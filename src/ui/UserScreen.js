@@ -3,7 +3,9 @@ import {useEffect,useState} from 'react';
 import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import {commonHeader} from "./common/CommonHeader";
 import './LoginForm.css';
+
 
 
 
@@ -16,6 +18,11 @@ function UserScreen(){
     var logged = window.localStorage.getItem("username");
     console.log(logged);
    
+    const LogOutUser = () =>{
+        alert("You are logged out");
+        window.localStorage.removeItem("username");
+        navigate('../login')
+    }
 
     useEffect(() => {
         if (logged==null){
@@ -76,9 +83,9 @@ function UserScreen(){
     }
   
     return (
-
+    <div>
+        <header className='Header'> <h1>Welcome {logged} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
     <div className='Login'>
-    <h1>Welcome to User {logged}</h1>
     <h1>New User Creation</h1>
     <form onSubmit={(e)=>{handSubmit(e)}}>
          
@@ -94,6 +101,7 @@ function UserScreen(){
             <br/>
             <input type="submit" value="Add"/>
         </form>
+    </div>
     </div>
 );
  }
