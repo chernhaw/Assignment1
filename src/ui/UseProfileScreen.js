@@ -1,8 +1,8 @@
 import {useEffect,useState} from 'react';
-import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
+import MainScreen from './MainScreen';
 
 function UserProfileScreen(){
     
@@ -19,7 +19,7 @@ function UserProfileScreen(){
            // console.log("UserProfileScreen - loggedProfile "+loggedProfile.email);
             const res = await Axios.post('http://localhost:8080/profile', 
             {username:""+logged+ ""});
-            console.log("loggedProfile.emailget user profile data for "+logged);
+            console.log("loggedProfile.email - get user profile data for "+logged);
             loggedProfile = res.data[0];
             console.log("UserProfileScreen - profile result obtained "+ loggedProfile.email);
             console.log("UserProfileScreen - loggedProfile "+loggedProfile.email);
@@ -71,6 +71,10 @@ function UserProfileScreen(){
         
     }
 
+    const goMain = () =>{
+        
+        navigate('../main')
+    }
 
     const handUpdatePassword=async(e)=>{
         
@@ -96,9 +100,11 @@ function UserProfileScreen(){
             console.log("Response from backend -updateemail "+updateRes);
             if (updateRes.length>0){
                 alert("Email is already being used - "+email+"\nPlease use a different email.");
+            } else {
+                alert("You have changed your email successfully");
             }
             
-        alert("You have changed your password successfully"); 
+         
     } catch (e){
             console.error("UserProfileScreen email there was an error"+e.error);
         }
@@ -106,7 +112,12 @@ function UserProfileScreen(){
 
     return (
         <div>
-        <header className='Header'> <h1>Welcome {logged} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
+        <header className='Header'> <h1>Welcome {logged} </h1>
+        <button onClick={goMain}>Main Menu</button>
+        <button onClick={LogOutUser}>Logout {logged}</button>
+        
+         
+        </header>
         <div>
         <h2>User Management-Profile Management</h2>
              <h2>Username : {logged}</h2>
@@ -119,7 +130,7 @@ function UserProfileScreen(){
             <label>New Email:</label>
             <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
-            <input type="submit" value="Update Password"/>
+            <input type="submit" value="Update Email"/>
             
         </form>
         </div>

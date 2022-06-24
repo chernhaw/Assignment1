@@ -4,8 +4,6 @@ import './LoginForm.css';
 
 import { useNavigate } from "react-router-dom";
 
-
-
 function LoginForm(){
     const [ username, setUsername] = useState('');
     const [ password, setPassword] = useState('');
@@ -26,15 +24,16 @@ function LoginForm(){
         
         alert("You have submitted "+username+" "+password);
         try {
+
             const res = await Axios.post('http://localhost:8080/login', 
             {username:""+username+ "",password:""+password+""});
             console.log("login function executed");
-            console.log(res.data);
-            const reslenght =res.data.length;
-            console.log(reslenght);
+            const validation = res.data;
+            console.log("login function validation "+validation);
            
-            if (reslenght>0){
-                window.localStorage.setItem("username", res.data[0].username);
+            
+            if (validation){
+                window.localStorage.setItem("username", username);
                 navigate('../user');
             } else {
                 alert("You have entered an invalid username or password");
@@ -42,7 +41,7 @@ function LoginForm(){
             
 
     } catch (e){
-            console.error("there was an error");
+            console.error("Login function - there was an error "+e.message);
         }
         
 

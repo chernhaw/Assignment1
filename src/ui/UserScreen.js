@@ -6,9 +6,6 @@ import { useNavigate } from "react-router-dom";
 import {commonHeader} from "./common/CommonHeader";
 import './LoginForm.css';
 
-
-
-
 function UserScreen(){
 
     const [ username, setUsername] = useState('');
@@ -31,7 +28,11 @@ function UserScreen(){
     },[])
 
     const handlePassChange = (event) =>{
+
+       // var validpass = checkPassWord(event.target.value);
+       
         setPassword( event.target.value);
+        
         
     }
     const handleUserChange = (event) =>{
@@ -46,9 +47,16 @@ function UserScreen(){
 
     const handSubmit=async(e)=>{
         e.preventDefault();
-        
-        alert("New user creation \n You have submitted "+username+" "+password+" "+email);
+        var validPass = checkPassWord(password);
+        console.log("handlesubmit - checkPassWord");
+        if (validPass.length>0) {
+
+            alert(validPass);
+            return 1;
+        }
+       
         try {
+            alert("New user creation \n You have submitted "+username+" "+password+" "+email);
             const res = await Axios.post('http://localhost:8080/newuser', 
             {username:""+username+ "",password:""+password+"", email:""+email+""});
             console.log("UserScreen - new user creation started ");
@@ -71,22 +79,54 @@ function UserScreen(){
             if (showErr){
                 alert (errMsg);
             }
-            
-            // 
-            
 
     } catch (e){
             console.error("there was an error");
         }
-        
-
     }
   
+    const goMain = () =>{
+        
+        navigate('../main')
+    }
+
+    const checkPassWord=(password)=>{
+        var regex = /^[A-Za-z0-9 ]+$/;
+        var passwordMsg = ''
+        console.log("UserScreen - checkPassword"+password);
+
+        var passwordLength = password.length;
+        // check length of password is 8-10
+        if (8<passwordLength){
+            passwordMsg = passwordMsg+"Password must be between 8-10 character";
+        
+        }
+
+        if (11>passwordLength){
+            passwordMsg = passwordMsg+"Password must be between 8-10 character";
+        
+        }
+
+        // test for special characters
+        var isSpecialChar = regex.test(password);
+        if (isSpecialChar){
+            passwordMsg = passwordMsg+"\nPassword need to have special characters";
+        }
+        const regexNumber = /\d/;
+        
+        var isNumChar = regexNumber.test(password);
+        if (isNumChar){
+            passwordMsg = password+"\nPassword need to have numeric characters";
+        }
+        console.log(passwordMsg);
+        return passwordMsg;
+    };
     return (
 
-        
     <div>
-        <header className='Header'> <h1>Welcome {logged} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
+        <header className='Header'> <h1>Welcome {logged} </h1>
+        <button onClick={LogOutUser}>Logout {logged}</button>
+        <button onClick={goMain}>Main Menu</button> </header>
     <div className='Login'>
     <h1>New User Creation</h1>
     <form onSubmit={(e)=>{handSubmit(e)}}>
@@ -94,10 +134,14 @@ function UserScreen(){
             <label>Name: </label>
             <input type="text" value={username} required onChange={(e)=>{handleUserChange(e)}}/>
             <br/>
-           
+            <br/>
             <label>Password: </label>
+            
             <input type="password" value={password} required onChange={(e)=>{handlePassChange(e)}}/>
             <br/>
+            <label>Need to be between 8 to 10 characters have numbers and special characters</label>
+            <br />
+            <br />
             <label>Email: </label>
             <input type="email" value={email} equired onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
