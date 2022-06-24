@@ -18,6 +18,7 @@ function UserScreen(){
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
+        window.localStorage.removeItem("email");
         navigate('../login')
     }
 

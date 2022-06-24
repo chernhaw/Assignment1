@@ -47,9 +47,26 @@ function LoginForm(){
                     console.log("email for user "+email);
         
                /////////////////////////////////
+               console.log("Query admin for login user");
+               // alert("You have submitted "+username+" "+password);
+               
+        
+                    const resadmin = await Axios.post('http://localhost:8080/admin', 
+                    {username:""+username+""});
+                    
+                    const admin = resadmin.data.admin;
+                    console.log("admin for user "+admin);
+
+               /////////////////////////////////
                 window.localStorage.setItem("email", email);
                 window.localStorage.setItem("username", username);
-                navigate('../main');
+                window.localStorage.setItem("admin", admin);
+
+                if (admin=='Y'){
+                    navigate('../main');
+                } else {
+                    navigate('../mainuser');
+                }
             } else {
                 alert("You have entered an invalid username or password");
             }

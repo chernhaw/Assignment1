@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
 
-function MainScreen(){
+function MainScreenUser(){
 
     
     const navigate = useNavigate();
@@ -42,16 +42,14 @@ function MainScreen(){
     <div>
         <header className='Header'> <h1>Welcome {logged} {loggedEmail} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
     <div className='Login'>
-    <h1>Main Screen </h1>
+    <h1>Main Screen - User </h1>
     <br/>
     <button onClick ={goProfile}>Change Password and/or email </button>
     <br/>
-    <button  onClick ={goUser}>Create New User </button>
-    <br/>
-    <button  onClick ={goGroup}>Group Management</button>
+    
     </div>
     </div>
 );
  }
 
- export default MainScreen;
+ export default MainScreenUser;
