@@ -33,8 +33,23 @@ function LoginForm(){
            
             
             if (validation){
+                // get email 
+               /////////////////////////////
+
+               console.log("Query email for login user");
+               // alert("You have submitted "+username+" "+password);
+               
+        
+                    const res = await Axios.post('http://localhost:8080/email', 
+                    {username:""+username+""});
+                    
+                    const email = res.data.email;
+                    console.log("email for user "+email);
+        
+               /////////////////////////////////
+                window.localStorage.setItem("email", email);
                 window.localStorage.setItem("username", username);
-                navigate('../user');
+                navigate('../main');
             } else {
                 alert("You have entered an invalid username or password");
             }
@@ -47,24 +62,28 @@ function LoginForm(){
 
     }
 
-
-    /*
-const handSubmit=async(e)=>{
+    const useremail = async(e)=>{
         e.preventDefault();
-        
-        alert("You have submitted "+username+ " "+password);
+        console.log("Query email for login user");
+       // alert("You have submitted "+username+" "+password);
         try {
-        await Axios.post('http://localhost:8080/login', {username:""+username+ "",password:""+password+""})
-            console.log("login function executed");
-           
+
+            const res = await Axios.post('http://localhost:8080/email', 
+            {username:""+username+""});
+            
+            const email = res.data;
+            console.log("login function validation "+email);
+
+
     } catch (e){
-            console.error("there was an error");
+            console.error("Login function - there was an  extracting email "+e.message);
         }
         
 
     }
 
-    */
+
+
     return (
         <div className='Login'>
         <form onSubmit={(e)=>{handSubmit(e)}}>

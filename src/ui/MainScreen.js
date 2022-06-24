@@ -10,11 +10,13 @@ function MainScreen(){
     
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
+    var loggedEmail = window.localStorage.getItem("email");
     console.log(logged);
    
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
+        window.localStorage.removeItem("email");
         navigate('../login')
     }
 
@@ -38,7 +40,7 @@ function MainScreen(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
+        <header className='Header'> <h1>Welcome {logged} {loggedEmail} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
     <div className='Login'>
     <h1>Main Screen </h1>
     <br/>

@@ -11,7 +11,7 @@ function UserProfileScreen(){
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var loggedProfile = null;
-    var profileEmail = null;
+    var profileEmail = window.localStorage.getItem("email");
   
     const loadProfile=async(e)=>{
         
@@ -49,7 +49,7 @@ function UserProfileScreen(){
     useEffect(() => {
 
         
-        loadProfile();
+      //  loadProfile();
         
         console.log("Profile email" +profileEmail)
         if (logged==null){
@@ -120,13 +120,13 @@ function UserProfileScreen(){
         </header>
         <div>
         <h2>User Management-Profile Management</h2>
-             <h2>Username : {logged}</h2>
-           
+             <h2>Username : {logged} </h2>
+             
         </div>
         <div >
         <form onSubmit={(e)=>{handUpdateEmail(e)}}>
            
-            
+            <label>Current Email:{profileEmail} current email</label><br/>
             <label>New Email:</label>
             <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
