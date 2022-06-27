@@ -50,7 +50,9 @@ function UserScreen(){
         console.log("Checkbox clicked");
         if (isAdmin){
             setisAdmin(false)
-        } 
+        } else {
+            setisAdmin(true)
+        }
     
     }
 
@@ -69,7 +71,7 @@ function UserScreen(){
         try {
             alert("New user creation \n You have submitted "+username+" "+password+" "+email);
             const res = await Axios.post('http://localhost:8080/newuser', 
-            {username:""+username+ "",password:""+password+"", email:""+email+""});
+            {username:""+username+ "",password:""+password+"", email:""+email+"", admin:""+isAdmin+", active:Y"});
             console.log("UserScreen - new user creation started ");
             const duplicateResult = res.data;
             console.log("UserScreen - checking for duplicates "+duplicateResult);
