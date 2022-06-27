@@ -10,8 +10,8 @@ function UserManagement(){
    
     const [ password, setPassword] = useState('');
     const [ email, setEmail] = useState('');
-    const [ userActive, setUserActive] = useState('');
-
+    const [ isAdmin, setisAdmin] = useState(true);
+    const [ userActive, setUserActive] = useState();
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var emailusermgt = window.localStorage.getItem("emailusermgt");
@@ -34,7 +34,16 @@ function UserManagement(){
         }
     },[])
 
-   
+    const checkAdminHandler =()=>{
+        console.log("Checkbox clicked");
+        if (isAdmin){
+           
+            setisAdmin(false)
+        } else {
+            setisAdmin(true)
+        }
+        console.log("Admin right : "+isAdmin)
+    }
     
 
    
@@ -75,6 +84,18 @@ function UserManagement(){
     }
 
 
+    const handUserAdminRight = async(e)=>{
+        e.preventDefault();
+        alert("You are granting admin right to "+usernameusermgt);
+        try {
+            const res = await Axios.post('http://localhost:8080/updateadm', {username:""+usernameusermgt+ "",admin:""+isAdmin+""})
+            var updateRes = res.data;
+            console.log("Updating admin right "+updateRes)
+        
+        } catch ( e){
+
+        }
+    }
     const handUpdatePassword=async(e)=>{
         
         e.preventDefault();
@@ -123,6 +144,21 @@ function UserManagement(){
             <br/>
             <input type="submit" value="Update Password"/>
             
+        </form>
+        </div>
+        <div >
+        <form onSubmit={(e)=>{handUserAdminRight(e)}}>
+           
+        <br/>
+        
+        <label htmlFor="checkbox">Check if this user is an admin user</label>
+            <input type="checkbox" 
+            id="checkbox" 
+            
+            checked={isAdmin} 
+            onChange ={checkAdminHandler}
+            />
+            <input type="submit" value="Update Admin Right"/>
         </form>
         </div>
         </div>
