@@ -34,6 +34,12 @@ function MainScreen(){
         navigate('../user')
     }
 
+    
+    const goUserMgt = () =>{
+        
+        navigate('../usersearch')
+    }
+
     const goGroup = () =>{
         navigate('../group')
     }
@@ -47,6 +53,8 @@ function MainScreen(){
     <button onClick ={goProfile}>Change Password and/or email </button>
     <br/>
     <button  onClick ={goUser}>Create New User </button>
+    <br/>
+    <button  onClick ={goUserMgt}>User Management</button>
     <br/>
     <button  onClick ={goGroup}>Group Management</button>
     </div>

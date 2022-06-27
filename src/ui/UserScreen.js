@@ -1,15 +1,15 @@
 
 import {useEffect,useState} from 'react';
-import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import {commonHeader} from "./common/CommonHeader";
+
 import './LoginForm.css';
 
 function UserScreen(){
 
     const [ username, setUsername] = useState('');
     const [ password, setPassword] = useState('');
+    const [ isAdmin, setisAdmin] = useState(false);
     const [ email, setEmail] = useState('');
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
@@ -46,9 +46,19 @@ function UserScreen(){
         
     }
 
+    const checkHandler =()=>{
+        console.log("Checkbox clicked");
+        if (isAdmin){
+            setisAdmin(false)
+        } 
+    
+    }
+
     const handSubmit=async(e)=>{
         e.preventDefault();
-        var validPass = checkPassWord(password);
+         var validPass = checkPassWord(password);
+        
+      validPass = checkPassWord(password);
         console.log("handlesubmit - checkPassWord");
         if (validPass.length>0) {
 
@@ -92,32 +102,37 @@ function UserScreen(){
     }
 
     const checkPassWord=(password)=>{
-        var regex = /^[A-Za-z0-9 ]+$/;
+      
+       
+        var regexNumber = /\d/;
+        var regSpecial =  /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
         var passwordMsg = ''
         console.log("UserScreen - checkPassword"+password);
 
         var passwordLength = password.length;
         // check length of password is 8-10
-        if (8<passwordLength){
+        console.log("UserScreen - passwordLength : "+passwordLength);
+       
+        console.log("passwordLength "+8<passwordLength)
+
+
+        if ( parseInt(password.length) && 10<parseInt(password.length) ){
+            console.log("UserScreen - password less than 8");
             passwordMsg = passwordMsg+"Password must be between 8-10 character";
         
         }
 
-        if (11>passwordLength){
-            passwordMsg = passwordMsg+"Password must be between 8-10 character";
         
-        }
-
         // test for special characters
-        var isSpecialChar = regex.test(password);
-        if (isSpecialChar){
+        var isSpecialChar = regSpecial.test(password);
+        if (!isSpecialChar){
             passwordMsg = passwordMsg+"\nPassword need to have special characters";
         }
-        const regexNumber = /\d/;
+        
         
         var isNumChar = regexNumber.test(password);
-        if (isNumChar){
-            passwordMsg = password+"\nPassword need to have numeric characters";
+        if (!isNumChar){
+            passwordMsg = passwordMsg+"\nPassword need to have numeric character";
         }
         console.log(passwordMsg);
         return passwordMsg;
@@ -144,9 +159,18 @@ function UserScreen(){
             <br />
             <br />
             <label>Email: </label>
-            <input type="email" value={email} equired onChange={(e)=>{handleEmailChange(e)}}/>
+            <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
-            <input type="submit" value="Add"/>
+            <br/>
+            <label htmlFor="checkbox">Check if this user is an admin user</label>
+            <input type="checkbox" 
+            id="checkbox" 
+            
+            checked={isAdmin} 
+            onChange ={checkHandler}
+            />
+            <br/>
+            <input type="submit" value="Create User"/>
         </form>
     </div>
     </div>

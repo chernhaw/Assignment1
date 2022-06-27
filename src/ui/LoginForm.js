@@ -62,9 +62,12 @@ function LoginForm(){
                 window.localStorage.setItem("username", username);
                 window.localStorage.setItem("admin", admin);
 
+                console.log("login-saved to local storage");
                 if (admin=='Y'){
+                    console.log("login - admin");
                     navigate('../main');
                 } else {
+                    console.log("login - non admin");
                     navigate('../mainuser');
                 }
             } else {
@@ -79,26 +82,7 @@ function LoginForm(){
 
     }
 
-    const useremail = async(e)=>{
-        e.preventDefault();
-        console.log("Query email for login user");
-       // alert("You have submitted "+username+" "+password);
-        try {
-
-            const res = await Axios.post('http://localhost:8080/email', 
-            {username:""+username+""});
-            
-            const email = res.data;
-            console.log("login function validation "+email);
-
-
-    } catch (e){
-            console.error("Login function - there was an  extracting email "+e.message);
-        }
-        
-
-    }
-
+    
 
 
     return (
