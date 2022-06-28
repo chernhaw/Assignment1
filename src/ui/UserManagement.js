@@ -11,7 +11,7 @@ function UserManagement(){
     const [ password, setPassword] = useState('');
     const [ email, setEmail] = useState('');
     const [ isAdmin, setisAdmin] = useState(true);
-    const [ userActive, setUserActive] = useState();
+    const [ isActive, setActive] = useState(true);
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var emailusermgt = window.localStorage.getItem("emailusermgt");
@@ -34,6 +34,8 @@ function UserManagement(){
         }
     },[])
 
+   
+
     const checkAdminHandler =()=>{
         console.log("Checkbox clicked");
         if (isAdmin){
@@ -46,6 +48,19 @@ function UserManagement(){
     }
     
 
+    const checkUserActiveHandler =()=>{
+        console.log("Checkbox clicked "+isActive);
+
+        if (isActive){
+           
+            setActive(false)
+        } else {
+    
+        setActive(true)
+        }
+        console.log("User "+usernameusermgt+" is "+isActive)
+    }
+    
    
     const handleEmailChange = (event) =>{
         setEmail( event.target.value);
@@ -62,6 +77,7 @@ function UserManagement(){
         
         navigate('../main')
     }
+
 
     const handUpdateEmail=async(e)=>{
         
@@ -82,11 +98,28 @@ function UserManagement(){
             console.error("UserProfileScreen email there was an error"+e.error);
         }
     }
+    const handUpdateUserActivate=async(e)=>{
+        
+        e.preventDefault();
+        alert("You have submitted user activation change");
+        try {
+            const res = await Axios.post('http://localhost:8080/activate', {username:""+usernameusermgt+ "",active:""+isActive+""})
+            var updateRes = res.data;
+            console.log("Response from backend -updateemail "+updateRes);
+           
+            
+            
+         
+    } catch (e){
+            console.error("UserProfileScreen email there was an error"+e.error);
+        }
+    }
+
 
 
     const handUserAdminRight = async(e)=>{
         e.preventDefault();
-        alert("You are granting admin right to "+usernameusermgt);
+        alert("You are updated admin right to "+usernameusermgt);
         try {
             const res = await Axios.post('http://localhost:8080/updateadm', {username:""+usernameusermgt+ "",admin:""+isAdmin+""})
             var updateRes = res.data;
@@ -136,6 +169,7 @@ function UserManagement(){
         </form>
         </div>
         <div >
+            <br/>
         <form onSubmit={(e)=>{handUpdatePassword(e)}}>
            
             
@@ -146,20 +180,27 @@ function UserManagement(){
             
         </form>
         </div>
-        <div >
-        <form onSubmit={(e)=>{handUserAdminRight(e)}}>
-           
         <br/>
+        <div >
+        <form onSubmit={(e)=>{handUpdateUserActivate(e)}}>
+           
         
-        <label htmlFor="checkbox">Check if this user is an admin user</label>
-            <input type="checkbox" 
-            id="checkbox" 
+        <label>{usernameusermgt} has is active : {""+isActive+""}</label>
             
-            checked={isAdmin} 
-            onChange ={checkAdminHandler}
-            />
-            <input type="submit" value="Update Admin Right"/>
+        <button  onClick={(e)=>{checkUserActiveHandler(e)}}>Activate or Deactivate user</button>
+            <input type="submit" value="Update user active status"/>
         </form>
+        </div>
+        <br/>
+        <div>
+        <form onSubmit={(e)=>{handUserAdminRight(e)}}>
+                <label>{usernameusermgt} has admin : {""+isAdmin+""}</label>
+               
+                
+                <button  onClick={(e)=>{checkAdminHandler(e)}}>Add or Remove admin</button>
+               <br/>
+               <input type="submit" value="Confirm update user admin status"/>
+           </form>
         </div>
         </div>
     );
