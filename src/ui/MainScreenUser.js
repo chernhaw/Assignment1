@@ -14,6 +14,7 @@ function MainScreenUser(){
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 

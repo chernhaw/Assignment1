@@ -8,6 +8,16 @@ function LoginForm(){
     const [ username, setUsername] = useState('');
     const [ password, setPassword] = useState('');
     const navigate = useNavigate();
+    window.localStorage.removeItem("username");
+    window.localStorage.removeItem("email");
+    window.localStorage.removeItem("admin");
+
+
+    
+       
+       
+       
+    
 
     const handleUserChange = (event) =>{
         setUsername(event.target.value);
@@ -22,6 +32,10 @@ function LoginForm(){
     const handSubmit=async(e)=>{
         e.preventDefault();
         
+         // clear out existing login
+           
+         
+        
         alert("You have submitted "+username+" "+password);
         try {
 
@@ -29,10 +43,15 @@ function LoginForm(){
             {username:""+username+ "",password:""+password+""});
             console.log("login function executed");
             const validation = res.data;
-            console.log("login function validation "+validation);
-           
+
+            var active;
+            console.log("login validation result : active: "+validation.active+" password:"+validation.repass);
             
-            if (validation){
+            if (validation.active=='N'){
+                alert("Your account "+username+ " is not active - please check with your admin")
+            } else
+
+            if (validation.active=='Y'){
                 // get email 
                /////////////////////////////
 
@@ -57,16 +76,20 @@ function LoginForm(){
                     const admin = resadmin.data.admin;
                     console.log("admin for user "+admin);
 
+                   
+                   
+
+                    
                /////////////////////////////////
                 window.localStorage.setItem("email", email);
                 window.localStorage.setItem("username", username);
                 window.localStorage.setItem("admin", admin);
 
                 console.log("login-saved to local storage");
-                if (admin=='Y'){
+                if (admin==='Y'&& validation.active==='Y'){
                     console.log("login - admin");
                     navigate('../main');
-                } else {
+                } else if (validation.active==='Y'){
                     console.log("login - non admin");
                     navigate('../mainuser');
                 }

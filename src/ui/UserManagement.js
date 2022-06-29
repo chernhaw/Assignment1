@@ -22,7 +22,8 @@ function UserManagement(){
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
-
+       
+        window.localStorage.removeItem("admin");
         window.localStorage.removeItem("emailusermgt");
         window.localStorage.removeItem("");
         navigate('../login')

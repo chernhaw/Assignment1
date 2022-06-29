@@ -44,6 +44,7 @@ function UserProfileScreen(){
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
@@ -74,7 +75,13 @@ function UserProfileScreen(){
 
     const goMain = () =>{
         
+        var isAdmin = window.localStorage.getItem("admin");
+        if (isAdmin=='Y'){
         navigate('../main')
+        }
+        else {
+            navigate('../mainuser')
+        }
     }
 
     const handUpdatePassword=async(e)=>{

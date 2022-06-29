@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {useEffect,useState} from 'react';
+import Axios from 'axios';
 import './LoginForm.css';
 
 function GroupMgt(){
@@ -11,12 +12,15 @@ function GroupMgt(){
 
     const [ username, setUsername] = useState('');
     const [ groupname, setGroupname] = useState('');
+    const [ assigngroup, setAssignGroup] = useState('');
+
     
    
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
@@ -31,6 +35,12 @@ function GroupMgt(){
         
     }
 
+    const handleGroupAssign=(event)=>{
+
+    //   start coding
+        setAssignGroup(event.target.value);
+
+    }
     const handleUserNameChange = (event) =>{
         setUsername(event.target.value);
         
@@ -41,8 +51,41 @@ function GroupMgt(){
         navigate('../main')
     }
 
-    const handUpdateGroup = (event) =>{
+    const handCreateGroup = async(e)=>{
+
+        var res;
+        alert ("You are created "+groupname);
+
+        try {
+
+             const res = await Axios.post('http://localhost:8080/creategroup', 
+            {groupname:""+groupname+""});
+            
+           // alert(res);
+            console.error("Create groupname response "+ res);
+          
+        } catch (e){
+            console.error("Create groupname error - "+e.message);
+        }
+        console.log("res " +res)
+    }
+
+
+    const handUpdateGroup = async(e) =>{
         alert ("You have assigned user "+username+" to "+groupname);
+
+        try {
+
+            const res = await Axios.post('http://localhost:8080/groupassign', 
+            {username:""+username+"",groupname:""+assigngroup+""});
+           //{username:""+logged+ "",password:""+password+""
+          // alert(res);
+           console.error("Create groupname response "+ res);
+         
+       } catch (e){
+           console.error("Create groupname error - "+e.message);
+       }
+     //  console.log("res " +res)
         
     }
     return (
@@ -50,23 +93,35 @@ function GroupMgt(){
         <header className='Header'> <h1>Welcome {logged} </h1>
         <button onClick={goMain}>Main Menu</button>
         <button onClick={LogOutUser}>Logout {logged}</button>
-        
-         
         </header>
         <div>
-        <h2>Group Management-Assign user </h2>
-             
-             
+        <h1>Group Management </h1> 
         </div>
         <div >
-        <form onSubmit={(e)=>{handUpdateGroup(e)}}>
-           
-            <label>Group Name:</label><br/>
+        <form onSubmit={(e)=>{handCreateGroup(e)}}>
+            <h3>Create new Group</h3>
+            <label>New Group Name:</label><br/>
             <input type="text" value={groupname} required onChange={(e)=>{handleGroupNameChange(e)}}/>
+            <br/>
+            <br/>
+            <input type="submit" value="Create Group"/>
+            
+        </form>
+
+        </div>
+        <br/>
+        <div >
+        <form onSubmit={(e)=>{handUpdateGroup(e)}}>
+        <h3>Assign Group</h3>
+            <label>Group Name:</label>
+            <input type="text" value={assigngroup} required onChange={(e)=>{handleGroupAssign(e)}}/>
+            <br/>
+            <br/>
             <label>Username :</label>
             <input type="text" value={username} required onChange={(e)=>{handleUserNameChange(e)}}/>
             <br/>
-            <input type="submit" value="Update Email"/>
+            <br/>
+            <input type="submit" value="Update Group"/>
             
         </form>
         </div>
