@@ -13,8 +13,7 @@ function GroupMgt(){
     const [ username, setUsername] = useState('');
     const [ groupname, setGroupname] = useState('');
     const [ assigngroup, setAssignGroup] = useState('');
-
-    
+    const [ checkgroup, setCheckGroup] = useState('');
    
     const LogOutUser = () =>{
         alert("You are logged out");
@@ -29,6 +28,11 @@ function GroupMgt(){
          navigate('../login')   
         }
     },[])
+
+    const handleCheckGroupChange=(event) =>{
+        setCheckGroup(event.target.value);
+    
+    }
 
     const handleGroupNameChange = (event) =>{
         setGroupname(event.target.value);
@@ -70,6 +74,22 @@ function GroupMgt(){
         console.log("res " +res)
     }
 
+    const handCheckGroup = async(e) =>{
+        try {
+
+            var res = await Axios.post('http://localhost:8080/checkgroup', 
+           {groupname:""+groupname+""});
+           
+       //    alert(res);
+           console.log("checkgroup - Check group response "+ res.data);
+           alert(res.data[0].username +" "+res.data[1].username +" length "+res.data.length);
+         
+       } catch (e){
+           console.error("Create groupname error - "+e.message);
+       }
+       console.log("res " +res)
+
+    }
 
     const handUpdateGroup = async(e) =>{
         alert ("You have assigned user "+username+" to "+groupname);
@@ -105,11 +125,20 @@ function GroupMgt(){
             <br/>
             <br/>
             <input type="submit" value="Create Group"/>
-            
         </form>
 
         </div>
-        <br/>
+        <div >
+        <form onSubmit={(e)=>{handCheckGroup(e)}}>
+            <h3>View Group</h3>
+            <label>Group Name:</label><br/>
+            <input type="text" value={checkgroup} required onChange={(e)=>{handleCheckGroupChange(e)}}/>
+            <br/>
+            <br/>
+            <input type="submit" value="View Group"/>
+        </form>
+
+        </div>
         <div >
         <form onSubmit={(e)=>{handUpdateGroup(e)}}>
         <h3>Assign Group</h3>
