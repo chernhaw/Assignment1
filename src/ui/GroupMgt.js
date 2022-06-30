@@ -1,7 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import {useEffect,useState} from 'react';
 import Axios from 'axios';
-import './LoginForm.css';
+import { useNavigate } from "react-router-dom";
+import GroupMember from './GroupMember';
+
 
 function GroupMgt(){
 
@@ -13,13 +14,12 @@ function GroupMgt(){
     const [ username, setUsername] = useState('');
     const [ groupname, setGroupname] = useState('');
     const [ assigngroup, setAssignGroup] = useState('');
-    const [ checkgroup, setCheckGroup] = useState('');
+    const [ querygroup, setQueryGroup] = useState('');
    
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
@@ -29,9 +29,9 @@ function GroupMgt(){
         }
     },[])
 
-    const handleCheckGroupChange=(event) =>{
-        setCheckGroup(event.target.value);
-    
+    const handleGroupQueryChange = (event) =>{
+        setQueryGroup(event.target.value);
+        
     }
 
     const handleGroupNameChange = (event) =>{
@@ -40,8 +40,6 @@ function GroupMgt(){
     }
 
     const handleGroupAssign=(event)=>{
-
-    //   start coding
         setAssignGroup(event.target.value);
 
     }
@@ -55,8 +53,41 @@ function GroupMgt(){
         navigate('../main')
     }
 
-    const handCreateGroup = async(e)=>{
+   
 
+
+    const handQueryGroup = async(e) =>{
+        e.preventDefault();
+       
+      //  window.localStorage.setItem("groupquery", querygroup);
+        
+        try {
+             var groupmembers = "";
+            const res = await Axios.post('http://localhost:8080/checkgroup', 
+            {groupname:""+groupname+""});
+           
+            console.log("Query group response "+ res.data);
+            
+           const size = res.data.length;
+           
+        
+           for ( var i=0; i<size; i++){
+             groupmembers = groupmembers+res.data[i].username + " \n"
+            
+           }
+           console.log(groupmembers);
+           window.localStorage.setItem("groupquery", groupmembers)
+
+        } catch (e){
+           console.error("Query group error - "+e.message);
+       }
+
+       
+     //  alert(data)
+       //setMembers(usersFound)
+    }
+    const handCreateGroup = async(e)=>{
+        e.preventDefault();
         var res;
         alert ("You are created "+groupname);
 
@@ -65,47 +96,15 @@ function GroupMgt(){
              const res = await Axios.post('http://localhost:8080/creategroup', 
             {groupname:""+groupname+""});
             
-           // alert(res);
-            console.error("Create groupname response "+ res);
-          
-        } catch (e){
+            console.log("Create groupname response "+ res);
+ 
+         } catch (e){
             console.error("Create groupname error - "+e.message);
         }
         console.log("res " +res)
     }
-
-    const handCheckGroup = async(e) =>{
-        try {
-
-            var res = await Axios.post('http://localhost:8080/checkgroup', 
-           {groupname:""+groupname+""});
-           
-       //    alert(res);
-           console.log("checkgroup - Check group response "+ res.data);
-           alert(res.data[0].username +" "+res.data[1].username +" length "+res.data.length);
-         
-       } catch (e){
-           console.error("Create groupname error - "+e.message);
-       }
-       console.log("res " +res)
-
-    }
-
-    const handUpdateGroup = async(e) =>{
+    const handUpdateGroup = (event) =>{
         alert ("You have assigned user "+username+" to "+groupname);
-
-        try {
-
-            const res = await Axios.post('http://localhost:8080/groupassign', 
-            {username:""+username+"",groupname:""+assigngroup+""});
-           //{username:""+logged+ "",password:""+password+""
-          // alert(res);
-           console.error("Create groupname response "+ res);
-         
-       } catch (e){
-           console.error("Create groupname error - "+e.message);
-       }
-     //  console.log("res " +res)
         
     }
     return (
@@ -113,10 +112,24 @@ function GroupMgt(){
         <header className='Header'> <h1>Welcome {logged} </h1>
         <button onClick={goMain}>Main Menu</button>
         <button onClick={LogOutUser}>Logout {logged}</button>
+        
+         
         </header>
         <div>
         <h1>Group Management </h1> 
         </div>
+
+        <div>
+        <form onSubmit={(e)=>{handQueryGroup(e)}}>
+            <h3>Query Group</h3>
+            <label>Group Name:</label><br/>
+            <input type="text" value={querygroup} required onChange={(e)=>{handleGroupQueryChange(e)}}/>
+            <br/>
+            <input type="submit" value="Query Group"/>
+            
+        </form>
+        </div>
+       
         <div >
         <form onSubmit={(e)=>{handCreateGroup(e)}}>
             <h3>Create new Group</h3>
@@ -125,20 +138,11 @@ function GroupMgt(){
             <br/>
             <br/>
             <input type="submit" value="Create Group"/>
+            
         </form>
 
         </div>
-        <div >
-        <form onSubmit={(e)=>{handCheckGroup(e)}}>
-            <h3>View Group</h3>
-            <label>Group Name:</label><br/>
-            <input type="text" value={checkgroup} required onChange={(e)=>{handleCheckGroupChange(e)}}/>
-            <br/>
-            <br/>
-            <input type="submit" value="View Group"/>
-        </form>
-
-        </div>
+        <br/>
         <div >
         <form onSubmit={(e)=>{handUpdateGroup(e)}}>
         <h3>Assign Group</h3>
