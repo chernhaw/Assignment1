@@ -11,6 +11,10 @@ function LoginForm(){
     window.localStorage.removeItem("username");
     window.localStorage.removeItem("email");
     window.localStorage.removeItem("admin");
+    window.localStorage.removeItem("emailusermgt"); 
+    window.localStorage.removeItem("usernameusermgt");
+    window.localStorage.removeItem("userActiveStatus");
+    window.localStorage.removeItem("userAdmin")
 
     const handleUserChange = (event) =>{
         setUsername(event.target.value);
@@ -83,7 +87,9 @@ function LoginForm(){
                 } else if (validation.repass=='false'){
                     alert("You have entered an invalid username or password");
                 }
-            } else {
+            } 
+            
+            else {
                 alert("You have entered an invalid username or password");
             }
             

@@ -104,8 +104,21 @@ function GroupMgt(){
         }
         console.log("res " +res)
     }
-    const handUpdateGroup = (event) =>{
-        alert ("You have assigned user "+username+" to "+groupname);
+    const handUpdateGroup = async(e) =>{
+
+        try {
+//{username:""+username+ "",password:""+password+""}
+            const res = await Axios.post('http://localhost:8080/groupassign', 
+           {groupname:""+assigngroup+"",username:""+username+""});
+           
+           console.log("Create group assignment response"+ res);
+
+        } catch (e){
+           console.error("Create groupname error - "+e.message);
+       }
+      
+
+       ///
         
     }
     return (
