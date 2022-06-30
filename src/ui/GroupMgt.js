@@ -1,8 +1,6 @@
 import {useEffect,useState} from 'react';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import GroupMember from './GroupMember';
-
 
 function GroupMgt(){
 
@@ -15,11 +13,13 @@ function GroupMgt(){
     const [ groupname, setGroupname] = useState('');
     const [ assigngroup, setAssignGroup] = useState('');
     const [ querygroup, setQueryGroup] = useState('');
+    const [ groupmembersresult, setGroupMembersResult] = useState('');
    
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
@@ -31,6 +31,7 @@ function GroupMgt(){
 
     const handleGroupQueryChange = (event) =>{
         setQueryGroup(event.target.value);
+        console.log("Handle group query "+querygroup)
         
     }
 
@@ -58,13 +59,13 @@ function GroupMgt(){
 
     const handQueryGroup = async(e) =>{
         e.preventDefault();
-       
+        var groupmembers = "";
       //  window.localStorage.setItem("groupquery", querygroup);
         
         try {
-             var groupmembers = "";
+          
             const res = await Axios.post('http://localhost:8080/checkgroup', 
-            {groupname:""+groupname+""});
+            {groupname:""+querygroup+""});
            
             console.log("Query group response "+ res.data);
             
@@ -75,9 +76,9 @@ function GroupMgt(){
              groupmembers = groupmembers+res.data[i].username + " \n"
             
            }
-           console.log(groupmembers);
-           window.localStorage.setItem("groupquery", groupmembers)
 
+           setGroupMembersResult(groupmembers);
+          
         } catch (e){
            console.error("Query group error - "+e.message);
        }
@@ -125,9 +126,13 @@ function GroupMgt(){
             <label>Group Name:</label><br/>
             <input type="text" value={querygroup} required onChange={(e)=>{handleGroupQueryChange(e)}}/>
             <br/>
+        
             <input type="submit" value="Query Group"/>
             
         </form>
+        <div>
+            {groupmembersresult}
+        </div>
         </div>
        
         <div >

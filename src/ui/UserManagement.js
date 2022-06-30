@@ -7,17 +7,27 @@ import './LoginForm.css';
 
 function UserManagement(){
 
-   
+    var initialActivate = window.localStorage.getItem("userActiveStatus");
+    var initialAdmin = window.localStorage.getItem("userAdmin");
     const [ password, setPassword] = useState('');
     const [ email, setEmail] = useState('');
-    const [ isAdmin, setisAdmin] = useState(true);
-    const [ isActive, setActive] = useState(true);
+    const [ isAdmin, setisAdmin] = useState(initialAdmin);
+    const [ isActive, setActive] = useState(initialActivate);
+//    const [ isActive, setActive] = useState(''+window.localStorage.getItem("userActiveStatus")+'');
+      
+    const [ newEmail, setNewEmail ] = useState('')
+    
+   
+   
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var emailusermgt = window.localStorage.getItem("emailusermgt");
+ //   setNewEmail(emailusermgt);
     var usernameusermgt = window.localStorage.getItem('usernameusermgt');
-    console.log(logged);
-   
+
+    console.log("logged "+logged);
+    console.log("Admin is "+isAdmin)
+    console.log("Active is "+isActive)
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
@@ -39,11 +49,11 @@ function UserManagement(){
 
     const checkAdminHandler =()=>{
         console.log("Checkbox clicked");
-        if (isAdmin){
+        if (isAdmin=='Y'){
            
-            setisAdmin(false)
+            setisAdmin('N')
         } else {
-            setisAdmin(true)
+            setisAdmin('Y')
         }
         console.log("Admin right : "+isAdmin)
     }
@@ -52,12 +62,12 @@ function UserManagement(){
     const checkUserActiveHandler =()=>{
         console.log("Checkbox clicked "+isActive);
 
-        if (isActive){
+        if (isActive=='Y'){
            
-            setActive(false)
+            setActive('N')
         } else {
     
-        setActive(true)
+        setActive('Y')
         }
         console.log("User "+usernameusermgt+" is "+isActive)
     }
@@ -87,6 +97,7 @@ function UserManagement(){
         try {
             const res = await Axios.post('http://localhost:8080/updateemail', {username:""+usernameusermgt+ "",email:""+email+""})
             var updateRes = res.data;
+            setNewEmail(email);
             console.log("Response from backend -updateemail "+updateRes);
             if (updateRes.length>0){
                 alert("Email is already being used - "+email+"\nPlease use a different email.");
@@ -154,14 +165,14 @@ function UserManagement(){
          
         </header>
         <div>
-        <h2>User Management- Management -  Admin</h2>
+        <h2>User Management- Management - Admin</h2>
              <h2>Username : {usernameusermgt} </h2>
              
         </div>
         <div >
         <form onSubmit={(e)=>{handUpdateEmail(e)}}>
            
-            <label>Current Email:{emailusermgt}</label><br/>
+            <label>Current Email {emailusermgt}</label><br/>
             <label>New Email:</label>
             <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>

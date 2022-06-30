@@ -43,7 +43,7 @@ function MainScreen(){
     }
 
     const goGroup = () =>{
-        navigate('../group')
+        navigate('../groupmgt')
     }
     return (
 

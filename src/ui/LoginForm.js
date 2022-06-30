@@ -12,13 +12,6 @@ function LoginForm(){
     window.localStorage.removeItem("email");
     window.localStorage.removeItem("admin");
 
-
-    
-       
-       
-       
-    
-
     const handleUserChange = (event) =>{
         setUsername(event.target.value);
         
@@ -31,20 +24,13 @@ function LoginForm(){
 
     const handSubmit=async(e)=>{
         e.preventDefault();
-        
-         // clear out existing login
-           
-         
-        
-        alert("You have submitted "+username+" "+password);
+    //    alert("You have submitted "+username+" "+password);
         try {
 
             const res = await Axios.post('http://localhost:8080/login', 
             {username:""+username+ "",password:""+password+""});
             console.log("login function executed");
             const validation = res.data;
-
-            var active;
             console.log("login validation result : active: "+validation.active+" password:"+validation.repass);
             
             if (validation.active=='N'){
@@ -75,10 +61,6 @@ function LoginForm(){
                     
                     const admin = resadmin.data.admin;
                     console.log("admin for user "+admin);
-
-                   
-                   
-
                     
                /////////////////////////////////
                 window.localStorage.setItem("email", email);
@@ -86,12 +68,20 @@ function LoginForm(){
                 window.localStorage.setItem("admin", admin);
 
                 console.log("login-saved to local storage");
-                if (admin==='Y'&& validation.active==='Y'){
+
+                console.log("user "+ username +" validation :"+validation.repass)
+
+               // if (validation.repass==='true'){
+                    //alert("Validation for password "+validation.repass)
+              //  }
+                if (admin==='Y' && validation.active==='Y' && validation.repass==='true'){
                     console.log("login - admin");
                     navigate('../main');
-                } else if (validation.active==='Y'){
+                } else if (validation.active==='Y' && validation.repass==='true'){
                     console.log("login - non admin");
                     navigate('../mainuser');
+                } else if (validation.repass=='false'){
+                    alert("You have entered an invalid username or password");
                 }
             } else {
                 alert("You have entered an invalid username or password");
