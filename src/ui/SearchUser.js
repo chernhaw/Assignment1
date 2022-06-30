@@ -71,18 +71,22 @@ function SearchUser(){
 
     const handleSearchEmailByUserName=async(e)=>{
         e.preventDefault();
-        console.log("Search username "+username+" by email");
+        console.log("Search user by "+username+" ");
     
         try {
 
-            const res = await Axios.post('http://localhost:8080/bynusername', 
+            const res = await Axios.post('http://localhost:8080/byusername', 
             {username:""+username+""});
-            
-            const email = res.data.email;
+            console.log(res.data)
+            console.log("username "+res.data.username)
+            console.log("active "+res.data.active)
+            console.log("email "+res.data.email)
+            console.log("admin "+res.data.admin)
                   
-            console.log("Search email - result  "+email);
-            window.localStorage.setItem("emailusermgt", email);
-            window.localStorage.setItem("usernameusermgt", username);
+            window.localStorage.setItem("emailusermgt", res.data.email); 
+            window.localStorage.setItem("usernameusermgt", res.data.username);
+            window.localStorage.setItem("userActiveStatus", res.data.active);
+            window.localStorage.setItem("userAdmin", res.data.admin)
             navigate('../usermgt');
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
