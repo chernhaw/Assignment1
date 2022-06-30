@@ -17,6 +17,7 @@ function SearchUser(){
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
@@ -39,20 +40,29 @@ function SearchUser(){
 
     const handleSearchUserByEmail=async(e)=>{
         e.preventDefault();
-        console.log("Search username "+username+" by email");
+        console.log("Search username by email" +email);
     
         try {
 
-            const res = await Axios.post('http://localhost:8080/username', 
+            const res = await Axios.post('http://localhost:8080/byemail', 
             {email:""+email+""});
             
-            const username = res.data.username;
-                  
-            console.log("Search username - result  "+username);
-            window.localStorage.setItem("emailusermgt", email); 
-            window.localStorage.setItem("usernameusermgt", username);
-            window.localStorage.setItem("userActiveStatus")
-            navigate('../usermgt');
+            console.log("username "+res.data.username)
+            console.log("active "+res.data.active)
+            console.log("email "+res.data.email)
+            console.log("admin "+res.data.admin)
+
+            // console.log("Search result  username :"+username+ 
+            // " email :"+useremail+ 
+            // " active :"+useractive +
+            // " useradmin : "+useradmin);
+            window.localStorage.setItem("emailusermgt", res.data.email); 
+            window.localStorage.setItem("usernameusermgt", res.data.username);
+            window.localStorage.setItem("userActiveStatus", res.data.active);
+            window.localStorage.setItem("userAdmin", res.data.admin)
+
+             navigate('../usermgt');
+       //   navigate('../queryresult');
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
         }
@@ -61,18 +71,22 @@ function SearchUser(){
 
     const handleSearchEmailByUserName=async(e)=>{
         e.preventDefault();
-        console.log("Search username "+username+" by email");
+        console.log("Search user by "+username+" ");
     
         try {
 
-            const res = await Axios.post('http://localhost:8080/email', 
+            const res = await Axios.post('http://localhost:8080/byusername', 
             {username:""+username+""});
-            
-            const email = res.data.email;
+            console.log(res.data)
+            console.log("username "+res.data.username)
+            console.log("active "+res.data.active)
+            console.log("email "+res.data.email)
+            console.log("admin "+res.data.admin)
                   
-            console.log("Search email - result  "+email);
-            window.localStorage.setItem("emailusermgt", email);
-            window.localStorage.setItem("usernameusermgt", username);
+            window.localStorage.setItem("emailusermgt", res.data.email); 
+            window.localStorage.setItem("usernameusermgt", res.data.username);
+            window.localStorage.setItem("userActiveStatus", res.data.active);
+            window.localStorage.setItem("userAdmin", res.data.admin)
             navigate('../usermgt');
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
@@ -105,7 +119,7 @@ function SearchUser(){
     <h2>User Management - Search By Email</h2>
     <form onSubmit={(e)=>{handleSearchUserByEmail(e)}}>
     <label>Email: </label>
-    <input type="" value={email} required onChange={(e)=>{handleUserEmailChange(e)}}/>
+    <input type="email" value={email} required onChange={(e)=>{handleUserEmailChange(e)}}/>
     <br/>
     <input type="submit" value="Search by User Email "/>
     </form>
