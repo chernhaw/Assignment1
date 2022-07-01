@@ -46,7 +46,9 @@ function SearchUser(){
 
             const res = await Axios.post('http://localhost:8080/byemail', 
             {email:""+email+""});
-            
+            if(res.data.username===undefined){
+                alert("No user found for "+email+" :"+res.data.username);
+                }else {
             console.log("username "+res.data.username)
             console.log("active "+res.data.active)
             console.log("email "+res.data.email)
@@ -60,9 +62,14 @@ function SearchUser(){
             window.localStorage.setItem("usernameusermgt", res.data.username);
             window.localStorage.setItem("userActiveStatus", res.data.active);
             window.localStorage.setItem("userAdmin", res.data.admin)
+        
 
              navigate('../usermgt');
+                }
        //   navigate('../queryresult');
+            // } else {
+            //     alert ("No user with "+email+" found")
+            // }
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
         }
@@ -77,17 +84,28 @@ function SearchUser(){
 
             const res = await Axios.post('http://localhost:8080/byusername', 
             {username:""+username+""});
+            console.log("Response length:"+""+res.data+"".length)
+            
+            if(res.data.username===undefined){
+            alert("No user found for "+username + " ");
+            }else {
             console.log(res.data)
             console.log("username "+res.data.username)
             console.log("active "+res.data.active)
             console.log("email "+res.data.email)
             console.log("admin "+res.data.admin)
-                  
             window.localStorage.setItem("emailusermgt", res.data.email); 
             window.localStorage.setItem("usernameusermgt", res.data.username);
             window.localStorage.setItem("userActiveStatus", res.data.active);
             window.localStorage.setItem("userAdmin", res.data.admin)
             navigate('../usermgt');
+            }
+         //   if (res.data.username =="undefined"){
+            
+            // } else {
+            //     alert ("No user with "+username+" found")
+            // }
+
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
         }
