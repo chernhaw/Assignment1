@@ -96,13 +96,14 @@ function UserManagement(){
         alert("You have submitted email change");
         try {
             const res = await Axios.post('http://localhost:8080/updateemail', {username:""+usernameusermgt+ "",email:""+email+""})
-            var updateRes = res.data;
-            setNewEmail(email);
-            console.log("Response from backend -updateemail "+updateRes);
-            if (updateRes.length>0){
+            var duplicate = res.data[0].duplicateemail;
+           // res.data
+            console.log("Response from backend -updateemail "+duplicate);
+            if (duplicate>0){
                 alert("Email is already being used - "+email+"\nPlease use a different email.");
             } else {
                 alert("You have changed your email successfully");
+                setNewEmail(email);
             }
             
          

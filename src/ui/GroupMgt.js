@@ -96,27 +96,35 @@ function GroupMgt(){
 
              const res = await Axios.post('http://localhost:8080/creategroup', 
             {groupname:""+groupname+""});
-            
-            alert("Create groupname response "+ res);
+            //const email = res.data.email;
+            console.log("Create group response"+ res.data.groupcount);
+
+            if (res.data.groupcount!=0){
+                alert ("Group "+ groupname + " already exist - please choose another name");
+            }
+           
            
          } catch (e){
             console.error("Create groupname error - "+e.message);
         }
-        console.log("res " +res)
+        //console.log("res " +res)
     }
     const handUpdateGroup = async(e) =>{
 
 
             alert("Updating "+username+ " to group "+assigngroup)
 
-            // check for duplicates
+            
         try {
-//{username:""+username+ "",password:""+password+""}
+
             const res = await Axios.post('http://localhost:8080/groupassign', 
            {groupname:""+assigngroup+"",username:""+username+""});
+          
+           console.log("Create group assignment response - duplicate member"+ res.data.duplicate_member);
            
-           console.log("Create group assignment response"+ res);
+          if (res.data.duplicate_member!=0){
             alert("Username "+username+" is already in "+assigngroup);
+          }
         } catch (e){
            console.error("Create groupname error - "+e.message);
        }

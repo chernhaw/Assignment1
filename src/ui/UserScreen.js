@@ -81,15 +81,15 @@ function UserScreen(){
             
             var showErr = false;
             var errMsg = "";
-            console.log("UserScreen - "+duplicateResult.indexOf("username"));
+            console.log("UserScreen - "+duplicateResult.indexOf("name"));
             console.log("UserScreen - "+duplicateResult.indexOf("email"));
-            if (duplicateResult.indexOf("username")>0){
+            if (duplicateResult.indexOf("name")>-1){
                 showErr=true;
                 errMsg = "Username " +username+ " already taken up - please use another\n"
             }
-            if (duplicateResult.indexOf("email")>0){
+            if (duplicateResult.indexOf("email")>-1){
                 showErr=true;
-                errMsg = "Email " +email+ " already taken up - please use another\n"
+                errMsg = errMsg+"Email " +email+ " already taken up - please use another\n"
             }
 
             if (showErr){
