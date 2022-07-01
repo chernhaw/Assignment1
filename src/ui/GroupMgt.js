@@ -97,8 +97,8 @@ function GroupMgt(){
              const res = await Axios.post('http://localhost:8080/creategroup', 
             {groupname:""+groupname+""});
             
-            console.log("Create groupname response "+ res);
- 
+            alert("Create groupname response "+ res);
+           
          } catch (e){
             console.error("Create groupname error - "+e.message);
         }
@@ -106,13 +106,17 @@ function GroupMgt(){
     }
     const handUpdateGroup = async(e) =>{
 
+
+            alert("Updating "+username+ " to group "+assigngroup)
+
+            // check for duplicates
         try {
 //{username:""+username+ "",password:""+password+""}
             const res = await Axios.post('http://localhost:8080/groupassign', 
            {groupname:""+assigngroup+"",username:""+username+""});
            
            console.log("Create group assignment response"+ res);
-
+            alert("Username "+username+" is already in "+assigngroup);
         } catch (e){
            console.error("Create groupname error - "+e.message);
        }
