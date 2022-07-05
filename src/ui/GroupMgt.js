@@ -11,6 +11,7 @@ function GroupMgt(){
 
     const [ username, setUsername] = useState('');
     const [ groupname, setGroupname] = useState('');
+    const [ groupdesc, setGroupdesc] = useState('');
     const [ assigngroup, setAssignGroup] = useState('');
     const [ querygroup, setQueryGroup] = useState('');
     const [ groupmembersresult, setGroupMembersResult] = useState('');
@@ -42,6 +43,10 @@ function GroupMgt(){
         
     }
 
+    const handleGroupDecsChange = (event) =>{
+        setGroupdesc(event.target.value);
+        
+    }
     const handleGroupAssign=(event)=>{
         setAssignGroup(event.target.value);
 
@@ -74,12 +79,7 @@ function GroupMgt(){
 
             const res = await Axios.post('http://localhost:8080/groupremove', 
             {groupname:""+unassigngroup+"",username:""+unassignmember+""});
-            // {groupname:""+querygroup+""});
-           
 
-          //  {groupname:""+assigngroup+"",username:""+username+""});
-
-           
             console.log("Query group response "+ res.data);
             
            const size = res.data.length;
@@ -115,9 +115,6 @@ function GroupMgt(){
         
         navigate('../main')
     }
-
-   
-
 
     const handQueryGroup = async(e) =>{
         e.preventDefault();
@@ -156,8 +153,9 @@ function GroupMgt(){
 
         try {
 
-             const res = await Axios.post('http://localhost:8080/creategroup', 
-            {groupname:""+groupname+""});
+             const res = await Axios.post('http://localhost:8080/creategroup',
+             {groupname:""+groupname+""}); 
+         //   {groupname:""+groupname+"", groupdesc:""+groupdesc+""});
             //const email = res.data.email;
             console.log("Create group response"+ res.data.groupcount);
 
@@ -172,16 +170,44 @@ function GroupMgt(){
         //console.log("res " +res)
     }
     const handUpdateGroup = async(e) =>{
-
-
+        var assignUser = true;
+        var assignGp = true;
             alert("Updating "+username+ " to group "+assigngroup)
+        // check if username exist
+        try{
+            const res = await Axios.post('http://localhost:8080/userexist', 
+            {username:""+username+""});
+            console.log("Create group response"+ res.data.usercount);
+          //  alert("user count " +res.data.usercount)
+          
+            if (res.data.usercount==0){
+                alert("Cannot assign user to group "+assigngroup +" user "+username+" does not exist")
+                assignUser=false
+            }
+        } catch (e){
+            console.error("Create groupname error - "+e.message);
+        }
 
-            
+        try{
+            const res = await Axios.post('http://localhost:8080/groupexist', 
+            {groupname:""+assigngroup+""});
+           // console.log("Group" +assignGp+ " exist " +res.data.usercount);
+
+          
+            if (res.data.groupcount==0){
+                alert("Cannot assign user to group "+assigngroup +" group "+assigngroup+" does not exist")
+                assignGp=false
+            }
+        } catch (e){
+            console.error("Create groupname error - "+e.message);
+        }
+
+        
+
+        if (assignUser && assignGp){
         try {
-
             const res = await Axios.post('http://localhost:8080/groupassign', 
            {groupname:""+assigngroup+"",username:""+username+""});
-          
            console.log("Create group assignment response - duplicate member"+ res.data.duplicate_member);
            
           if (res.data.duplicate_member!=0){
@@ -190,7 +216,7 @@ function GroupMgt(){
         } catch (e){
            console.error("Create groupname error - "+e.message);
        }
-      
+    }
 
        ///
         
@@ -200,8 +226,6 @@ function GroupMgt(){
         <header className='Header'> <h1>Welcome {logged} </h1>
         <button onClick={goMain}>Main Menu</button>
         <button onClick={LogOutUser}>Logout {logged}</button>
-        
-         
         </header>
         <div>
         <h1>Group Management </h1> 
@@ -228,7 +252,7 @@ function GroupMgt(){
             <label>New Group Name:</label><br/>
             <input type="text" value={groupname} required onChange={(e)=>{handleGroupNameChange(e)}}/>
             <br/>
-            <br/>
+           
             <input type="submit" value="Create Group"/>
             
         </form>
