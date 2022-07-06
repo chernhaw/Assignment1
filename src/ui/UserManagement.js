@@ -1,6 +1,4 @@
-
 import {useEffect,useState} from 'react';
-import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
@@ -119,9 +117,6 @@ function UserManagement(){
             const res = await Axios.post('http://localhost:8080/activate', {username:""+usernameusermgt+ "",active:""+isActive+""})
             var updateRes = res.data;
             console.log("Response from backend -updateemail "+updateRes);
-           
-            
-            
          
     } catch (e){
             console.error("UserProfileScreen email there was an error"+e.error);

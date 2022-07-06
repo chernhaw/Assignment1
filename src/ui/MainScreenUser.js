@@ -41,11 +41,11 @@ function MainScreenUser(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} {loggedEmail} <button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
+        <header className='Header'> <h1>Welcome {logged} {loggedEmail}  <button onClick ={goProfile}>Change Password and/or email </button><button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
     <div className='Login'>
-    <h1>Main Screen - User </h1>
+    <h1>Kanban stuff -- to do </h1>
     <br/>
-    <button onClick ={goProfile}>Change Password and/or email </button>
+   
     <br/>
     
     </div>
