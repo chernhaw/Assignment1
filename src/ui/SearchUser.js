@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react';
 import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import {commonHeader} from "./common/CommonHeader";
+import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 function SearchUser(){
@@ -122,8 +122,8 @@ function SearchUser(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={LogOutUser}>Logout {logged}</button>
-        <button onClick={goMain}>Main Menu</button> </header>
+        <h3><Button onClick={LogOutUser}>Logout {logged}</Button>
+        <Button onClick={goMain}>Previous Screen</Button></h3> </header>
     <div className='Login'>
     <h2>User Management - Search By Username</h2>
     <div>

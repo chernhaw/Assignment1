@@ -1,5 +1,6 @@
 import {useEffect,useState} from 'react';
 import { useNavigate } from "react-router-dom";
+import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 function MainScreenUser(){
@@ -41,7 +42,8 @@ function MainScreenUser(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} {loggedEmail}  <button onClick ={goProfile}>Change Password and/or email </button><button onClick={LogOutUser}>Logout {logged}</button></h1> </header>
+        <header className='Header'> <h1>Welcome {logged} {loggedEmail}</h1> 
+        <h2> <Button onClick ={goProfile}>Change {logged} Password/email </Button><Button  onClick={LogOutUser}>Logout {logged}</Button></h2> </header>
     <div className='Login'>
     <h1>Kanban stuff -- to do </h1>
     <br/>

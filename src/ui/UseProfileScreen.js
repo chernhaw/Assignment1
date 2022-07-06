@@ -3,6 +3,7 @@ import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
 import MainScreen from './MainScreen';
+import Button from '@mui/material/Button';
 
 function UserProfileScreen(){
     
@@ -120,14 +121,19 @@ function UserProfileScreen(){
 
     return (
         <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={goMain}>Main Menu</button>
-        <button onClick={LogOutUser}>Logout {logged}</button>
+        <header className='Header'> 
+        <h1>Welcome {logged} {profileEmail}</h1>
+
+
+        <h2> 
         
+        <Button onClick={goMain}>Previous Screen</Button>
+        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        </h2>
          
         </header>
         <div>
-        <h2>User Management-Profile Management</h2>
+        <h1>User Management-Profile Management</h1>
              <h2>Username : {logged} </h2>
              
         </div>

@@ -1,5 +1,6 @@
 import {useEffect,useState} from 'react';
 import Axios from 'axios';
+import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
 function GroupMgt(){
@@ -223,9 +224,12 @@ function GroupMgt(){
     }
     return (
         <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={goMain}>Main Menu</button>
-        <button onClick={LogOutUser}>Logout {logged}</button>
+        <header className='Header'> 
+        <h1>Welcome {logged} </h1>
+            <h3>
+        <Button onClick={goMain}>Previous Page</Button>
+        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        </h3>
         </header>
         <div>
         <h1>Group Management </h1> 

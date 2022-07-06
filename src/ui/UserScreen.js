@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
+import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 function UserScreen(){
@@ -144,10 +144,14 @@ function UserScreen(){
     };
     return (
 
+    
+
     <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={LogOutUser}>Logout {logged}</button>
-        <button onClick={goMain}>Main Menu</button> </header>
+        <header className='Header'> <h1>Welcome {logged}  </h1>
+        <h3>
+        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        <Button onClick={goMain}>Previous Screen</Button> 
+        </h3></header>
     <div className='Login'>
     <h1>New User Creation</h1>
     <form onSubmit={(e)=>{handSubmit(e)}}>
