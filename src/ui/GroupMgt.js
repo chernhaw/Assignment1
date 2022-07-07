@@ -18,7 +18,12 @@ function GroupMgt(){
     const [ groupmembersresult, setGroupMembersResult] = useState('');
     const [ unassignmember, setUnassignMember ] = useState('');
     const [ unassigngroup, setUnassignGroup ] = useState('');
+    const [ isAdmin, setisAdmin] = useState(false);
+    const [ roleusername, setRoleUsername ] = useState();
+    const [ rolegroupname, setRolegroupname] = useState();
    
+    const [ roleresult, setRoleresult] = useState();
+
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
@@ -68,6 +73,33 @@ function GroupMgt(){
         
     }
 
+
+    const checkGroupAdminHandler = async(e) =>{
+        console.log("Group admin");
+        if (isAdmin=='Y'){
+           
+            setisAdmin('N')
+        } else {
+            setisAdmin('Y')
+        }
+        console.log("Group Admin right : "+isAdmin)
+    }
+
+    const handleUserRolesQueryChange = async(e) =>{
+        setRoleUsername(e.target.value);
+   
+    } 
+
+    const handleGroupRolesQueryChange = async(e) =>{
+        setRolegroupname(e.target.value);
+    }
+
+    const handGroupAdmin = async(e) =>{
+
+        alert( "Updating  "+username+" to admin status" )
+        console.log(" "+ unassigngroup +" "+unassignmember)
+    }
+    
     const handUpdateGroupUnassign=async(e) =>{
         e.preventDefault();
         var groupmembers = "";
@@ -147,9 +179,34 @@ function GroupMgt(){
      //  alert(data)
        //setMembers(usersFound)
     }
+
+    const handUserRolesQuery = async(e)=>{
+        e.preventDefault();
+        
+        try {
+
+            const res = await Axios.post('http://localhost:8080/grouprole',
+            {groupname:""+rolegroupname+"", username:""+roleusername+""}); 
+        //   {groupname:""+groupname+"", groupdesc:""+groupdesc+""});
+           //const email = res.data.email;
+           try {
+           
+            setRoleresult("User "+roleusername+" in group "+rolegroupname+" has role of "+res.data[0].group_role)
+
+            } catch (e){
+                setRoleresult("Cannot find role for user "+roleusername+" in "+rolegroupname)
+            }
+         
+
+          
+          
+          
+        } catch (e){
+           console.error("Check user group  error - "+e.message);
+       }
+    }
     const handCreateGroup = async(e)=>{
         e.preventDefault();
-        var res;
         alert ("You are created "+groupname);
 
         try {
@@ -263,6 +320,16 @@ function GroupMgt(){
 
         </div>
         <br/>
+        <h3>Check User Group Roles</h3>
+        <form onSubmit={(e)=>{handUserRolesQuery(e)}}>
+        <label>Username:</label><br/>
+        <input type="text" value={roleusername} required onChange={(e)=>{handleUserRolesQueryChange(e)}}/>
+        <br/>
+        <label>Groupname:</label><br/>
+        <input type="text" value={rolegroupname} required onChange={(e)=>{handleGroupRolesQueryChange(e)}}/>
+        <input type="submit" value="Query User Role"/><br/>
+        <label>{roleresult}</label>
+        </form>
         <div >
         <form onSubmit={(e)=>{handUpdateGroup(e)}}>
         <h3>Assign Group</h3>
@@ -273,11 +340,13 @@ function GroupMgt(){
             <label>Username :</label>
             <input type="text" value={username} required onChange={(e)=>{handleUserNameChange(e)}}/>
             <br/>
-            
+           
             <input type="submit" value="Update Group"/>
             
         </form>
+        
         </div>
+        
 
 
 

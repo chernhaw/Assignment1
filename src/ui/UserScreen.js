@@ -72,7 +72,7 @@ function UserScreen(){
         }
        
         try {
-            alert("New user creation \n You have submitted "+username+" "+password+" "+email);
+            alert("New user creation \n You have submitted "+username+"  "+email);
             const res = await Axios.post('http://localhost:8080/newuser', 
             {username:""+username+ "",password:""+password+"", email:""+email+"", admin:""+isAdmin+", active:Y"});
             console.log("UserScreen - new user creation started ");
@@ -168,7 +168,7 @@ function UserScreen(){
             <br />
             <br />
             <label>Email: </label>
-            <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
+            <input type="email" value={email} onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
             <br/>
             <label htmlFor="checkbox">Check if this user is an admin user</label>
