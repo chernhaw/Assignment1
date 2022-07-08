@@ -38,7 +38,7 @@ function LoginForm(){
             console.log("login validation result : active: "+validation.active+" password:"+validation.repass);
             
             if (validation.active=='N'){
-             //   alert("Your account "+username+ " is not active - please check with your admin")
+                alert("You have entered an invalid username or password");
                 console.log("account "+username+ " is not active")
             } else
 
@@ -48,10 +48,9 @@ function LoginForm(){
 
                console.log("Query email for login user");
                // alert("You have submitted "+username+" "+password);
-               
-        
+             
                     const res = await Axios.post('http://localhost:8080/email', 
-                    {username:""+username+""});
+                    {username:""+username+"", groupname:""});
                     
                     const email = res.data.email;
                     console.log("email for user "+email);
@@ -60,12 +59,23 @@ function LoginForm(){
                console.log("Query admin for login user");
                // alert("You have submitted "+username+" "+password);
                
-        
-                    const resadmin = await Axios.post('http://localhost:8080/admin', 
+
+              
+              
+                    const resadmin = await Axios.post('http://localhost:8080/checkgroup', 
                     {username:""+username+""});
+                  //  const validation = resadmin.data;
+                    const admin = resadmin.data[0].admin;
+                    alert("admin for user "+admin);
+
+                     /*
+
+                const res = await Axios.post('http://localhost:8080/email', 
+                    {username:""+username+"", groupname:""});
                     
-                    const admin = resadmin.data.admin;
-                    console.log("admin for user "+admin);
+                    const email = res.data.email;
+                    console.log("email for user "+email);
+               */
                     
                /////////////////////////////////
                 window.localStorage.setItem("email", email);
@@ -76,10 +86,12 @@ function LoginForm(){
 
                 console.log("user "+ username +" validation :"+validation.repass)
 
+
+
                // if (validation.repass==='true'){
                     //alert("Validation for password "+validation.repass)
               //  }
-                if (admin==='Y' && validation.active==='Y' && validation.repass==='true'){
+                if (admin!=0 && validation.active==='Y' && validation.repass==='true'){
                     console.log("login - admin");
                     navigate('../main');
                 } else if (validation.active==='Y' && validation.repass==='true'){
@@ -96,7 +108,7 @@ function LoginForm(){
             
 
     } catch (e){
-            console.error("Login function - there was an error "+e.message);
+           alert("Login function - there was an error "+e.message);
         }
         
 

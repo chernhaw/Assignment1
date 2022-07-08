@@ -27,7 +27,7 @@ function SearchUser(){
         if (logged==null){
          navigate('../login')   
         }
-        if (admin!='Y'){
+        if (admin===0){
             navigate('../login')   
            }
     },[])

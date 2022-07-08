@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import './LoginForm.css';
+import Axios from 'axios';
 
 function MainScreen(){
 
@@ -25,11 +26,44 @@ function MainScreen(){
         if (logged==null){
          navigate('../login')   
         }
-        if (admin!='Y'){
+        if (admin===0){
             navigate('../login')   
            }
     },[])
 
+    const grouplist = async(e) =>{
+      
+        
+        //  window.localStorage.setItem("groupquery", querygroup);
+          var groupnames ="";
+          try {
+             
+             
+              const res = await Axios.post('http://localhost:8080/listgroup', 
+              {groupname:""+groupnames+""});
+             
+              console.log("Query group response "+ res.data);
+              
+             const size = res.data.length;
+             
+          
+             for ( var i=0; i<size; i++){
+               groupnames = groupnames+res.data[i].groupname + " \n"
+              
+             }
+  
+             
+  
+             window.localStorage.setItem("group", groupnames);
+             
+            
+          } catch (e){
+             console.error("Query group error - "+e.message);
+  
+         }
+         
+       
+      }
    
     const goProfile = () =>{
         
@@ -48,7 +82,12 @@ function MainScreen(){
     }
 
     const goGroup = () =>{
+        grouplist();
+        
+       // window.localStorage.setItem("group", group);
+       
         navigate('../groupmgt')
+       
     }
     return (
 
