@@ -9,6 +9,7 @@ function MainScreen(){
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var loggedEmail = window.localStorage.getItem("email");
+    var admin = window.localStorage.getItem("admin")
     console.log(logged);
    
     const LogOutUser = () =>{
@@ -24,6 +25,9 @@ function MainScreen(){
         if (logged==null){
          navigate('../login')   
         }
+        if (admin!='Y'){
+            navigate('../login')   
+           }
     },[])
 
    

@@ -38,7 +38,8 @@ function LoginForm(){
             console.log("login validation result : active: "+validation.active+" password:"+validation.repass);
             
             if (validation.active=='N'){
-                alert("Your account "+username+ " is not active - please check with your admin")
+             //   alert("Your account "+username+ " is not active - please check with your admin")
+                console.log("account "+username+ " is not active")
             } else
 
             if (validation.active=='Y'){

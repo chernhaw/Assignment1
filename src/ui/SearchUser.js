@@ -11,7 +11,9 @@ function SearchUser(){
     const [ email, setEmail] = useState('');
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
-    console.log(logged);
+    var admin = window.localStorage.getItem("admin");
+    console.log("Logged" +logged);
+    console.log("Admin" +admin);
    
     const LogOutUser = () =>{
         alert("You are logged out");
@@ -25,6 +27,9 @@ function SearchUser(){
         if (logged==null){
          navigate('../login')   
         }
+        if (admin!='Y'){
+            navigate('../login')   
+           }
     },[])
 
 

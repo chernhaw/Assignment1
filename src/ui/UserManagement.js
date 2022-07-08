@@ -20,6 +20,7 @@ function UserManagement(){
    
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
+    var admin = window.localStorage.getItem("admin");
     var emailusermgt = window.localStorage.getItem("emailusermgt");
  //   setNewEmail(emailusermgt);
     var usernameusermgt = window.localStorage.getItem('usernameusermgt');
@@ -42,6 +43,10 @@ function UserManagement(){
         if (logged==null){
          navigate('../login')   
         }
+
+        if (admin!='Y'){
+            navigate('../login')   
+           }
     },[])
 
    
@@ -207,7 +212,7 @@ function UserManagement(){
                
                 
                 <button  onClick={(e)=>{checkAdminHandler(e)}}>Add or Remove admin</button>
-               <br/>
+               
                <input type="submit" value="Confirm update user admin status"/>
            </form>
         </div>

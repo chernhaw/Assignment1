@@ -13,7 +13,9 @@ function UserScreen(){
     const [ email, setEmail] = useState('');
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
-    console.log(logged);
+    var admin = window.localStorage.getItem("admin");
+    console.log("logged user " +logged);
+    console.log("admin user "+ admin);
    
     const LogOutUser = () =>{
         alert("You are logged out");
@@ -26,9 +28,14 @@ function UserScreen(){
     }
 
     useEffect(() => {
+        
         if (logged==null){
          navigate('../login')   
         }
+
+        if (admin=='N'){
+            navigate('../login')   
+           }
     },[])
 
     const handlePassChange = (event) =>{
@@ -49,14 +56,15 @@ function UserScreen(){
         
     }
 
-    const checkHandler =()=>{
+    const checkAdminHandler =()=>{
         console.log("Checkbox clicked");
-        if (isAdmin){
-            setisAdmin(false)
+        if (isAdmin=='Y'){
+           
+            setisAdmin('N')
         } else {
-            setisAdmin(true)
+            setisAdmin('Y')
         }
-    
+        console.log("Admin right : "+isAdmin)
     }
 
     const handSubmit=async(e)=>{
@@ -75,6 +83,7 @@ function UserScreen(){
             alert("New user creation \n You have submitted "+username+"  "+email);
             const res = await Axios.post('http://localhost:8080/newuser', 
             {username:""+username+ "",password:""+password+"", email:""+email+"", admin:""+isAdmin+", active:Y"});
+          //  alert("Email "+ email.length)
             console.log("UserScreen - new user creation started ");
             const duplicateResult = res.data;
             console.log("UserScreen - checking for duplicates "+duplicateResult);
@@ -87,9 +96,11 @@ function UserScreen(){
                 showErr=true;
                 errMsg = "Username " +username+ " already taken up - please use another\n"
             }
-            if (duplicateResult.indexOf("email")>-1){
+            if (email.length!==0){
+                 if (duplicateResult.indexOf("email")>-1){
                 showErr=true;
                 errMsg = errMsg+"Email " +email+ " already taken up - please use another\n"
+                }
             }
 
             if (showErr){
@@ -171,13 +182,11 @@ function UserScreen(){
             <input type="email" value={email} onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
             <br/>
-            <label htmlFor="checkbox">Check if this user is an admin user</label>
-            <input type="checkbox" 
-            id="checkbox" 
+            <label> Need admin right : {""+isAdmin+""}</label>
+               
+                
+               <button  onClick={(e)=>{checkAdminHandler(e)}}>Add or Remove admin</button>
             
-            checked={isAdmin} 
-            onChange ={checkHandler}
-            />
             <br/>
             <input type="submit" value="Create User"/>
         </form>

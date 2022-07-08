@@ -7,8 +7,10 @@ function GroupMgt(){
 
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
+    var admin = window.localStorage.getItem("admin");
    
     console.log(logged);
+    console.log("admin right " +admin);
 
     const [ username, setUsername] = useState('');
     const [ groupname, setGroupname] = useState('');
@@ -18,9 +20,43 @@ function GroupMgt(){
     const [ groupmembersresult, setGroupMembersResult] = useState('');
     const [ unassignmember, setUnassignMember ] = useState('');
     const [ unassigngroup, setUnassignGroup ] = useState('');
-    const [ isAdmin, setisAdmin] = useState(false);
+    const [ isAdmin, setisAdmin] = useState('N');
     const [ roleusername, setRoleUsername ] = useState();
     const [ rolegroupname, setRolegroupname] = useState();
+    const [ assignadmingroup, setAssignAdminGroup] = useState();
+    const [ adminUserName, setAdminUserName] = useState();
+    const [ removeAdmingroup, setRemoveAdminGroup] = useState();
+    const [ removeAdminUserName, setRemoveAdminUserName] = useState();
+
+
+    const handleAdminGpRemoveChange = (event) =>{
+        setRemoveAdminGroup(event.target.value);
+        console.log("Handle group query "+querygroup)
+        
+    }
+
+     const handleUserNameAdminRemoveChange = (event) =>{
+        setRemoveAdminUserName(event.target.value);
+        console.log("Handle group query "+querygroup)
+        
+    }
+    /*
+ <form onSubmit={(e)=>{handleAdminRemoveGroup(e)}}>
+        <h3>Remove Admin Role in Group</h3>
+            <label>Group Name:</label>
+            <input type="text" value={removeAdmingroup} required onChange={(e)=>{handleAdminGpRemoveChange(e)}}/>
+            <br/>
+            
+            <label>Username :</label>
+            <input type="text" value={removeAdminUserName} required onChange={(e)=>{handleUserNameAdminRemoveChange(e)}}/>
+            <br/>
+            
+            <input type="submit" value="Update Admin status"/>
+            
+        </form>
+
+
+    */
    
     const [ roleresult, setRoleresult] = useState();
 
@@ -36,7 +72,12 @@ function GroupMgt(){
         if (logged==null){
          navigate('../login')   
         }
+        if (admin!='Y'){
+            navigate('../login')   
+           }
     },[])
+
+   
 
     const handleGroupQueryChange = (event) =>{
         setQueryGroup(event.target.value);
@@ -49,10 +90,7 @@ function GroupMgt(){
         
     }
 
-    const handleGroupDecsChange = (event) =>{
-        setGroupdesc(event.target.value);
-        
-    }
+  
     const handleGroupAssign=(event)=>{
         setAssignGroup(event.target.value);
 
@@ -74,16 +112,7 @@ function GroupMgt(){
     }
 
 
-    const checkGroupAdminHandler = async(e) =>{
-        console.log("Group admin");
-        if (isAdmin=='Y'){
-           
-            setisAdmin('N')
-        } else {
-            setisAdmin('Y')
-        }
-        console.log("Group Admin right : "+isAdmin)
-    }
+   
 
     const handleUserRolesQueryChange = async(e) =>{
         setRoleUsername(e.target.value);
@@ -265,7 +294,8 @@ function GroupMgt(){
         if (assignUser && assignGp){
         try {
             const res = await Axios.post('http://localhost:8080/groupassign', 
-           {groupname:""+assigngroup+"",username:""+username+""});
+  
+           {groupname:""+assigngroup+"",username:""+username+"", role:""+isAdmin+""});
            console.log("Create group assignment response - duplicate member"+ res.data.duplicate_member);
            
           if (res.data.duplicate_member!=0){
@@ -279,6 +309,43 @@ function GroupMgt(){
        ///
         
     }
+
+    const handleAdminUpdateGroup=async(e)=>{
+        try {
+            const res = await Axios.post('http://localhost:8080/groupadminassign', 
+  
+           {groupname:""+assignadmingroup+"",username:""+adminUserName+""});
+           console.log("Assign admin to - user " +adminUserName + " in group "+assignadmingroup);
+           
+            
+        } catch (e){
+           console.error("Assign user as admin error - "+e.message);
+       }
+    }
+
+
+   
+
+    const handleAdminRemoveGroup=async(e)=>{
+        try {
+            const res = await Axios.post('http://localhost:8080/groupadminremove', 
+  
+           {groupname:""+removeAdmingroup+"",username:""+removeAdminUserName+""});
+           console.log("Remove admin to - user " +removeAdminUserName + " in group "+removeAdminUserName);
+           
+         
+        } catch (e){
+           console.error("error in removing user as admin - "+e.message);
+       }
+    }
+   
+    const handleAdminGroupChange=async(e) =>{
+        setAssignAdminGroup(e.target.value);
+    }
+    const handleUserNameAdminChange = async(e)=>{
+        setAdminUserName(e.target.value)
+    }
+    
     return (
         <div>
         <header className='Header'> 
@@ -331,6 +398,7 @@ function GroupMgt(){
         <label>{roleresult}</label>
         </form>
         <div >
+
         <form onSubmit={(e)=>{handUpdateGroup(e)}}>
         <h3>Assign Group</h3>
             <label>Group Name:</label>
@@ -341,13 +409,44 @@ function GroupMgt(){
             <input type="text" value={username} required onChange={(e)=>{handleUserNameChange(e)}}/>
             <br/>
            
+           
+            
             <input type="submit" value="Update Group"/>
             
         </form>
         
         </div>
+        <div>
+        <form onSubmit={(e)=>{handleAdminUpdateGroup(e)}}>
+        <h3>Assign Admin Role in Group</h3>
+            <label>Group Name:</label>
+            <input type="text" value={assignadmingroup} required onChange={(e)=>{handleAdminGroupChange(e)}}/>
+            <br/>
+            
+            <label>Username :</label>
+            <input type="text" value={adminUserName} required onChange={(e)=>{handleUserNameAdminChange(e)}}/>
+            <br/>
+            
+            <input type="submit" value="Update Admin status"/>
+            
+        </form>
+        </div>
+        <div>
+        <form onSubmit={(e)=>{handleAdminRemoveGroup(e)}}>
+        <h3>Remove Admin Role in Group</h3>
+            <label>Group Name:</label>
+            <input type="text" value={removeAdmingroup} required onChange={(e)=>{handleAdminGpRemoveChange(e)}}/>
+            <br/>
+            
+            <label>Username :</label>
+            <input type="text" value={removeAdminUserName} required onChange={(e)=>{handleUserNameAdminRemoveChange(e)}}/>
+            <br/>
+            
+            <input type="submit" value="Update Admin status"/>
+            
+        </form>
         
-
+        </div>
 
 
         <div >
