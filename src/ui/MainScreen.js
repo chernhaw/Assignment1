@@ -33,28 +33,68 @@ function MainScreen(){
 
     const grouplist = async(e) =>{
       
+    
+       
         
         //  window.localStorage.setItem("groupquery", querygroup);
           var groupnames ="";
-          try {
-             
-             
+          try {             
               const res = await Axios.post('http://localhost:8080/listgroup', 
               {groupname:""+groupnames+""});
              
               console.log("Query group response "+ res.data);
               
              const size = res.data.length;
-             
-          
              for ( var i=0; i<size; i++){
-               groupnames = groupnames+res.data[i].groupname + " \n"
+                if (i!=size-1){
+               groupnames = groupnames+" "+res.data[i].groupname + ","
+                } else {
+                    groupnames = groupnames+" "+res.data[i].groupname+""
+                }
               
              }
   
-             
+           //  alert(groupnames)
   
              window.localStorage.setItem("group", groupnames);
+             
+            
+          } catch (e){
+             console.error("Query group error - "+e.message);
+  
+         }
+         
+       
+      }
+
+
+      const userlist = async(e) =>{
+      
+    
+        
+        
+        //  window.localStorage.setItem("groupquery", querygroup);
+          var users ="";
+          try {             
+              const res = await Axios.post('http://localhost:8080/listusers');
+             
+              console.log("Query group response "+ res.data);
+              
+             const size = res.data.length;
+             for ( var i=0; i<size; i++){
+                console.log("User "+res.data[i].username)
+              //  alert ("User "+res.data[i].username)
+                if (i!=size-1){
+               users = users+" "+res.data[i].username + ","
+                } else {
+                    users = users+" "+res.data[i].username+""
+                }
+              
+             }
+  
+             alert(users)
+  
+             window.localStorage.setItem("users", users);
              
             
           } catch (e){
@@ -72,17 +112,19 @@ function MainScreen(){
 
     const goUser = () =>{
         
+        
         navigate('../user')
     }
 
     
     const goUserMgt = () =>{
-        
+        userlist();
         navigate('../usersearch')
     }
 
     const goGroup = () =>{
         grouplist();
+        userlist();
         
        // window.localStorage.setItem("group", group);
        

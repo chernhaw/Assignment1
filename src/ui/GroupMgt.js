@@ -2,16 +2,26 @@ import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import Select from 'react-select'
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import MenuItem from '@mui/material/MenuItem';
 function GroupMgt() {
 
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
-    var group = window.localStorage.getItem("group");
-    var groupnames = ''
+    var group = ""+ window.localStorage.getItem("group")+""
+    group = group.split(',')
+  //  alert ("group array "+group)
+    console.log("")
+    var groupnames=""
+   
+ //  alert("users array "+users)
+
+  //  var groupnames = ''
     console.log(logged);
     console.log("admin right " + admin);
+    
 
     const [username, setUsername] = useState('');
     const [groupname, setGroupname] = useState('');
@@ -22,6 +32,9 @@ function GroupMgt() {
 
     const [grouplistoption, setGroupListOption] = useState()
     const [userlistoption, setUserListOption] = useState()
+
+ //   setUserListOption(users)
+    const [assignusertogroup, setAssignUserToGroup] = useState();
 
     const [groupmembersresult, setGroupMembersResult] = useState();
     const [unassignmember, setUnassignMember] = useState('');
@@ -34,7 +47,10 @@ function GroupMgt() {
     const [removeAdmingroup, setRemoveAdminGroup] = useState();
     const [removeAdminUserName, setRemoveAdminUserName] = useState();
 
-
+    const handleAssignUserToGroup = (event) =>{
+        setAssignUserToGroup(event.target.value);
+    }
+   
     const handleAdminGpRemoveChange = (event) => {
         setRemoveAdminGroup(event.target.value);
         console.log("Handle group query " + querygroup)
@@ -88,16 +104,32 @@ function GroupMgt() {
         const res = await Axios.post('http://localhost:8080/listgroup',
             { groupname: "" + groupnames + "" });
 
-        console.log("Query group response " + res.data);
-        const data = res.data;
+        // console.log("Query group response " + res.data);
+         const data = res.data;
 
-        const options = data.map(d => ({
-            "value": d.value,
-            "label": d.label
-        }))
-        console.log(options)
+        // const options = data.map(d => ({
+        //     "value": d.value,
+        //     "label": d.label
+        // }))
+        // console.log(options)
 
-        setGroupListOption(options)
+        console.log("Query group response "+ res.data);
+              
+        const size = res.data.length;
+        for ( var i=0; i<size; i++){
+           if (i!=size-1){
+          groupnames = groupnames+" "+res.data[i].groupname + ","
+           } else {
+               groupnames = groupnames+" "+res.data[i].groupname+""
+           }
+         
+        }
+
+        
+
+        window.localStorage.setItem("group", groupnames);
+
+        setGroupListOption(groupnames)
 
 
         const resuser = await Axios.post('http://localhost:8080/listusers');
@@ -105,14 +137,19 @@ function GroupMgt() {
         console.log("Query group response " + resuser.data);
         const datauser = resuser.data;
 
-        const useroptions = datauser.map(d => ({
-            "value": d.value,
-            "label": d.label
-            
-        }))
-        console.log(useroptions)
+       
+        for ( var i=0; i<size; i++){
+            if (i!=size-1){
+           userlistoption = userlistoption+" "+res.data[i].username + ","
+            } else {
+                userlistoption = userlistoption+" "+res.data[i].username+""
+            }
+          
+         }
+         userlistoption = userlistoption.split(',')
 
-        setUserListOption(useroptions)
+        setUserListOption(userlistoption)
+     //   alert(userlistoption)
 
 
         /*
@@ -164,6 +201,7 @@ function GroupMgt() {
 
 
     const handleGroupAssign = (event) => {
+        alert(event.target.value)
         setAssignGroup(event.target.value);
 
     }
@@ -257,7 +295,7 @@ function GroupMgt() {
         //  window.localStorage.setItem("groupquery", querygroup);
         var groupnames = "";
         try {
-            alert("group" + querygroup)
+          //  alert("group" + querygroup)
 
             const res = await Axios.post('http://localhost:8080/listgroup',
                 { groupname: "" + groupnames + "" });
@@ -513,28 +551,38 @@ function GroupMgt() {
                 <form>
                 < h3 >Assign to Group </h3>
                 <div><label>Select Group</label>
-                <Select options={grouplistoption} />
+                <Select
+       
+                  value={assigngroup}
+                onChange={handleGroupAssign}
+                    input={<OutlinedInput label="Group" />}
+          
+                 >
+                  {group.map((groupname) => (
+                <MenuItem
+                key={groupname}
+                value={groupname}  >
+              {groupname}
+            </MenuItem>
+            
+          ))}
+        </Select>
                 </div>
-                <div><label>Select User</label>
-                <Select options={userlistoption} />
+            <div><label>Select User</label>
+                <Select 
+                value ={assignusertogroup}
+                onChange = {handleAssignUserToGroup}
+                input={<OutlinedInput label="User to assign to group" />}
+          
+                 />
+
+               
+
+
                 </div>
                 </form>
 
-                <form>
-                    <h3>Assign Group</h3>
-                    <label>Group Name:</label>
-                    <input type="text" value={assigngroup} required onChange={(e) => { handleGroupAssign(e) }} />
-                    <br />
-
-                    <label>Username :</label>
-                    <input type="text" value={username} required onChange={(e) => { handleUserNameChange(e) }} />
-                    <br />
-
-
-
-                    <input type="submit" value="Update Group" />
-
-                </form>
+              
 
             </div>
             <div>
