@@ -122,26 +122,34 @@ function GroupMgt() {
 
     }, [])
 
+
     const handleGroupEdit = async (e) => {
 
-        alert ("Group selected for edit "+e.target.value)
+        var groupuserlist =[]
+        setGroupMembersResult([])
        
-        setGroupEdit(e.target.value)
+       setGroupEdit(e.target.value)
        
-
+       alert("Selected "+e.target.value+ " to view members")
        try {
       
-        console.log("Querying team member for group "+groupedit)
+        console.log("Querying team member for group "+e.target.value)
 
-        const res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
+        var res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
         console.log ("After rest call")
     
-        const data = res.data;
+      var data  = res.data
 
+         res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
+        console.log ("After rest call")
+    
+         data = res.data;
         console.log("groupedit : "+data)
 
+
        // setGroupMembersResult(res.data)
-        var groupuserlist =[]
+       
+       
        for (var i=0; i<res.data.length; i++){
         console.log(data[i].username)
         groupuserlist[i]=data[i].username
@@ -152,14 +160,8 @@ function GroupMgt() {
        // setGroupMembersResult(...groupmembersresult,  groupuserlist[i])
        }
 
-
-    //    for ( var i=0; i<groupuserlist.length; i++){
-    //     if (i!=groupuserlist.length){
-    //         groupuserlist = groupuserlist+" "+data[i].username + ","
-    //     } else {
-    //         groupuserlist = groupuserlist+" "+data[i].username+""
-    //     }
-    //setGroupMembersResult(groupuserlist)
+       
+  
 
     setGroupMembersResult(JSON.stringify(groupuserlist))
 
@@ -169,12 +171,21 @@ function GroupMgt() {
        
       
        } catch (e) {
+
+        setGroupMembersResult([])
         console.error("Query group error - " + e.message);
     }
     }
 
     
-    
+    const handleGroupToDelete = (event )=>{
+        alert ("Group selected "+event.target.value)
+        setUnassignGroup(event.target.value);
+    }
+    const handleDeleteUserToGroup = (event) =>{
+        alert ("User selected "+event.target.value)
+        setUnassignMember(event.target.value);
+    }
 
     
     const handleGroupAssign = (event )=>{
@@ -215,10 +226,7 @@ function GroupMgt() {
     //     setAssignGroup(event.target.value);
 
     // }
-    const handleUserNameChange = (event) => {
-        setUsername(event.target.value);
-
-    }
+    
 
     const handleGroupUnAssign = (event) => {
         console.log("group unassign " + event.target.value)
@@ -257,7 +265,7 @@ function GroupMgt() {
         try {
 
             alert("Removing from  group " + unassigngroup + " username " + unassignmember)
-            console.log(" " + unassigngroup + " " + unassignmember)
+            console.log(" " + unassigngroup  + " " + unassignmember  )
 
             const res = await Axios.post('http://localhost:8080/groupremove',
                 { groupname: "" + unassigngroup + "", username: "" + unassignmember + "" });
@@ -416,11 +424,11 @@ function GroupMgt() {
     const handUpdateGroup = async (e) => {
         var assignUser = true;
         var assignGp = true;
-        alert("Updating " + username + " to group " + assigngroup)
+        alert("Updating " + assignusertogroup + " to group " + assigngroup)
         // check if username exist
         try {
             const res = await Axios.post('http://localhost:8080/userexist',
-                { username: "" + username + "" });
+                { username: "" + assignusertogroup + "" });
             console.log("Create group response" + res.data.usercount);
             //  alert("user count " +res.data.usercount)
 
@@ -452,7 +460,7 @@ function GroupMgt() {
             try {
                 const res = await Axios.post('http://localhost:8080/groupassign',
 
-                    { groupname: "" + assigngroup + "", username: "" + username + "", role: "" + isAdmin + "" });
+                    { groupname: "" + assigngroup + "", username: "" + assignusertogroup + "", role: "" + isAdmin + "" });
                 console.log("Create group assignment response - duplicate member" + res.data.duplicate_member);
 
                 if (res.data.duplicate_member != 0) {
@@ -528,17 +536,16 @@ function GroupMgt() {
                     <input type="submit" value="Create Group" />
 
                 </form>
+
+
+
                 <form onSubmit={(e) => { handUpdateGroup(e) }}>
             <h4> Current Groups</h4>
 
             {grouplistoption}
             <div>
-            
-       
-      
-                
           
-                    <h4>View or Edit Group</h4>
+                    <h4>View Group Members</h4>
                     
                     <Select
                         value={groupedit}
@@ -584,7 +591,12 @@ function GroupMgt() {
            
            
                 < h3 >Assign to Group </h3>
+
+
+                
                 <div><label>Select Group</label>
+
+
                 <Select
        
                   value={assigngroup}
@@ -598,6 +610,7 @@ function GroupMgt() {
                 value={groupname}  >
               {groupname}
             </MenuItem>
+            
             
           ))}
         </Select>
@@ -621,10 +634,55 @@ function GroupMgt() {
 
                 </div>
                 {console.log(users)}
+
+                <input type="submit" value="Assign User" />
                 </form>
 
-              
+                
 
+            </div>
+            <div>
+                <form onSubmit={(e) => { handUpdateGroupUnassign(e) }}>
+
+                < h3 >Remove from Group </h3>
+                <div><label>Select Group</label>
+                <Select
+                        value={unassigngroup}
+                onChange={handleGroupToDelete}
+                        input={<OutlinedInput label="Group" />}
+                             >
+                        {group.map((groupname) => (
+                        <MenuItem
+                        key={groupname}
+                        value={groupname}  >
+                       {groupname}
+                        </MenuItem>
+ 
+                        ))}
+                    </Select>
+                    </div>
+
+                    <div><label>Select User</label>
+                    <Select 
+                value ={assignusertogroup}
+                onChange = {handleDeleteUserToGroup}
+                input={<OutlinedInput label="User to assign to group" />}>
+
+{userlistoption.map((user) => (
+                <MenuItem
+                key={user.username}
+                value={user.username}  >
+              {user.username}
+            </MenuItem>
+          
+          ))}
+               </Select>
+
+                    </div>
+                    <input type="submit" value="Unassign User" />
+                </form>
+               
+               
             </div>
             <div>
                 <form onSubmit={(e) => { handleAdminUpdateGroup(e) }}>
