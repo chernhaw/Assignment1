@@ -66,7 +66,7 @@ function LoginForm(){
                     {username:""+username+""});
                   //  const validation = resadmin.data;
                     const admin = resadmin.data[0].admin;
-                    alert("admin for user "+admin);
+                 //   alert("admin for user "+admin);
 
                      /*
 

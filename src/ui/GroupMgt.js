@@ -5,15 +5,22 @@ import { useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
+
+
+import ReactTable from "react-table";  
 function GroupMgt() {
 
+    
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
+    
+    var users =""+ window.localStorage.getItem("users")+""
+    users = users.split(',')
+   
     var group = ""+ window.localStorage.getItem("group")+""
     group = group.split(',')
-  //  alert ("group array "+group)
-    console.log("")
+    
     var groupnames=""
    
  //  alert("users array "+users)
@@ -27,16 +34,20 @@ function GroupMgt() {
     const [groupname, setGroupname] = useState('');
 
     const [assigngroup, setAssignGroup] = useState('');
-    const [querygroup, setQueryGroup] = useState('');
-    const [grouplistresult, setGroupListsResult] = useState('');
-
-    const [grouplistoption, setGroupListOption] = useState()
-    const [userlistoption, setUserListOption] = useState()
-
- //   setUserListOption(users)
     const [assignusertogroup, setAssignUserToGroup] = useState();
 
-    const [groupmembersresult, setGroupMembersResult] = useState();
+    const [querygroup, setQueryGroup] = useState('');
+    const [grouplistresult, setGroupListsResult] = useState('');
+    const [groupmembers, setGroupMembers] = useState([])
+ 
+    const [grouplistoption, setGroupListOption] = useState()
+    const [userlistoption, setUserListOption] = useState([])
+    const [groupedit, setGroupEdit] = useState('')
+
+ //   setUserListOption(users)
+    
+
+    const [groupmembersresult, setGroupMembersResult] = useState('');
     const [unassignmember, setUnassignMember] = useState('');
     const [unassigngroup, setUnassignGroup] = useState('');
     const [isAdmin, setisAdmin] = useState('N');
@@ -47,7 +58,131 @@ function GroupMgt() {
     const [removeAdmingroup, setRemoveAdminGroup] = useState();
     const [removeAdminUserName, setRemoveAdminUserName] = useState();
 
+
+   
+
+    const [roleresult, setRoleresult] = useState();
+
+    const LogOutUser = () => {
+        alert("You are logged out");
+        window.localStorage.removeItem("username");
+        window.localStorage.removeItem("email");
+        window.localStorage.removeItem("admin");
+        navigate('../login')
+    }
+
+    useEffect( () => {
+
+        if (logged == null) {
+            navigate('../login')
+        }
+        if (admin === 0) {
+            navigate('../login')
+        }
+
+
+
+         Axios.post('http://localhost:8080/listgroup',
+            { groupname: "" + groupnames + "" })
+            .then((res)=>{
+                const data = res.data;
+                
+  //  alert ("group array "+group)
+
+                console.log("Query group response "+ data);
+              
+                const size = data.length;
+                for ( var i=0; i<size; i++){
+                   if (i!=size-1){
+                  groupnames = groupnames+" "+data[i].groupname + ","
+                   } else {
+                       groupnames = groupnames+" "+data[i].groupname+""
+                   }
+                 
+                }
+
+                setGroupMembersResult('')
+
+            
+        
+                setGroupListOption(groupnames)
+
+            }).catch((err)=>{});
+//
+         
+
+
+
+
+    Axios.get('http://localhost:8080/listusers')
+    .then((response)=>{
+    const data = response.data;
+    setUserListOption(data);
+    }).catch((err)=>{});
+
+    }, [])
+
+    const handleGroupEdit = async (e) => {
+
+        alert ("Group selected for edit "+e.target.value)
+       
+        setGroupEdit(e.target.value)
+       
+
+       try {
+      
+        console.log("Querying team member for group "+groupedit)
+
+        const res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
+        console.log ("After rest call")
+    
+        const data = res.data;
+
+        console.log("groupedit : "+data)
+
+       // setGroupMembersResult(res.data)
+        var groupuserlist =[]
+       for (var i=0; i<res.data.length; i++){
+        console.log(data[i].username)
+        groupuserlist[i]=data[i].username
+       }
+
+       for (var i=0; i<groupuserlist.length; i++){
+         console.log(groupuserlist[i])
+       // setGroupMembersResult(...groupmembersresult,  groupuserlist[i])
+       }
+
+
+    //    for ( var i=0; i<groupuserlist.length; i++){
+    //     if (i!=groupuserlist.length){
+    //         groupuserlist = groupuserlist+" "+data[i].username + ","
+    //     } else {
+    //         groupuserlist = groupuserlist+" "+data[i].username+""
+    //     }
+    //setGroupMembersResult(groupuserlist)
+
+    setGroupMembersResult(JSON.stringify(groupuserlist))
+
+     
+       //setlist(...list, newItem);
+      
+       
+      
+       } catch (e) {
+        console.error("Query group error - " + e.message);
+    }
+    }
+
+    
+    
+
+    
+    const handleGroupAssign = (event )=>{
+        alert ("Group selected "+event.target.value)
+        setAssignGroup(event.target.value);
+    }
     const handleAssignUserToGroup = (event) =>{
+        alert ("User selected "+event.target.value)
         setAssignUserToGroup(event.target.value);
     }
    
@@ -62,131 +197,6 @@ function GroupMgt() {
         console.log("Handle group query " + querygroup)
 
     }
-    /*
-    https://stackoverflow.com/questions/52428879/objects-are-not-valid-as-a-react-child-if-you-meant-to-render-a-collection-of-c
- <form onSubmit={(e)=>{handleAdminRemoveGroup(e)}}>
-        <h3>Remove Admin Role in Group</h3>
-            <label>Group Name:</label>
-            <input type="text" value={removeAdmingroup} required onChange={(e)=>{handleAdminGpRemoveChange(e)}}/>
-            <br/>
-            
-            <label>Username :</label>
-            <input type="text" value={removeAdminUserName} required onChange={(e)=>{handleUserNameAdminRemoveChange(e)}}/>
-            <br/>
-            
-            <input type="submit" value="Update Admin status"/>
-            
-        </form>
-
-
-    */
-
-    const [roleresult, setRoleresult] = useState();
-
-    const LogOutUser = () => {
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        navigate('../login')
-    }
-
-    useEffect(async () => {
-
-        if (logged == null) {
-            navigate('../login')
-        }
-        if (admin === 0) {
-            navigate('../login')
-        }
-
-
-        const res = await Axios.post('http://localhost:8080/listgroup',
-            { groupname: "" + groupnames + "" });
-
-        // console.log("Query group response " + res.data);
-         const data = res.data;
-
-        // const options = data.map(d => ({
-        //     "value": d.value,
-        //     "label": d.label
-        // }))
-        // console.log(options)
-
-        console.log("Query group response "+ res.data);
-              
-        const size = res.data.length;
-        for ( var i=0; i<size; i++){
-           if (i!=size-1){
-          groupnames = groupnames+" "+res.data[i].groupname + ","
-           } else {
-               groupnames = groupnames+" "+res.data[i].groupname+""
-           }
-         
-        }
-
-        
-
-        window.localStorage.setItem("group", groupnames);
-
-        setGroupListOption(groupnames)
-
-
-        const resuser = await Axios.post('http://localhost:8080/listusers');
-
-        console.log("Query group response " + resuser.data);
-        const datauser = resuser.data;
-
-       
-        for ( var i=0; i<size; i++){
-            if (i!=size-1){
-           userlistoption = userlistoption+" "+res.data[i].username + ","
-            } else {
-                userlistoption = userlistoption+" "+res.data[i].username+""
-            }
-          
-         }
-         userlistoption = userlistoption.split(',')
-
-        setUserListOption(userlistoption)
-     //   alert(userlistoption)
-
-
-        /*
- async getOptions(){
-     const res = await axios.get('https://jsonplaceholder.typicode.com/users')
-     const data = res.data
- 
-     const options = data.map(d => ({
-       "value" : d.id,
-       "label" : d.name
-     }))
-     this.setState({selectOptions: options})
-   }
-        */
-
-        // setGroupListsRef(groupnames)
-        //     groupnames = "["
-
-        //    for ( var i=0; i<size; i++){
-        //     if (i!=size-1){
-        //      groupnames =  groupname +res.data[i] +","
-        //     } else {
-        //         groupnames = groupname +res.data[i]
-        //     }
-        //    }
-
-        // groupnames = groupnames +"]"
-
-
-        //  console.log("groupObj  "+ groupObj)
-
-        //    setGroupListsRef(groupnames)
-        //    console.log(JSON.stringify(grouplistref))
-
-    }, [])
-
-
 
     const handleGroupQueryChange = (event) => {
         setQueryGroup(event.target.value);
@@ -200,11 +210,11 @@ function GroupMgt() {
     }
 
 
-    const handleGroupAssign = (event) => {
-        alert(event.target.value)
-        setAssignGroup(event.target.value);
+    // const handleGroupUnAssign = (event) => {
+    //     alert(event.target.value)
+    //     setAssignGroup(event.target.value);
 
-    }
+    // }
     const handleUserNameChange = (event) => {
         setUsername(event.target.value);
 
@@ -257,32 +267,19 @@ function GroupMgt() {
             const size = res.data.length;
 
 
-            for (var i = 0; i < size; i++) {
+            for (var i = 0; i < size-1; i++) {
                 groupmembers = groupmembers + res.data[i].username + " \n"
 
             }
 
-            setGroupMembersResult(groupmembers);
+           
+           
 
         } catch (e) {
             console.error("Query group error - " + e.message);
         }
     }
-    /*
- const [ unassignmenber, setUnassignMember ] = useState('');
-    const [ unassigngroup, setUnassignGroup ] = useState('');
-
-    */
-
-    // handUpdateGroupUnassign(e)}}>
-    //     <h3>Remove Group Assignment </h3>
-    //         <label>Group Name:</label>
-    //         <input type="text" value={assigngroup} required onChange={(e)=>{handleGroupUnAssign(e)}}/>
-
-    //         <br/>
-    //         <label>Username :</label>
-    //         <input type="text" value={username} required onChange={(e)=>{handleUserNameChangeUnassign(e)}}/>
-
+ 
     const goMain = () => {
 
         navigate('../main')
@@ -326,36 +323,32 @@ function GroupMgt() {
 
     const handQueryGroup = async (e) => {
         e.preventDefault();
-
-        //  window.localStorage.setItem("groupquery", querygroup);
-
         try {
-            alert("group" + querygroup)
-            var groupnames = "";
-            const res = await Axios.post('http://localhost:8080/listgroup',
+            
+            alert(querygroup)
+            var groupmembers = "";
+            alert("handQueryGroup")
+            const res = await Axios.post('http://localhost:8080/groupmembers',
                 { groupname: "" + querygroup + "" });
-
-            console.log("Query group response " + res.data);
-
+           
             const size = res.data.length;
-
-
-            for (var i = 0; i < size; i++) {
-                groupnames = groupnames + res.data[i].groupname + " \n"
+            
+            for (var i = 0; i < size-1; i++) {
+                groupmembers = groupmembers + res.data[i].username + " \n"
 
             }
 
-            setGroupListsResult(groupnames);
-
-            alert(groupnames);
+          
+        
+           
 
         } catch (e) {
             console.error("Query group error - " + e.message);
         }
 
 
-        //  alert(data)
-        //setMembers(usersFound)
+        
+        
     }
 
     const handUserRolesQuery = async (e) => {
@@ -522,22 +515,9 @@ function GroupMgt() {
             <div>
                 <h1>Group Management </h1>
             </div>
-
             <div>
-                <form onSubmit={(e) => { handQueryGroup(e) }}>
-                    <h3>Search Group</h3>
-                    <label>Group Name:</label><br />
-                    <input type="text" value={querygroup} onChange={(e) => { handleGroupQueryChange(e) }} />
-                    <br />
-
-                    <input type="submit" value="Query Group" />
-
-                </form>
-                <div>
-                    {grouplistresult}
-                </div>
+           
             </div>
-
             <div >
                 <form onSubmit={(e) => { handCreateGroup(e) }}>
                     <h3>Create new Group</h3>
@@ -548,7 +528,61 @@ function GroupMgt() {
                     <input type="submit" value="Create Group" />
 
                 </form>
-                <form>
+                <form onSubmit={(e) => { handUpdateGroup(e) }}>
+            <h4> Current Groups</h4>
+
+            {grouplistoption}
+            <div>
+            
+       
+      
+                
+          
+                    <h4>View or Edit Group</h4>
+                    
+                    <Select
+                        value={groupedit}
+                        onChange={handleGroupEdit}
+                        input={<OutlinedInput label="Group" />}
+                             >
+                        {group.map((groupname) => (
+                        <MenuItem
+                        key={groupname}
+                        value={groupname}  >
+                       {groupname}
+                        </MenuItem>
+ 
+                        ))}
+                    </Select>
+                    
+                    <div>
+                        {groupmembersresult}
+                        
+                        <div>
+                            <div>
+                           
+        
+    
+                            </div>
+                            <div>
+                            <ul>
+       
+      </ul>
+                            </div>
+                        <ul>
+       
+      </ul>
+
+                        </div>
+                        <ul>
+       
+      </ul>
+                    </div>
+                 
+                
+            </div>
+           
+           
                 < h3 >Assign to Group </h3>
                 <div><label>Select Group</label>
                 <Select
@@ -572,14 +606,21 @@ function GroupMgt() {
                 <Select 
                 value ={assignusertogroup}
                 onChange = {handleAssignUserToGroup}
-                input={<OutlinedInput label="User to assign to group" />}
-          
-                 />
+                input={<OutlinedInput label="User to assign to group" />}>
 
-               
+{userlistoption.map((user) => (
+                <MenuItem
+                key={user.username}
+                value={user.username}  >
+              {user.username}
+            </MenuItem>
+          
+          ))}
+               </Select>
 
 
                 </div>
+                {console.log(users)}
                 </form>
 
               

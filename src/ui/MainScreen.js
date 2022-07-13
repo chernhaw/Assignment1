@@ -31,7 +31,7 @@ function MainScreen(){
            }
     },[])
 
-    const grouplist = async(e) =>{
+    const grouplist = () =>{
       
     
        
@@ -39,7 +39,7 @@ function MainScreen(){
         //  window.localStorage.setItem("groupquery", querygroup);
           var groupnames ="";
           try {             
-              const res = await Axios.post('http://localhost:8080/listgroup', 
+              const res =  Axios.post('http://localhost:8080/listgroup', 
               {groupname:""+groupnames+""});
              
               console.log("Query group response "+ res.data);
@@ -68,7 +68,7 @@ function MainScreen(){
       }
 
 
-      const userlist = async(e) =>{
+      const userlist = (e) =>{
       
     
         
@@ -76,14 +76,14 @@ function MainScreen(){
         //  window.localStorage.setItem("groupquery", querygroup);
           var users ="";
           try {             
-              const res = await Axios.post('http://localhost:8080/listusers');
+              const res =  Axios.post('http://localhost:8080/listusers');
              
               console.log("Query group response "+ res.data);
               
              const size = res.data.length;
              for ( var i=0; i<size; i++){
                 console.log("User "+res.data[i].username)
-              //  alert ("User "+res.data[i].username)
+              // alert ("User "+res.data[i].username)
                 if (i!=size-1){
                users = users+" "+res.data[i].username + ","
                 } else {
@@ -124,9 +124,9 @@ function MainScreen(){
 
     const goGroup = () =>{
         grouplist();
-        userlist();
+       userlist();
         
-       // window.localStorage.setItem("group", group);
+       
        
         navigate('../groupmgt')
        
