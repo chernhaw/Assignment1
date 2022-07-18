@@ -41,13 +41,17 @@ function GroupMgt() {
     const [querygroup, setQueryGroup] = useState('');
     const [grouplistresult, setGroupListsResult] = useState('');
     const [groupmembers, setGroupMembers] = useState([])
+
+    const [groupedit, setGroupEdit] = useState('');
  
     const [grouplistoption, setGroupListOption] = useState([])
 
     const [showgroups, setShowGroups] = useState('');
 
+    const [showusers, setShowUsers] = useState('');
+
     const [userlistoption, setUserListOption] = useState([])
-    const [groupedit, setGroupEdit] = useState('')
+    const [checkgroup, setCheckGroup] = useState('')
     
 
     const [groupmembersresult, setGroupMembersResult] = useState('');
@@ -89,6 +93,8 @@ function GroupMgt() {
             navigate('../login')
         }
 
+        setGroupMembersResult('')
+
 
 // put back asyc after groupnames show undefined
     const res = await Axios.post('http://localhost:8080/listgroup',
@@ -116,54 +122,77 @@ function GroupMgt() {
     console.log("current grouplist array members : " +currgrouplistArr) 
     setGroupListOption(currgrouplistArr)
 
-    Axios.get('http://localhost:8080/listusers')
+
+    
+    var curruserlistArr=[]
+    var curruserlist=""
+    Axios.post('http://localhost:8080/listusers')
     .then((response)=>{
-    const data = response.data;
-    setUserListOption(data);
+    const datauser = response.data;
+    console.log("Query user response "+ response.data);
+          
+    const size = response.data.length;
+ 
+    //curgrouplist = "{"
+     for ( var i=0; i<size; i++){
+       
+        curruserlist = curruserlist+ " " +response.data[i].username
+        console.log("current user list "+ curruserlist)
+     }
+      
+
+     curruserlistArr=curruserlist.split(" ")
+    // currgrouplistArr.pop()
+     console.log("current grouplist array members : " +curruserlistArr) 
+     setShowUsers(curruserlist)
+
+   setUserListOption(datauser);
     }).catch((err)=>{});
 
     }, [])
 
 
+   // <input type="text" value={checkgroup} required onChange={(e)=>{handleCheckGroupChange(e)}}/>
+    const handleCheckGroupChange=(e)=>{
+        setCheckGroup(e.target.value)
+    }
     
     const handleGroupEdit = async (e) => {
 
+        alert ("Group selected for edit "+e.target.value)
+       
+        setGroupEdit(e.target.value)
+       
 
-        var groupuserlist =[]
-        setGroupMembersResult([])
-       
-       setGroupEdit(e.target.value)
-       
-       alert("Selected "+e.target.value+ " to view members")
        try {
       
-        console.log("Querying team member for group "+e.target.value)
+        console.log("Querying team member for group "+groupedit)
 
-        var res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
+        const res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
         console.log ("After rest call")
     
-      var data  = res.data
+        const data = res.data;
 
-         res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" });
-        console.log ("After rest call")
-    
-         data = res.data;
         console.log("groupedit : "+data)
-       
-       
+
+       // setGroupMembersResult(res.data)
+        var groupuserlist =''
        for (var i=0; i<res.data.length; i++){
         console.log(data[i].username)
-        groupuserlist[i]=data[i].username
+        groupuserlist=groupuserlist+ data[i].username+ " "
        }
 
-       for (var i=0; i<groupuserlist.length; i++){
-         console.log(groupuserlist[i])
-       // setGroupMembersResult(...groupmembersresult,  groupuserlist[i])
-       }
 
        
-  
 
+    //    for ( var i=0; i<groupuserlist.length; i++){
+    //     if (i!=groupuserlist.length){
+    //         groupuserlist = groupuserlist+" "+data[i].username + ","
+    //     } else {
+    //         groupuserlist = groupuserlist+" "+data[i].username+""
+    //     }
+    //setGroupMembersResult(groupuserlist)
+       console.log(groupuserlist)
     setGroupMembersResult(groupuserlist)
 
      
@@ -172,8 +201,6 @@ function GroupMgt() {
        
       
        } catch (e) {
-
-        setGroupMembersResult([])
         console.error("Query group error - " + e.message);
     }
     }
@@ -535,12 +562,13 @@ function GroupMgt() {
             <h4> Current Groups</h4>
 
             {showgroups}
+
+            <h4> Current users</h4>
+            {showusers}
             <div>
 
-           
-                <h4>View Group Members</h4>
-                    
-                    <Select
+           <h4> Check user in group</h4>
+            <Select
                         value={groupedit}
                         onChange={handleGroupEdit}
                         input={<OutlinedInput label="Group" />}
