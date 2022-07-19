@@ -119,12 +119,12 @@ function MainScreen(){
     
     const goUserMgt = () =>{
         userlist();
-        navigate('../usersearch')
+        navigate('../profile')
     }
 
     const goGroup = () =>{
-        grouplist();
-       userlist();
+     //   grouplist();
+     //  userlist();
         
        
        

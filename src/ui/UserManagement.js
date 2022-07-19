@@ -4,8 +4,23 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
 
+
 function UserManagement(){
 
+
+    useEffect( async() => {
+
+       
+    
+    
+    
+    Axios.get('http://localhost:8080/listusers')
+    .then((response)=>{
+    const data = response.data;
+    setUserListOption(data);
+    }).catch((err)=>{});
+    
+    }, [])
     var initialActivate = window.localStorage.getItem("userActiveStatus");
     var initialAdmin = window.localStorage.getItem("userAdmin");
     const [ password, setPassword] = useState('');
@@ -13,7 +28,7 @@ function UserManagement(){
     const [ isAdmin, setisAdmin] = useState(initialAdmin);
     const [ isActive, setActive] = useState(initialActivate);
 //    const [ isActive, setActive] = useState(''+window.localStorage.getItem("userActiveStatus")+'');
-      
+    
     const [ newEmail, setNewEmail ] = useState('')
     
    
@@ -24,6 +39,7 @@ function UserManagement(){
     var emailusermgt = window.localStorage.getItem("emailusermgt");
  //   setNewEmail(emailusermgt);
     var usernameusermgt = window.localStorage.getItem('usernameusermgt');
+    const [userlistoption, setUserListOption] = useState([])
 
     console.log("logged "+logged);
     console.log("Admin is "+isAdmin)
