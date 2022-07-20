@@ -63,11 +63,22 @@ function LoginForm(){
               
               
                     const resadmin = await Axios.post('http://localhost:8080/checkgroup', 
-                    {username:""+username+""});
+                    {username:""+username+"", admin:"admin"});
                   //  const validation = resadmin.data;
-                    const admin = resadmin.data[0].admin;
-                 //   alert("admin for user "+admin);
 
+
+                    var admin = resadmin.data[0].admin;
+
+                    try {
+                        console.log("Admin count "+admin)
+                       
+                    } catch (e){
+                        console.log(e.message)
+                        admin = 0
+                    }
+
+                 //   alert("admin for user "+admin);
+                    console.log("user "+username+" admin "+admin)
                      /*
 
                 const res = await Axios.post('http://localhost:8080/email', 

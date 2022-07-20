@@ -28,7 +28,7 @@ function MainScreenUser(){
    
     const goProfile = () =>{
         
-        navigate('../profile')
+        navigate('../profileuser')
     }
 
     const goUser = () =>{

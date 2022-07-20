@@ -114,6 +114,7 @@ function UserScreen(){
   
     const goMain = () =>{
         
+     //   alert("go to main")
         navigate('../main')
     }
 
@@ -182,12 +183,7 @@ function UserScreen(){
             <input type="email" value={email} onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
             <br/>
-            <label> Need admin right : {""+isAdmin+""}</label>
-               
-                
-               <button  onClick={(e)=>{checkAdminHandler(e)}}>Add or Remove admin</button>
-            
-            <br/>
+           
             <input type="submit" value="Create User"/>
         </form>
     </div>

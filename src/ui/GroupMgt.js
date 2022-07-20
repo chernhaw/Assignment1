@@ -35,9 +35,6 @@ function GroupMgt() {
     const [username, setUsername] = useState('');
     const [groupname, setGroupname] = useState('');
 
-    const [assigngroup, setAssignGroup] = useState('');
-    const [assignusertogroup, setAssignUserToGroup] = useState();
-
     const [querygroup, setQueryGroup] = useState('');
     const [grouplistresult, setGroupListsResult] = useState('');
     const [groupmembers, setGroupMembers] = useState([])
@@ -151,12 +148,7 @@ function GroupMgt() {
 
     }, [])
 
-
-   // <input type="text" value={checkgroup} required onChange={(e)=>{handleCheckGroupChange(e)}}/>
-    const handleCheckGroupChange=(e)=>{
-        setCheckGroup(e.target.value)
-    }
-    
+ 
 
     const handleGroupEditChange=(e)=>{
 
@@ -188,44 +180,9 @@ function GroupMgt() {
     }
 
     
-    const handleGroupToDelete = (event )=>{
-        alert ("Group selected "+event.target.value)
-        setUnassignGroup(event.target.value);
-    }
-    const handleDeleteUserToGroup = (event) =>{
-        alert ("User selected "+event.target.value)
-        setUnassignMember(event.target.value);
-    }
-
-    
-    const handleGroupAssign = (event )=>{
-        alert ("Group selected "+event.target.value)
-        setAssignGroup(event.target.value);
-    }
-    const handleAssignUserToGroup = (event) =>{
-        alert ("User selected "+event.target.value)
-        setAssignUserToGroup(event.target.value);
-    }
    
-    const handleAdminGpRemoveChange = (event) => {
-        setRemoveAdminGroup(event.target.value);
-        console.log("Handle group query " + querygroup)
-
-    }
-
-    const handleUserNameAdminRemoveChange = (event) => {
-        setRemoveAdminUserName(event.target.value);
-        console.log("Handle group query " + querygroup)
-
-    }
-
    
 
-
-    const handleGroupQueryChange = (event) => {
-        setQueryGroup(event.target.value);
-
-    }
 
     const handleGroupNameChange = (event) => {
         setGroupname(event.target.value);
@@ -233,41 +190,9 @@ function GroupMgt() {
     }
 
 
-    // const handleGroupUnAssign = (event) => {
-    //     alert(event.target.value)
-    //     setAssignGroup(event.target.value);
-
-    // }
+   
     
 
-    const handleGroupUnAssign = (event) => {
-        console.log("group unassign " + event.target.value)
-        setUnassignGroup(event.target.value);
-
-    }
-
-    const handleUserNameChangeUnassign = (event) => {
-        setUnassignMember(event.target.value);
-
-    }
-
-
-
-
-    const handleUserRolesQueryChange = async (e) => {
-        setRoleUsername(e.target.value);
-
-    }
-
-    const handleGroupRolesQueryChange = async (e) => {
-        setRolegroupname(e.target.value);
-    }
-
-    const handGroupAdmin = async (e) => {
-
-        alert("Updating  " + username + " to admin status")
-        console.log(" " + unassigngroup + " " + unassignmember)
-    }
 
     
  
