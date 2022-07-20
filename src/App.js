@@ -15,6 +15,7 @@ import SearchUser from './ui/SearchUser';
 import GroupAdmin from './ui/GroupAdmin';
 import GroupEdit from './ui/GroupEdit';
 import UserDisableScreen from './ui/UserDisableScreen';
+import UserNonAdminScreen from './ui/UserNonAdminScreen';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route exact path="/groupmgt" element={<GroupMgt />} />
           <Route exact path="/groupadmin" element={<GroupAdmin />}/>
           <Route exact path="/profile" element={<UserProfileScreen />} />
+          <Route exact path="/profileuser" element={<UserNonAdminScreen />} />
           <Route exact path="/mainuser" element={<MainUser />}/>
           <Route exact path="/usersearch" element={<SearchUser />} />
           <Route exact path="/disableuser" element={<UserDisableScreen />} />
