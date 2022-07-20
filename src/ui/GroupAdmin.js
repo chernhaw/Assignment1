@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 function GroupAdmin() {
 
 
+
     var adminnames=""
     const [usernameAdmin, setusernameAdmin] = useState('');
 
@@ -32,8 +33,8 @@ function GroupAdmin() {
         window.localStorage.removeItem("querygroup");
         navigate('../login')
     }
-    useEffect(async () => {
-
+    useEffect(() => {
+        window.location.reload(true)
        
         if (logged == null) {
 

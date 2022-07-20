@@ -13,7 +13,7 @@ function GroupEdit() {
     var groupmembers = ''
     var userlist = ''
 
-   
+    var blnReload = false
     const [showusernames, setShowUsernames] = useState('')
     const [group, setGroup] = useState('')
     const [showuserlist, setShowUserlist]= useState('')
@@ -36,9 +36,11 @@ function GroupEdit() {
         window.localStorage.removeItem("group");
         navigate('../login')
     }
-    useEffect(async () => {
-
+    useEffect( () => {
+        var groupedit=''
        
+       
+        //window.location.reload(blnReload)
         if (logged == null) {
 
            
@@ -74,30 +76,46 @@ function GroupEdit() {
 
         
     
-        var groupedit = window.localStorage.getItem("group");
+        var groupedit = ""
+
+       
         
-        const res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" })
-        .then((response)=>{
-        const data = response.data;
-          
-        const size = data.length;
-        console.log("data " +data)
-       // console.log("data" +data[0].username)
-        
-        console.log("data size " +size)
-        
-         for ( var i=0; i<size; i++){
-            groupmembers = groupmembers+" "+data[i].username + " "
-                console.log("group membernames[" +i+ "]" + groupmembers)
-            }
-        console.log("final groupmember names " +groupmembers)
-       setShowUsernames(groupmembers);
-       setGroup(groupedit)
-        }).catch((err)=>{});
+
+        groupedit = window.localStorage.getItem("group");
+       
+       
+        getGroupMembers(groupedit)
+       
+        setTimeout(refresh, 20000000)
     
         }, [])
 
        
+        function refresh(){
+            
+            window.location.reload()
+        }
+        const getGroupMembers =async()=>{
+            var groupedit = window.localStorage.getItem("group");
+            const res = await Axios.post('http://localhost:8080/groupedit', { groupname: "" + groupedit + "" })
+            .then((response)=>{
+            const data = response.data;
+              
+            const size = data.length;
+            console.log("data " +data)
+           // console.log("data" +data[0].username)
+            
+            console.log("data size " +size)
+            
+             for ( var i=0; i<size; i++){
+                groupmembers = groupmembers+" "+data[i].username + " "
+                    console.log("group membernames[" +i+ "]" + groupmembers)
+                }
+            console.log("final groupmember names " +groupmembers)
+           setShowUsernames(groupmembers);
+           setGroup(groupedit)
+            }).catch((err)=>{});
+        }
    
         const goMain = () => {
 

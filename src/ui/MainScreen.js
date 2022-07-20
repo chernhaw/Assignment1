@@ -28,51 +28,20 @@ function MainScreen(){
         }
         if (admin===0){
             navigate('../login')   
-           }
+        }
+
+        setTimeout(refresh, 20000000)
+
     },[])
 
-    const grouplist = () =>{
-      
-    
-       
-        
-        //  window.localStorage.setItem("groupquery", querygroup);
-          var groupnames ="";
-          try {             
-              const res =  Axios.post('http://localhost:8080/listgroup', 
-              {groupname:""+groupnames+""});
-             
-              console.log("Query group response "+ res.data);
-              
-             const size = res.data.length;
-             for ( var i=0; i<size; i++){
-                if (i!=size-1){
-               groupnames = groupnames+" "+res.data[i].groupname + ","
-                } else {
-                    groupnames = groupnames+" "+res.data[i].groupname+""
-                }
-              
-             }
-  
-           //  alert(groupnames)
-  
-             window.localStorage.setItem("group", groupnames);
-             
+    function refresh(){
             
-          } catch (e){
-             console.error("Query group error - "+e.message);
-  
-         }
-         
-       
-      }
+        window.location.reload()
+    }
 
-
+    
       const userlist = (e) =>{
       
-    
-        
-        
         //  window.localStorage.setItem("groupquery", querygroup);
           var users ="";
           try {             
