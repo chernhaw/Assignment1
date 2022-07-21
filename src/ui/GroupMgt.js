@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+
 
 function GroupMgt() {
 
@@ -108,7 +105,7 @@ function GroupMgt() {
    //curgrouplist = "{"
     for ( var i=0; i<size; i++){
       
-             curgrouplist = curgrouplist+ " " +res.data[i].groupname
+             curgrouplist = curgrouplist + res.data[i].groupname + " "
     }
      
 
@@ -346,8 +343,22 @@ function GroupMgt() {
             <div>
                 <h1>Group Management </h1>
             </div>
-            <div>
-           
+            <h3>Current Groups</h3>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)", }}>
+            {showgroups.split(" ").map((group)=>{
+                
+                    return(
+                        
+                        
+                        
+                        <div key={group} style={{border:"1px solid #000"}}>
+                            {group}
+                        </div>
+                        
+                    )
+                
+               
+            })}
             </div>
             <div >
                 <form onSubmit={(e) => { handCreateGroup(e) }}>
@@ -360,11 +371,8 @@ function GroupMgt() {
 
                 </form>
 
-            <h4> Current Groups</h4>
-
-            {showgroups}
-
-            
+       
+           
             <div>
 
             <h4>Edit Groupmember</h4>

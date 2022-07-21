@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
+import { resolvePath, useNavigate } from "react-router-dom";
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
-
+import './App.css';
 function GroupEdit() {
 
 
@@ -14,7 +14,7 @@ function GroupEdit() {
     var userlist = ''
 
     var blnReload = false
-    const [showusernames, setShowUsernames] = useState('')
+    const [showgroupmembers, setShowGroupmembers] = useState('')
     const [group, setGroup] = useState('')
     const [showuserlist, setShowUserlist]= useState('')
     const [unassignmember, setUnassignMember]=useState('')
@@ -63,7 +63,7 @@ function GroupEdit() {
           console.log("data size " +size)
           
            for ( var i=0; i<size; i++){
-            userlist = userlist+" "+data[i].username + " "
+            userlist = userlist+data[i].username + " "
                   console.log("listuser [" +i+ "]" + userlist)
               }
           console.log("final list user" +userlist)
@@ -108,11 +108,16 @@ function GroupEdit() {
             console.log("data size " +size)
             
              for ( var i=0; i<size; i++){
-                groupmembers = groupmembers+" "+data[i].username + " "
+                groupmembers = groupmembers+data[i].username+" " 
                     console.log("group membernames[" +i+ "]" + groupmembers)
                 }
+
+                if (size==0){
+                    groupmembers ="No members in "+group
+                    }
+                console.log("final groupmember names " +groupmembers)
             console.log("final groupmember names " +groupmembers)
-           setShowUsernames(groupmembers);
+           setShowGroupmembers(groupmembers);
            setGroup(groupedit)
             }).catch((err)=>{});
         }
@@ -134,26 +139,7 @@ function GroupEdit() {
         }
 
 
-        const refreshGroup=async()=>{
-
-            const resupdate =  Axios.post('http://localhost:8080/groupedit', { groupname: "" + group + "" })
-                
-            const data = resupdate.data;
-              
-            const size = data.length;
-            console.log("data" +data)
-           // console.log("data" +data[0].username)
-            
-            console.log("data size " +size)
-            
-             for ( var i=0; i<size; i++){
-                groupmembers = groupmembers+" "+data[i].username + " "
-                    console.log("group membernames[" +i+ "]" + groupmembers)
-                }
-            console.log("final groupmember names " +groupmembers)
-           setShowUsernames(groupmembers);
-            
-        }
+       
 
 
         const handleUserNameChangeAssign = (event) => {
@@ -170,7 +156,7 @@ function GroupEdit() {
         const handleAssignGroup = async (e) => {
 
 
-            var groupmembers = ""+showusernames+""
+            var groupmembers = ""+showgroupmembers+""
             var usertoassign = ""+assignmember+""
             var userlist = ""+showuserlist+""
 
@@ -282,11 +268,46 @@ function GroupEdit() {
                 </h3>
             </header>
 
-           <h3>Current user in {group}</h3>
-           {showusernames} 
-           <h3>List of users</h3> 
-           {showuserlist}
-           <h3></h3>
+           <h3>Current members in {group}</h3>
+          
+
+          
+           <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)", }}>
+            {showgroupmembers.split(" ").map((group)=>{
+                
+                    return(
+                        
+                        
+                        
+                        <div key={group} style={{border:"1px solid #000"}}>
+                            {group}
+                        </div>
+                        
+                    )
+                
+               
+            })}
+            </div>    
+          
+           <h3>List of users that can be added to group ( if they are not members )</h3> 
+          
+           <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)", }}>
+            {showuserlist.split(" ").map((group)=>{
+                
+                    return(
+                        
+                        
+                        
+                        <div key={group} style={{border:"1px solid #000"}}>
+                            {group}
+                        </div>
+                        
+                    )
+                
+               
+            })}
+            </div>    
+
            <form onSubmit={(e) => { handleAssignGroup(e) }}>
                    
                     <label>Assign user:</label><br />

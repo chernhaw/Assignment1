@@ -65,7 +65,9 @@ function GroupAdmin() {
        // console.log("data" +data[0].username)
         
         console.log("data size " +size)
-
+        if (size===0){
+            adminnames = "No admin users found"
+        }
         
          for ( var i=0; i<size; i++){
               
