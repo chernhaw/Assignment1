@@ -77,11 +77,13 @@ function GroupMgt() {
     }
 
     const setAdmin = () => {
-       
+        var refresh="true"
+        window.localStorage.setItem("refresh", refresh )
         navigate('../groupadmin')
     }
 
     useEffect( async() => {
+        setTimeout(refresh, 500)
 
         if (logged == null) {
             navigate('../login')
@@ -148,8 +150,25 @@ function GroupMgt() {
 
     }, [])
 
- 
+    function refresh(){
+        var refresh = window.localStorage.getItem("refresh")
+       // alert("Refresh "+refresh)
+        if (refresh=='true'){
+        window.location.reload()
+        window.localStorage.removeItem("refresh")
+        }
 
+    }
+
+    function refresh(){
+        var refresh = window.localStorage.getItem("refresh")
+       // alert("Refresh "+refresh)
+        if (refresh=='true'){
+        window.location.reload()
+        window.localStorage.removeItem("refresh")
+        }
+
+    }
     const handleGroupEditChange=(e)=>{
 
         setGroupEdit(e.target.value)
@@ -158,15 +177,16 @@ function GroupMgt() {
 
         alert ("Group selected for edit "+groupedit)
        
-     //   setGroupEdit(e.target.value)
+        // setGroupEdit(e.target.value)
        
 
        try {
       
         console.log("Querying team member for group "+groupedit)
        
-
+       var refresh = "true"
       window.localStorage.setItem("group", groupedit);
+      window.localStorage.setItem("refresh", refresh )
 
       navigate('../groupedit')
      
@@ -197,6 +217,8 @@ function GroupMgt() {
     
  
     const goMain = () => {
+        var refresh="true"
+        window.localStorage.setItem("refresh", refresh )
 
         navigate('../main')
     }
@@ -274,7 +296,7 @@ function GroupMgt() {
     
     const handCreateGroup = async (e) => {
         e.preventDefault();
-        alert(" current grouplist " + group)
+     //   alert(" current grouplist " + group)
         alert("You are created " + groupname);
 
         try {
@@ -295,7 +317,7 @@ function GroupMgt() {
                 }).catch((err)=>{});
                  
             }
-
+            window.location.reload()
 
         } catch (e) {
             console.error("Create groupname error - " + e.message);
@@ -307,25 +329,9 @@ function GroupMgt() {
 
 
 
-    const handleAdminRemoveGroup = async (e) => {
-        try {
-            const res = await Axios.post('http://localhost:8080/groupadminremove',
+    
 
-                { groupname: "" + removeAdmingroup + "", username: "" + removeAdminUserName + "" });
-            console.log("Remove admin to - user " + removeAdminUserName + " in group " + removeAdminUserName);
-
-
-        } catch (e) {
-            console.error("error in removing user as admin - " + e.message);
-        }
-    }
-
-    const handleAdminGroupChange = async (e) => {
-        setAssignAdminGroup(e.target.value);
-    }
-    const handleUserNameAdminChange = async (e) => {
-        setAdminUserName(e.target.value)
-    }
+   
 
     return (
         <div>

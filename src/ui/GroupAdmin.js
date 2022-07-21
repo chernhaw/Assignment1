@@ -34,7 +34,7 @@ function GroupAdmin() {
         navigate('../login')
     }
     useEffect(() => {
-        window.location.reload(true)
+        setTimeout(refresh, 500)
        
         if (logged == null) {
 
@@ -87,16 +87,25 @@ function GroupAdmin() {
        
    
         const goMain = () => {
+            var refresh="true"
+            window.localStorage.setItem("refresh", refresh )
 
             navigate('../main')
         }
  
 
+
+        function refresh(){
+            var refresh = window.localStorage.getItem("refresh")
+           // alert("Refresh "+refresh)
+            if (refresh=='true'){
+            window.location.reload()
+            window.localStorage.removeItem("refresh")
+            }
+
+        }
         const goGroup = () =>{
-            //   grouplist();
-            //  userlist();
-               
-              
+
               
                navigate('../groupmgt')
               

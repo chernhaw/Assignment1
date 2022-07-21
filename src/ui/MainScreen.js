@@ -30,13 +30,18 @@ function MainScreen(){
             navigate('../login')   
         }
 
-        setTimeout(refresh, 20000000)
+        setTimeout(refresh, 500)
 
     },[])
 
     function refresh(){
-            
+        var refresh = window.localStorage.getItem("refresh")
+       // alert("Refresh "+refresh)
+        if (refresh=='true'){
         window.location.reload()
+        window.localStorage.removeItem("refresh")
+        }
+
     }
 
     

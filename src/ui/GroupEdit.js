@@ -19,9 +19,6 @@ function GroupEdit() {
     const [showuserlist, setShowUserlist]= useState('')
     const [unassignmember, setUnassignMember]=useState('')
     const [assignmember, setAssignMember]=useState('')
-
-    
-    
     
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
@@ -37,6 +34,8 @@ function GroupEdit() {
         navigate('../login')
     }
     useEffect( () => {
+
+        setTimeout(refresh, 500)
         var groupedit=''
        
        
@@ -72,28 +71,29 @@ function GroupEdit() {
           setShowUserlist(userlist)
 
         }).catch((err)=>{});
-
-
         
     
         var groupedit = ""
 
-       
-        
 
         groupedit = window.localStorage.getItem("group");
        
        
         getGroupMembers(groupedit)
        
-        setTimeout(refresh, 20000000)
+       
     
         }, [])
 
        
         function refresh(){
-            
+            var refresh = window.localStorage.getItem("refresh")
+           // alert("Refresh "+refresh)
+            if (refresh=='true'){
             window.location.reload()
+            window.localStorage.removeItem("refresh")
+            }
+
         }
         const getGroupMembers =async()=>{
             var groupedit = window.localStorage.getItem("group");
@@ -256,7 +256,7 @@ function GroupEdit() {
                     
                 console.log("Query group response " + res.data);
     
-                refreshGroup()
+                window.location.reload()
                 
             } catch (e) {
                 console.error("Query group error - " + e.message);
