@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import './LoginForm.css';
 import Axios from 'axios';
+import LogOut from './Logout';
 
 function MainScreen(){
-
     
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
@@ -13,22 +13,22 @@ function MainScreen(){
     var admin = window.localStorage.getItem("admin")
     console.log(logged);
    
-    const LogOutUser = () =>{
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
+    // const LogOutUser = () =>{
+    //     alert("You are logged out");
+    //     window.localStorage.removeItem("username");
+    //     window.localStorage.removeItem("email");
+    //     window.localStorage.removeItem("admin");
                
-        navigate('../login')
-    }
+    //     navigate('../login')
+    // }
 
     useEffect(() => {
-        if (logged==null){
-         navigate('../login')   
-        }
-        if (admin===0){
-            navigate('../login')   
-        }
+        // if (logged==null){
+        //  navigate('../login')   
+        // }
+        // if (admin===0){
+        //     navigate('../login')   
+        // }
 
         setTimeout(refresh, 500)
 
@@ -99,9 +99,6 @@ function MainScreen(){
     const goGroup = () =>{
      //   grouplist();
      //  userlist();
-        
-       
-       
         navigate('../groupmgt')
        
     }
@@ -109,7 +106,8 @@ function MainScreen(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} {loggedEmail} </h1>
-       <h2> <Button onClick={LogOutUser}>Logout {logged}</Button> 
+      <LogOut />
+         <h2>
         <Button onClick ={goProfile}>Change {logged} Password/Email </Button>
         </h2>
         <div>

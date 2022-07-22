@@ -2,6 +2,7 @@ import {useEffect,useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import './LoginForm.css';
+import LogOut from './Logout';
 
 function MainScreenUser(){
 
@@ -31,19 +32,14 @@ function MainScreenUser(){
         navigate('../profileuser')
     }
 
-    const goUser = () =>{
-        
-        navigate('../user')
-    }
-
-    const goGroup = () =>{
-        navigate('../group')
-    }
+   
     return (
 
     <div>
         <header className='Header'> <h1>Welcome {logged} {loggedEmail}</h1> 
-        <h2> <Button onClick ={goProfile}>Change {logged} Password/email </Button><Button  onClick={LogOutUser}>Logout {logged}</Button></h2> </header>
+        <h2> <Button onClick ={goProfile}>Change {logged} Password/email </Button>
+        </h2> 
+        <LogOut /></header>
     <div className='Login'>
     <h1>Kanban stuff -- to do </h1>
     <br/>

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import LogOut from './Logout';
 
 
 function GroupMgt() {
@@ -60,18 +61,14 @@ function GroupMgt() {
     const [removeAdminUserName, setRemoveAdminUserName] = useState();
 
 
-   
-
-    const [roleresult, setRoleresult] = useState();
-
-    const LogOutUser = () => {
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        window.localStorage.removeItem("group");
-        navigate('../login')
-    }
+    // const LogOutUser = () => {
+    //     alert("You are logged out");
+    //     window.localStorage.removeItem("username");
+    //     window.localStorage.removeItem("email");
+    //     window.localStorage.removeItem("admin");
+    //     window.localStorage.removeItem("group");
+    //     navigate('../login')
+    // }
 
     const setAdmin = () => {
         var refresh="true"
@@ -89,10 +86,9 @@ function GroupMgt() {
             navigate('../login')
         }
 
-        setGroupMembersResult('')
+    
 
-
-// put back asyc after groupnames show undefined
+async function getAllGroup(){
     const res = await Axios.post('http://localhost:8080/listgroup',
         { groupname: null });
 
@@ -112,11 +108,13 @@ function GroupMgt() {
 
     console.log("Current group list" +curgrouplist)
     setShowGroups(curgrouplist)
+}
 
-    currgrouplistArr=curgrouplist.split(" ")
-    currgrouplistArr.pop()
-    console.log("current grouplist array members : " +currgrouplistArr) 
-    setGroupListOption(currgrouplistArr)
+getAllGroup()
+   // currgrouplistArr=curgrouplist.split(" ")
+   // currgrouplistArr.pop()
+   // console.log("current grouplist array members : " +currgrouplistArr) 
+    //setGroupListOption(currgrouplistArr)
 
 
     
@@ -207,11 +205,7 @@ function GroupMgt() {
     }
 
 
-   
-    
 
-
-    
  
     const goMain = () => {
         var refresh="true"
@@ -260,37 +254,8 @@ function GroupMgt() {
         return groupnames
     }
 
-    const handQueryGroup = async (e) => {
-        e.preventDefault();
-        try {
-            
-            alert(querygroup)
-            var groupmembers = "";
-            alert("handQueryGroup")
-            const res = await Axios.post('http://localhost:8080/groupmembers',
-                { groupname: "" + querygroup + "" });
-           
-            const size = res.data.length;
-            
-            for (var i = 0; i < size-1; i++) {
-                groupmembers = groupmembers + res.data[i].username + " \n"
+   
 
-            }
-
-          
-        
-           
-
-        } catch (e) {
-            console.error("Query group error - " + e.message);
-        }
-
-
-        
-        
-    }
-
-    
     const handCreateGroup = async (e) => {
         e.preventDefault();
      //   alert(" current grouplist " + group)
@@ -323,20 +288,13 @@ function GroupMgt() {
     }
     
 
-
-
-
-    
-
-   
-
     return (
         <div>
             <header className='Header'>
-                <h1>Welcome {logged} </h1>
+                <h1>Welcome <strong>{logged}</strong> </h1>
                 <h3>
                     <Button onClick={goMain}>Previous Page</Button>
-                    <Button onClick={LogOutUser}>Logout {logged}</Button>
+                   <LogOut/>
                     <Button onClick={setAdmin}>Set Admin </Button>
                 </h3>
             </header>

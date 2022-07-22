@@ -3,6 +3,7 @@ import Axios from 'axios';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
+import LogOut from './Logout';
 
 
 function UserManagement(){
@@ -178,7 +179,7 @@ function UserManagement(){
         <header className='Header'> <h1>Welcome {logged} </h1>
             <h3>
         <Button onClick={goMain}>Previous Page</Button>
-        <Button onClick={LogOutUser}>Logout {logged}</Button>
+       <LogOut/>
         </h3>
         </header>
         <div>

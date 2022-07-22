@@ -168,8 +168,7 @@ const checkPassWord=(password)=>{
         <h2> 
         
         <Button onClick={goMain}>Previous Screen</Button>
-        <Button onClick={LogOutUser}>Logout {logged}</Button>
-   
+        <LogOutUser/>
         </h2>
          
         </header>

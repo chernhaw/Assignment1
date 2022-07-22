@@ -3,17 +3,16 @@ import Axios from 'axios';
 import Button from '@mui/material/Button';
 import { resolvePath, useNavigate } from "react-router-dom";
 
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
+import LogOut from './Logout';
 import './App.css';
+import axios from 'axios';
 function GroupEdit() {
 
 
     var groupmembers = ''
     var userlist = ''
 
-    var blnReload = false
+
     const [showgroupmembers, setShowGroupmembers] = useState('')
     const [group, setGroup] = useState('')
     const [showuserlist, setShowUserlist]= useState('')
@@ -25,14 +24,7 @@ function GroupEdit() {
     var admin = window.localStorage.getItem("admin");
     
 
-    const LogOutUser = () => {
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        window.localStorage.removeItem("group");
-        navigate('../login')
-    }
+    
     useEffect( () => {
 
         setTimeout(refresh, 500)
@@ -50,7 +42,6 @@ function GroupEdit() {
           
             navigate('../login')
         } 
-
 
         Axios.post('http://localhost:8080/listusers')
         .then((response)=>{
@@ -74,11 +65,7 @@ function GroupEdit() {
         
     
         var groupedit = ""
-
-
         groupedit = window.localStorage.getItem("group");
-       
-       
         getGroupMembers(groupedit)
        
        
@@ -113,7 +100,7 @@ function GroupEdit() {
                 }
 
                 if (size==0){
-                    groupmembers ="No members in "+group
+                    groupmembers ="Nil"
                     }
                 console.log("final groupmember names " +groupmembers)
             console.log("final groupmember names " +groupmembers)
@@ -128,19 +115,9 @@ function GroupEdit() {
         }
  
 
-        const goGroup = () =>{
-            //   grouplist();
-            //  userlist();
-               
-              
-              
-               navigate('../groupmgt')
-              
+        const goGroup = () =>{     
+               navigate('../groupmgt')    
         }
-
-
-       
-
 
         const handleUserNameChangeAssign = (event) => {
             setAssignMember(event.target.value);
@@ -154,15 +131,43 @@ function GroupEdit() {
 
 
         const handleAssignGroup = async (e) => {
+          //  e.preventDefault()
+           
+        //   if(showgroupmembers.split(" ").includes(assignmember)){
+        //     alert("User already in group");
+        //     window.location.reload();
+        //   }else{
+        //     var count = 0
+        //     await axios.post('http://localhost:8080/userexist',
+        //     { username: "" + assignmember + "" })
+        //     .then((res)=>{
+        //        if(res.data.usercount == 0){
+        //             count = res.data.usercount
+        //            alert("User does not exit")
+        //            window.location.reload();
+        //        }
+        //        })
+        //     .catch((err)=>console.log(err));
+        //     if(count != 0){
+        //         await axios.post('http://localhost:8080/groupassign',
+        //         { groupname: "" + group + "", username: "" + assignmember + "" })
+        //         .then((res)=>{
+        //             alert(`${assignmember} has been added into ${group}`)
+        //             window.location.reload();
+        //         })
+        //         .catch((err)=>{console.log(err)})
+        //     }
+         
+        //   }
 
-
+          
             var groupmembers = ""+showgroupmembers+""
             var usertoassign = ""+assignmember+""
             var userlist = ""+showuserlist+""
 
             var assignUser = true;
             var assignGp = true;
-            alert("Assigning " + assignmember + " to group " + group)
+          
 
 
            // alert("User in group "+groupmembers.search(usertoassign))
@@ -198,6 +203,7 @@ function GroupEdit() {
             
             
     
+            
             if (assignUser && assignGp) {
                 try {
                     const res = await Axios.post('http://localhost:8080/groupassign',
@@ -209,44 +215,80 @@ function GroupEdit() {
     
                     if (res.data.duplicate_member != 0) {
                         alert("Username " + assignmember + " is already in " + group);
+                    } else {
+                        window.location.reload();
                     }
 
+                    
                     
                 } catch (e) {
                     console.error("Create groupname error - " + e.message);
                 }
-
+                window.location.reload();
                 
                assignUser = true;
                assignGp = true;
             }
-    
-            ///
-    
+                        
+                
         }
     
        
 
         const handGroupUnassign = async (e) => {
-            e.preventDefault();
-         //   var groupmembers = "";
-            //  window.localStorage.setItem("groupquery", querygroup);
-    
-            try {
-    
-                alert("Unassign username " + unassignmember+ " to group " + group )
-                console.log("GroupEdit unassign " +group  + " " + unassignmember  )
-    
-                const res = await Axios.post('http://localhost:8080/groupremove',
-                    { groupname: "" + group + "", username: "" + unassignmember + "" });
-                    
-                console.log("Query group response " + res.data);
-    
-                window.location.reload()
+            
+            if(!showgroupmembers.split(" ").includes(unassignmember)){
+                alert("User is not in group");
+                window.location.reload();
+              }else{
+               
+               
+                    await axios.post('http://localhost:8080/groupremove',
+                    { groupname: "" + group + "", username: "" + unassignmember + "" })
+                    .then((res)=>{
+                        alert(`${unassignmember} has been removed from ${group}`)
+                        window.location.reload();
+                    })
+                    .catch((err)=>{console.log(err)})
                 
-            } catch (e) {
-                console.error("Query group error - " + e.message);
-            }
+             
+              }
+
+
+
+        //    var removeuser = true
+        //     //  window.localStorage.setItem("groupquery", querygroup);
+    
+           
+    
+        //    //   alert("Unassign username " + unassignmember+ " to group " + group )
+        //         console.log("GroupEdit unassign " +group  + " " + unassignmember  )
+               
+
+        //      //   alert("groupmembers :" +showgroupmembers)
+
+        //         console.log("search unassgin "+ showgroupmembers.search(unassignmember))
+
+        //         if (showgroupmembers.search(unassignmember)==-1){
+        //             alert("User "+unassignmember+" not in group")
+        //             removeuser=false;
+        //         }
+        //      // alert("search unassgin "+ showgroupmembers.search(unassignmember))
+    
+        //     if (removeuser){
+        //         try {
+        //             alert("Unassign username " + unassignmember+ " to group " + group )  
+        //         const res = await Axios.post('http://localhost:8080/groupremove',
+        //             { groupname: "" + group + "", username: "" + unassignmember + "" });
+                   
+        //     } catch (e) {
+        //       //  alert("Unassign username " + unassignmember+ " to group " + group +" error "+e.message )  
+        //         console.error("Query group error - " + e.message);
+        //     }
+    
+
+        //     window.location.reload()
+        // }
         }
 
     
@@ -262,7 +304,7 @@ function GroupEdit() {
                 <h3>
                     <Button onClick={goMain}>Main </Button>
                     <Button onClick={goGroup}>Group Management </Button>
-                    <Button onClick={LogOutUser}>Logout {logged}</Button>
+                   <LogOut/>
 
                     <Button onClick={goGroup}>Previous Screen</Button>
                 </h3>
@@ -276,16 +318,10 @@ function GroupEdit() {
             {showgroupmembers.split(" ").map((group)=>{
                 
                     return(
-                        
-                        
-                        
                         <div key={group} style={{border:"1px solid #000"}}>
                             {group}
                         </div>
-                        
                     )
-                
-               
             })}
             </div>    
           
@@ -307,7 +343,7 @@ function GroupEdit() {
                
             })}
             </div>    
-
+            <h3>Assign / Unassign User</h3>
            <form onSubmit={(e) => { handleAssignGroup(e) }}>
                    
                     <label>Assign user:</label><br />

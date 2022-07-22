@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
+import LogOut from './Logout';
 
 function UserProfileScreen(){
     
@@ -26,24 +26,8 @@ function UserProfileScreen(){
    
     console.log(logged);
 
-    //get user profile
-    
-    // 1.2 create function like loginForm for rest call
-    // 2. display user name
-    // 
-   
-    const LogOutUser = () =>{
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        navigate('../login')
-    }
-
     useEffect(() => {
 
-        
-     
         Axios.post('http://localhost:8080/listusers')
         .then((response)=>{
         const data = response.data;
@@ -132,6 +116,8 @@ function UserProfileScreen(){
     } catch (e){
             console.error("UserProfileScreen password change error "+e.error);
         }
+
+        
     }
 
     const handleUsernameCheck=(event)=>{
@@ -139,20 +125,24 @@ function UserProfileScreen(){
     }
 
     const handUpdateEmail=async(e)=>{
-        
-        e.preventDefault();
-        alert("You have submitted email change");
+      //  e.preventDefault();
+      
+       
         try {
             const res = await Axios.post('http://localhost:8080/updateemail', {username:""+selectedusertoedit+ "",email:""+email+""})
             var updateRes = res.data;
             console.log("Response from backend -updateemail "+updateRes);
+
+            alert(updateRes)
             if (updateRes.length>0){
                 alert("Email is already being used - "+email+"\nPlease use a different email.");
             } else {
                 alert("You have changed your email successfully");
-                
+            
             }
             
+
+
          
     } catch (e){
             console.error("UserProfileScreen email there was an error"+e.error);
@@ -168,10 +158,10 @@ function UserProfileScreen(){
         <h2> 
         
         <Button onClick={goMain}>Previous Screen</Button>
-        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        
         <Button onClick={disableUser}>Disable User </Button>
         </h2>
-         
+        <LogOut />
         </header>
         <div>
         <h1>User Management</h1>

@@ -8,6 +8,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import LogOut from './Logout';
 
 function UserDisableScreen(){
     
@@ -29,13 +30,7 @@ function UserDisableScreen(){
       
         navigate('../profile')
     }
-    const LogOutUser = () =>{
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        navigate('../login')
-    }
+    
 
     useEffect(() => {
 
@@ -192,7 +187,7 @@ function UserDisableScreen(){
         <h2> 
         
         <Button onClick={goUserMgt}>Previous Screen</Button>
-        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        <LogOut/>
         
         </h2>
          

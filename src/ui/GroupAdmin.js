@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
+import LogOut from './Logout';
 
 function GroupAdmin() {
 
@@ -160,10 +161,8 @@ function GroupAdmin() {
                 <h3>
                     <Button onClick={goMain}>Main </Button>
                     <Button onClick={goGroup}>Group Management </Button>
-                    <Button onClick={LogOutUser}>Logout {logged}</Button>
-
-                   
                 </h3>
+                <LogOut/>
             </header>
             <div>
                 <h3>Group Admin </h3>

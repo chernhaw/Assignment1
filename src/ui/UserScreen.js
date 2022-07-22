@@ -56,16 +56,7 @@ function UserScreen(){
         
     }
 
-    const checkAdminHandler =()=>{
-        console.log("Checkbox clicked");
-        if (isAdmin=='Y'){
-           
-            setisAdmin('N')
-        } else {
-            setisAdmin('Y')
-        }
-        console.log("Admin right : "+isAdmin)
-    }
+    
 
     const handSubmit=async(e)=>{
         e.preventDefault();
@@ -105,6 +96,9 @@ function UserScreen(){
 
             if (showErr){
                 alert (errMsg);
+            }
+            if (!showErr){
+                alert("User "+username+" created")
             }
 
     } catch (e){
