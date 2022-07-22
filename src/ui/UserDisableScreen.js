@@ -153,17 +153,7 @@ function UserDisableScreen(){
     
  
 
-    const goMain = () =>{
-        
-        
-        if (admin === 0) {
-          
-            navigate('../login')
-        } 
-        else {
-            navigate('../mainuser')
-        }
-    }
+   
 
    
     const handleUsernameDisableCheck=(event)=>{
@@ -194,10 +184,19 @@ function UserDisableScreen(){
         </header>
         
         <h1>User Disable/Enable</h1>
-          <h4>Below are the user that has been disabled</h4>
+          <h4>Disabled list</h4>
         
-            {disabledUserList}
-        
+          
+            <div style={{display:"grid",gridTemplateColumns:"repeat(1,1fr)", }}>
+            {disabledUserList.split(" ").map((group)=>{
+                
+                    return(
+                        <div key={group} style={{border:"1px solid #000"}}>
+                            {group}
+                        </div>
+                    )
+            })}
+            </div>    
             
     
         
@@ -208,10 +207,28 @@ function UserDisableScreen(){
             <input type="text" value={selectedusertoenable} required onChange={(e) => { handleUsernameEnableCheck(e) }} />
         <input type="submit" value="Enable User" />
 </form>
-<h4>Below are the usernames </h4>
-                        {userlist}
+<h4>Below are the existing usernames </h4>
+                      
+
+                        <div style={{display:"grid",gridTemplateColumns:"repeat(5,1fr)", }}>
+            {userlist.split(" ").map((group)=>{
+                
+                    return(
+                        
+                        
+                        
+                        <div key={group} style={{border:"1px solid #000"}}>
+                            {group}
+                        </div>
+                        
+                    )
+                
+               
+            })}
+            </div>
+            <br/>
         <form onSubmit={(e)=>{handleUserCheckDisable(e)}}>
-            <label> Enter group from the list above to disable user </label>
+            <label> Enter group from the list above to disable user (if they are not in the disabled list) </label>
             <input type="text" value={selectedusertodisable} required onChange={(e) => { handleUsernameDisableCheck(e) }} />
             <input type="submit" value="Disable User" />
         </form>       

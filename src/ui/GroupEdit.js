@@ -331,13 +331,9 @@ function GroupEdit() {
             {showuserlist.split(" ").map((group)=>{
                 
                     return(
-                        
-                        
-                        
                         <div key={group} style={{border:"1px solid #000"}}>
                             {group}
                         </div>
-                        
                     )
                 
                
