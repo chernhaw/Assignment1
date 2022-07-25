@@ -102,6 +102,11 @@ function MainScreen(){
         navigate('../groupmgt')
        
     }
+
+    const createApp = () =>{
+        navigate('../createApp')
+    }
+
     return (
 
     <div>
@@ -121,9 +126,14 @@ function MainScreen(){
         <button  onClick ={goUserMgt}>User Management</button>
         <button  onClick ={goGroup}>Group Management</button> 
         </div>
+       
         </div>
+       
          </header>
     <div className='Login'>
+
+        
+    <button  onClick ={createApp}>Create App</button> 
     <h1>Kanban stuff -- to do </h1>
    
     

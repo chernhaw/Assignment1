@@ -116,8 +116,8 @@ function GroupAdmin() {
 
 
            const handleAdminUnassignGroup = async (e) => {
-            console.log("unassign admin to - user " + usernameAdminunassign );
-            alert(usernameAdminunassign)
+           
+            if (adminnames.indexOf(usernameAdmin)==-1){
             try {
                 const res = await Axios.post('http://localhost:8080/adminunassign',
     
@@ -128,19 +128,46 @@ function GroupAdmin() {
             } catch (e) {
                 console.error("unassign user as admin error - " + e.message);
             }
+            } else {
+                alert ("User must be an admin user")
+            }
         }
         
            const handleAdminUpdateGroup = async (e) => {
+
+            var isadmin = false;
+
+            try {
+                const res = await Axios.post('http://localhost:8080/admin',
+    
+                    {  username: "" + usernameAdmin + "" });
+                console.log("User ia admin admin " + res.data.rows[0].count );
+                if (res.data.rows[0].count!=0){
+                    alert( "User is already admin")
+                }
+                
+            } catch (e) {
+                console.error("Checking user is admin error - " + e.message);
+            }
+       
+
+    
+
+
+            if (!isadmin){
             try {
                 const res = await Axios.post('http://localhost:8080/adminassign',
     
                     {  username: "" + usernameAdmin + "" });
                 console.log("Assign admin to - user " + usernameAdmin );
     
-    
+                
             } catch (e) {
                 console.error("Assign user as admin error - " + e.message);
             }
+        } else {
+            alert ("User is already admin")
+        }
         }
 
         const handleUnAdminNameChange = (event)=>{
