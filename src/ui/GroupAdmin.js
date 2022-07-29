@@ -26,14 +26,7 @@ function GroupAdmin() {
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
 
-    const LogOutUser = () => {
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        window.localStorage.removeItem("querygroup");
-        navigate('../login')
-    }
+   
     useEffect(() => {
         setTimeout(refresh, 500)
        

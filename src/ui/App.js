@@ -17,6 +17,7 @@ import GroupEdit from './ui/GroupEdit';
 import UserDisableScreen from './ui/UserDisableScreen';
 import UserNonAdminScreen from './ui/UserNonAdminScreen';
 import CreateApp from './ui/CreateApp';
+import EditApp from './ui/EditApp';
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
           <Route exact path="/disableuser" element={<UserDisableScreen />} />
           <Route exact path="/usermgt" element={<UserManagement />} />
           <Route exact path="/createApp" element={<CreateApp />} />
+          <Route exact path="/editApp" element={<EditApp />} />
       </Routes>
     </BrowserRouter>
    

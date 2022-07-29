@@ -111,13 +111,7 @@ async function getAllGroup(){
 }
 
 getAllGroup()
-   // currgrouplistArr=curgrouplist.split(" ")
-   // currgrouplistArr.pop()
-   // console.log("current grouplist array members : " +currgrouplistArr) 
-    //setGroupListOption(currgrouplistArr)
-
-
-    
+   
     var curruserlistArr=[]
     var curruserlist=""
     Axios.post('http://localhost:8080/listusers')

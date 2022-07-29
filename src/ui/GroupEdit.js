@@ -256,46 +256,8 @@ function GroupEdit() {
 
 
 
-        //    var removeuser = true
-        //     //  window.localStorage.setItem("groupquery", querygroup);
-    
-           
-    
-        //    //   alert("Unassign username " + unassignmember+ " to group " + group )
-        //         console.log("GroupEdit unassign " +group  + " " + unassignmember  )
-               
-
-        //      //   alert("groupmembers :" +showgroupmembers)
-
-        //         console.log("search unassgin "+ showgroupmembers.search(unassignmember))
-
-        //         if (showgroupmembers.search(unassignmember)==-1){
-        //             alert("User "+unassignmember+" not in group")
-        //             removeuser=false;
-        //         }
-        //      // alert("search unassgin "+ showgroupmembers.search(unassignmember))
-    
-        //     if (removeuser){
-        //         try {
-        //             alert("Unassign username " + unassignmember+ " to group " + group )  
-        //         const res = await Axios.post('http://localhost:8080/groupremove',
-        //             { groupname: "" + group + "", username: "" + unassignmember + "" });
-                   
-        //     } catch (e) {
-        //       //  alert("Unassign username " + unassignmember+ " to group " + group +" error "+e.message )  
-        //         console.error("Query group error - " + e.message);
-        //     }
-    
-
-        //     window.location.reload()
-        // }
+       
         }
-
-    
-          
-
-
-          
 
     return (
         <div>
