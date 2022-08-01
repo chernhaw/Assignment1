@@ -103,25 +103,37 @@ function EditApp(){
     
 
     const handleAppOpenChange=(event)=>{
-
-        if (groupToOpenList.search(event.target.value)==-1){
-          alert(event.target.value+" is already assigned")
-        } else{
-        setGroupToOpenList(groupToOpenList+" "+event.target.value)
-        console.log("Updated group list "+groupToOpenList)
-        }
-       // alert(groupToOpenList)
-    }
-
-    const updateAddToDoList=(event)=>{
-
-        
-        if (groupTodoList.search(event.target.value)==-1){
+        event.preventDefault();
+        alert(event.target.value)
+        if (groupToOpenList.search(event.target.value)!=-1){
             alert(event.target.value+" is already assigned")
           } else{
-            setGroupTodoList(groupTodoList+ " "+event.target.value)
+            setGroupToOpen(event.target.value)
+            setGroupToOpenList(groupToOpenList+" "+groupToOpen)
           }
+      
+    }
 
+    const handleGroupOpen = (event)=>{
+
+      
+       
+        setGroupToOpenList(groupToOpenList+" "+groupToOpen)
+        console.log("Updated group list "+groupToOpenList)
+        
+    }
+
+    const handleSelectedGroupToDo=(event)=>{
+        //alert(event.target.value)
+       
+            setGroupTodoList(groupTodoList+ " "+event.target.value)
+          
+
+    }
+    const updateAddToDoList=(event)=>{
+
+       // setGroupTodoList(groupTodoList+ " "+event.target.value)
+       
        
         
     }
@@ -184,8 +196,8 @@ function EditApp(){
                 console.log("app result "+data[0].app_acronym);
                 console.log("app description "+data[0].app_description);
                 console.log("app rnumber "+data[0].app_rnumber);
-                console.log("app startdate "+data[0].app_start_date);
-                console.log("app enddate "+data[0].app_end_date);
+                console.log("app startdate "+data[0].app_startdate);
+                console.log("app enddate "+data[0].app_enddate);
                 console.log("app permit_open "+ data[0].app_permit_open);
                 console.log("app permit_todolist "+ data[0].app_permit_todolist);
                 console.log("app permit_doing "+ data[0].app_permit_doing);
@@ -195,8 +207,8 @@ function EditApp(){
               
                  setApp_description(data[0].app_description);
                  setApp_rnumbern(data[0].app_rnumber);
-                 setApp_Start_Date(data[0].app_start_date);
-                 setApp_End_Date(data[0].app_end_date);
+                 setApp_Start_Date(data[0].app_startdate);
+                 setApp_End_Date(data[0].app_enddate);
                  setGroupToOpenList(data[0].app_permit_open);
                  setGroupTodoList(data[0].app_permit_todolist);
                  setGroupDoingList(data[0].app_permit_doing);
@@ -208,13 +220,10 @@ function EditApp(){
         }
     }
 
-    const handleCreateApp=async(e)=>{
-        e.preventDefault();
+    const handleEditApp=async(e)=>{
+       // e.preventDefault();
        
-        console.log("Create app "+app_acronym)
-        console.log("app description "+app_description)
-        console.log("app start date "+app_start_date)
-        console.log("app end date "+app_end_date)
+        console.log(groupTodoList)
     
         try {
 
@@ -223,11 +232,8 @@ function EditApp(){
             app_description: ""+app_description+"",
             app_rnumber: ""+app_rnumber+"",
             app_start_date: ""+app_start_date+"",
-            app_end_date: ""+app_end_date+"",
-            app_permit_open: ""+groupToOpenList+"",
-            app_permit_todolist: ""+groupTodoList+"",
-            app_permit_doing:""+groupDoingList+"",
-            app_permit_done:""+groupDoneList+""
+            app_end_date: ""+app_end_date+""
+           
 
 
 
@@ -274,43 +280,39 @@ function EditApp(){
         </form>
    
     <div>
-    <form onSubmit={(e)=>{handleCreateApp(e)}}>
+    <form onSubmit={(e)=>{handleEditApp(e)}}>
 
    
     
-    <label>App Description : {app_description}</label>
-    <input type="text" value={app_rnumber} required onChange={(e) => { handleAppDescription(e) }} />
+    <label><b>App Description : {app_description} </b></label><br/>
+    <label>Update description</label><br/>
+    <input type="text" value={app_description}  onChange={(e) => { handleAppDescription(e) }} />
     <br />
-    <label>App R number :</label>
-    <input type="text" value={app_rnumber} required onChange={(e) => { handleAppRnumber(e) }} />
     <br />
-    <label>App start date :</label>
-    <input type="date" value={app_start_date} required onChange={(e) => { handleAppStartDate(e) }} />
+    <label><b>App R number :</b></label><br/>
+    <label>Update R number</label><br/>
+    <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />
+    <br />
+    <br />
+    <label><b>App start date :</b></label>
     <br/>
-    <label>App end date :</label>
-    <input type="date" value={app_end_date} required onChange={(e) => { handleAppEndDate(e) }} />
+     Current value : {app_start_date.split('T')[0]} 
+     <br/>
+     <label>Update start date</label>
+    <input type="date" value={app_start_date} onChange={(e) => { handleAppStartDate(e) }} />
     <br/>
-    <label>App To do Group - current groups :  {groupTodoList}</label><br/>
+    <br/>
+    <label><b>App end date :</b></label>
+    <br/>
+   
+    Current value : {app_end_date.split('T')[0]} 
+     <br/>
     
-                    <form onSubmit={updateAddToDoList()}>
-                    <label>Select Group Todo</label> 
-                    <Select 
-                value= {groupToDo}
-              
-                input={<OutlinedInput label="Assign Admin" />}>
+     <label>Update end date</label>
+    <input type="date" value={app_end_date}  onChange={(e) => { handleAppEndDate(e) }} />
+    <br/>
 
-                    {grouplistresult.map((group) => (
-                <MenuItem
-                key={group.groupname}
-                value={group.groupname}  >
-              {group.groupname}
-            </MenuItem>
-          
-          ))}
-               </Select>
-               
-
-     </form>         
+    <br />
     <input type="submit" value="Update App "/>
     </form>
 

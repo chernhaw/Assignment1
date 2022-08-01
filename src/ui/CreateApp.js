@@ -195,13 +195,13 @@ function CreateApp(){
     <input type="text" value={app_description} required onChange={(e) => { handleAppDescription(e) }} />
     <br /><br/>
     <label>App R number :</label>
-    <input type="text" value={app_rnumber} required onChange={(e) => { handleAppRnumber(e) }} />
+    <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />
     <br /><br/>
     <label>App start date :</label>
-    <input type="date" value={app_start_date} required onChange={(e) => { handleAppStartDate(e) }} />
+    <input type="date" value={app_start_date}  onChange={(e) => { handleAppStartDate(e) }} />
     <br/><br/>
     <label>App end date :</label>
-    <input type="date" value={app_end_date} required onChange={(e) => { handleAppEndDate(e) }} />
+    <input type="date" value={app_end_date} onChange={(e) => { handleAppEndDate(e) }} />
     <br/>
     <br/>           
                     <label>Current group allow Open App ---</label>
