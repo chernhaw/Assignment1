@@ -102,58 +102,10 @@ function EditApp(){
 
     
 
-    const handleAppOpenChange=(event)=>{
-        event.preventDefault();
-        alert(event.target.value)
-        if (groupToOpenList.search(event.target.value)!=-1){
-            alert(event.target.value+" is already assigned")
-          } else{
-            setGroupToOpen(event.target.value)
-            setGroupToOpenList(groupToOpenList+" "+groupToOpen)
-          }
-      
-    }
+   
 
-    const handleGroupOpen = (event)=>{
-
-      
-       
-        setGroupToOpenList(groupToOpenList+" "+groupToOpen)
-        console.log("Updated group list "+groupToOpenList)
-        
-    }
-
-    const handleSelectedGroupToDo=(event)=>{
-        //alert(event.target.value)
-       
-            setGroupTodoList(groupTodoList+ " "+event.target.value)
-          
-
-    }
-    const updateAddToDoList=(event)=>{
-
-       // setGroupTodoList(groupTodoList+ " "+event.target.value)
-       
-       
-        
-    }
-
-    const handleAppDoingChange=(event)=>{
-        if (groupDoingList.search(event.target.value)==-1){
-            alert(event.target.value+" is already assigned")
-        } else {
-        setGroupDoingList(groupDoingList+" "+event.target.value)
-        }
-    }
-
-    const handleAppDoneChange=(event)=>{
-        if (groupDoneList.search(event.target.value)==-1){
-            alert(event.target.value+" is already assigned")
-        } else{
-        setGroupDoneList(groupDoneList+" "+event.target.value)
-        }
-    }
-
+  
+ 
     const handleAppAcronym =(e) =>{
         setApp_acronym(e.target.value)
     }

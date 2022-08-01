@@ -90,6 +90,9 @@ function MainScreen(){
         navigate('../user')
     }
 
+    const createPlan = () =>{
+        navigate('../createplan')
+    }
     
     const goUserMgt = () =>{
         userlist();
@@ -107,6 +110,9 @@ function MainScreen(){
         navigate('../createApp')
     }
 
+    const editPlan = () =>{
+        navigate('../editPlan')
+    }
     const editApp = () =>{
         navigate('../editApp')
     }
@@ -137,8 +143,10 @@ function MainScreen(){
 
         
     <button  onClick ={createApp}>Create App</button> 
-
     <button  onClick ={editApp}>Edit App</button> 
+    <button onClick={createPlan}>Create Plan</button>
+    <button onClick={editPlan}>Edit Plan</button>
+
     <h1>Kanban stuff -- to do </h1>
    
     
