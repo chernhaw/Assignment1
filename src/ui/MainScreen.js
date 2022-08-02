@@ -116,6 +116,10 @@ function MainScreen(){
     const editApp = () =>{
         navigate('../editApp')
     }
+
+    const createTask=() =>{
+        navigate('../createTask')
+    }
     return (
 
     <div>
@@ -146,6 +150,7 @@ function MainScreen(){
     <button  onClick ={editApp}>Edit App</button> 
     <button onClick={createPlan}>Create Plan</button>
     <button onClick={editPlan}>Edit Plan</button>
+    <button onClick={createTask}>Create Task</button>
 
     <h1>Kanban stuff -- to do </h1>
    

@@ -19,6 +19,7 @@ import UserNonAdminScreen from './ui/UserNonAdminScreen';
 import CreateApp from './ui/CreateApp';
 import EditApp from './ui/EditApp';
 import CreatePlan from './CreatePlan';
+import CreateTask from './CreateTask';
 
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
           <Route exact path="/editApp" element={<EditApp />} />
           <Route exact path="/createplan" element={<CreatePlan />} />
           <Route exact path="/updateplan" element={<EditPlan />} />
+          <Route exact path="/createTask" element={<CreateTask />} />
       </Routes>
     </BrowserRouter>
    
