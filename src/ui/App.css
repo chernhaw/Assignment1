@@ -3,7 +3,27 @@
 }
 
 
+.column {
+  float: left;
+  border: 1px solid blue;
+  width: 16.0%;
+}
 
+.task {
+  border: 2px solid red;
+  width: 95%;
+}
+
+.columnLabel {
+ 
+  border: 1px solid ;
+  width: 100%;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  }
 .container {
   display: grid;
   grid-template-columns: 100px, 100px, 100px;
@@ -25,14 +45,8 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.solid { border: 1px solid red;
+  background-color: #282c34;}
 
 .images {
   display: flex;

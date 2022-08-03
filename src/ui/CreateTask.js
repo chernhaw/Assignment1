@@ -67,6 +67,18 @@ function CreateTask(){
         
     },[])
 
+    const handleTaskNoteChange=(event)=>{
+
+       
+           
+            setTaskNotes(event.target.value)
+        
+
+
+       // setTaskNotes(event.target.value+"\n"+"State: Open, User :"+logged+" "+currentDate)
+
+    }
+
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
@@ -115,16 +127,18 @@ function CreateTask(){
         //    console.error("Create task function - there was error "+e.message);
         // }
       
-        setTaskNotes("User:"+logged+", Current State:Open, Date and Time:"+Date())
+        setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
         console.log("Create task for app "+app_acronym)
         console.log("Create task for task "+taskplan)
         console.log("Task description "+taskdescription)
         console.log("Taskname "+taskName)
+       
         console.log("Task notes "+taskNotes)
-        console.log("Create user "+logged)
+       console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
 
+        
          try {
         const res = await Axios.post('http://localhost:8080/createtask', 
         {  app_acronym: "" + app_acronym + "",
@@ -187,9 +201,11 @@ function CreateTask(){
                <br />
                <label>Task Description</label>
                <br/>
-
-               <textarea rows="10" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
-              
+               <textarea rows="5" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
+               <br/>
+               <label>Task Notes</label>
+               <br/>
+               <textarea rows="10" cols="50" value={taskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
                 <br/>
                <input type="submit" value="Create Task"/>
     </form>
