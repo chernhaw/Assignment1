@@ -6,6 +6,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import LogOut from './Logout';
+import GoMain from './GoMain';
 
 function CreatePlan(){
 
@@ -102,7 +103,7 @@ function CreatePlan(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <LogOut/> </header>
+        <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Create new Plan</h2>
     <div>

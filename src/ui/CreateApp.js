@@ -9,6 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import LogOut from './Logout';
+import GoMain from './GoMain'
 
 function CreateApp(){
 
@@ -182,7 +183,7 @@ function CreateApp(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <LogOut/> </header>
+        <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Create new App</h2>
     <div>
@@ -287,7 +288,7 @@ function CreateApp(){
     <input type="submit" value="Create App"/>
     </form>
 
-    <div> <Button onClick={goEditPermission}>Set App Permission</Button> </div>
+    
     </div>
     </div>
     

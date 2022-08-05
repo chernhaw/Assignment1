@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import LogOut from './Logout';
 import GoMain from './GoMain';
 
+var newTaskState =""
 function TaskEdit(){
 
     const navigate = useNavigate();
@@ -95,22 +96,26 @@ function TaskEdit(){
             console.log("task creator : "+ data[0].task_creator)
             setTaskCreator(data[0].task_creator)
 
-console.log("Checking for group able to access task at this state -- "+task_State)
+console.log("Checking for group able to access task at this state -- "+data[0].task_state)
 
-if (data[0].task_state.search('Open')!=-1){
-  console.log("To set to Todo -- getting group allow to todo in "+task_acronym)
+// if (data[0].task_state.search('Open')!=-1){
+//   console.log("To set to Todo -- getting group allow to todo in "+data[0].task_app_acronym)
 
-  console.log("Checking application table in app_permit_todo, app_permit_doing")
+//   console.log("Checking application table in app_permit_todo, app_permit_doing")
 
 
 
-}
+// }
             
        
           const res2 = await Axios.post('http://localhost:8080/getaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
       
           var data = res2.data
-          console.log("Current plan list ->" +data[0].plan_app_acronym)
+         
+          console.log("Users able to change update this state : ")
+          for (var i=0; i<data.length-1 ; i++){
+            console.log(data[i].access)
+          }
 
          //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
         //  console.log("Current plan list" +data[0].object.)
@@ -136,16 +141,6 @@ if (data[0].task_state.search('Open')!=-1){
         
         getTaskDetail()
       //  getAccess()
-        // check state
-
-        
-      
-       
-
-        
-
-        // check group permit for app at state
-
 
         getAllPlans()
         
@@ -153,20 +148,17 @@ if (data[0].task_state.search('Open')!=-1){
 
     const handleTaskNoteChange=(event)=>{
 
-       
-           
-            setTaskNotes(taskNotes+"\n" +event.target.value+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date())
+     
+
+      
+          setTaskNotes(taskNotes+"\n" +event.target.value+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date())
         
-
-
-       // setTaskNotes(event.target.value+"\n"+"State: Open, User :"+logged+" "+currentDate)
-
     }
 
    
 
     const handleTaskPlan=(event)=>{
-      //  setTaskPlan(event.target.value)
+       setTaskPlan(event.target.value)
     }
 
     const handleTaskNameChange=(event)=>{
@@ -179,53 +171,79 @@ if (data[0].task_state.search('Open')!=-1){
 
     
     
-    const handleCreateTask=async(event)=>{
-    //     event.preventDefault();
-       
-    //     // console.log("Count for app "+app_acronym)
-    //     // try {
-    //     //     const res = await Axios.post('http://localhost:8080/counttask', 
-    //     //     {  app_acronym: "" + app_acronym + "" });
-    //     //         noOfTask = res.data[0].taskcount
-    //     //         console.log("No of task for "+app_acronym+ " : " + noOfTask)
-              
-    //     // } catch (e){
-    //     //    console.error("Create task function - there was error "+e.message);
-    //     // }
-      
-    //     setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
-    //     console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
-    //     console.log("Create task for app "+app_acronym)
-    //     console.log("Create task for task "+taskplan)
-    //     console.log("Task description "+taskdescription)
-    //     console.log("Taskname "+taskName)
-       
-    //     console.log("Task notes "+taskNotes)
-    //    console.log("Create user "+logged)
-    //     console.log("No of task in "+noOfTask)
+    const handleUpdateTask=async(event)=>{
+         event.preventDefault();
 
+        console.log("Task "+ task_id+" state is :"+task_State)
+        console.log("Update Task state : "+newTaskState)
+        console.log("update app_acronym "+task_acronym)
+        console.log("update task plan "+taskplan)
+        console.log("update taskdescription "+taskdescription)
+        console.log("update taskname "+task_name)
+       
+        console.log("update taskNotes "+taskNotes)
         
-    //      try {
-    //     const res = await Axios.post('http://localhost:8080/createtask', 
-    //     {  app_acronym: "" + app_acronym + "",
-    //     taskPlan: ""+taskplan+"",
-    //     taskName: ""+taskName+"",
-    //     taskDescription: ""+taskdescription+"",
-    //     taskNotes:""+taskNotes+"",
-    //     taskCreator:""+logged+""
-    //  });
-    // } catch (e){
-    //     console.error("Create task function - there was error "+e.message);
-    // }
+        
+         console.log("Run update task for "+task_id)
+        
+         try {
+        const res = await Axios.post('http://localhost:8080/updatetask', 
+        {  app_acronym: "" + task_acronym + "",
+        taskPlan: ""+taskplan+"",
+        taskName: ""+task_name+"",
+        taskDescription: ""+taskdescription+"",
+        taskState:""+newTaskState+"",
+        taskNotes:""+taskNotes+"",
+        taskOwner:""+logged+"",
 
-
-    /*
-const [task_acronym, setTask_acronym] = useState('');
-    const [task_owner, setTask_owner] = useState('');
-    const [task_createDate, setTask_createDate] = useState('');
-    */
+     });
+    } catch (e){
+        console.error("Update task - there was error "+e.message);
+    }
     }
 
+    const handleUpdateTaskInfo=async(event)=>{
+      event.preventDefault();
+
+      console.log("Task "+ task_id+" state is :"+task_State)
+    
+      if( task_State=="Open"){
+         setTask_State("Todo")
+         console.log("New task state "+task_State)
+      } else if (task_State=="Todo"){
+       setTask_State("Doing")
+       console.log("New task state "+task_State)
+      } else if (task_State=="Doing"){
+       setTask_State("Done")
+       console.log("New task state "+task_State)
+      }
+
+     console.log("Update Task : "+task_State)
+     console.log("app_acronym "+task_acronym)
+     console.log("task plan "+taskplan)
+     console.log("taskdescription "+taskdescription)
+     console.log("taskname "+task_name)
+    
+     console.log("taskNotes "+taskNotes)
+     
+     
+      console.log("Run update task for "+task_id)
+     
+      try {
+     const res = await Axios.post('http://localhost:8080/updatetask', 
+     {  app_acronym: "" + task_acronym + "",
+     taskPlan: ""+taskplan+"",
+     taskName: ""+task_name+"",
+     taskDescription: ""+taskdescription+"",
+     taskState:""+newTaskState+"",
+     taskNotes:""+taskNotes+"",
+     taskOwner:""+logged+"",
+
+  });
+ } catch (e){
+     console.error("Update task - there was error "+e.message);
+ }
+ }
     return ( 
     
         <div>
@@ -233,7 +251,7 @@ const [task_acronym, setTask_acronym] = useState('');
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Edit Task Id : {task_id}</h2>
-    <form onSubmit={(e)=>{handleCreateTask(e)}}>
+    <form onSubmit={(e)=>{handleUpdateTask(e)}}>
     
                <label>Current Task Plan : {taskplan}</label><br/>
                <label>Select Plan for Task</label>
@@ -267,7 +285,9 @@ const [task_acronym, setTask_acronym] = useState('');
                <label>Task Owner: {task_owner}</label>
                <br/>
                <br/>
-               <label>Task State : {task_State}</label>
+               <label>Current Task State : {task_State}</label>
+               <br/>
+               <label>New Task State</label><TaskState taskState={task_State} />
                <br/>
               
                <label>Current Task Name : {task_name}</label>
@@ -287,12 +307,97 @@ const [task_acronym, setTask_acronym] = useState('');
                <br/>
                <textarea rows="10" cols="50" value={taskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
                 <br/>
-               <input type="submit" value="Update Task"/>
+               
+                <input type="submit" value="Update Task"/>
+               
+
     </form>
     </div>
     </div>
     );
    
 }
+
+
+function TaskState(props){
+
+  const [newTask, setNewTask]=useState();
+
+  const handleTaskStateChange=(event)=>{
+    newTaskState=event.target.value
+    setNewTask(event.target.value)
+  }
+
+
+  const taskState = props.taskState;
+
+  if( taskState=="Open"){
+
+  return ( <>
+  <Select
+    labelId="demo-simple-select-label"
+    id="demo-simple-select"
+    value={newTask}
+    label="task State"
+    onChange={handleTaskStateChange}
+  >
+    <MenuItem value={"Open"}>Open</MenuItem>
+    <MenuItem value={"Todo"}>Todo</MenuItem>
+  </Select>
+
+  </>
+  );
+  } else if ( taskState=="Todo"){
+    return ( <>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={taskState}
+        label="Age"
+        onChange={handleTaskStateChange}
+      >
+        <MenuItem value={"Todo"}>Todo</MenuItem>
+        <MenuItem value={"Doing"}>Doing</MenuItem>
+      </Select>
+    
+      </>
+      );
+
+  } else if ( taskState=="Doing"){
+    return ( <>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={taskState}
+        label="Age"
+        onChange={handleTaskStateChange}
+      >
+        <MenuItem value={"Todo"}>Todo</MenuItem>
+        <MenuItem value={"Doing"}>Doing</MenuItem>
+        <MenuItem value={"Done"}>Done</MenuItem>
+      </Select>
+    
+      </>
+      );
+
+  } else if ( taskState=="Done"){
+    return ( <>
+      <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={taskState}
+        label="Age"
+        onChange={handleTaskStateChange}
+      >
+      
+        <MenuItem value={"Doing"}>Doing</MenuItem>
+        <MenuItem value={"Done"}>Done</MenuItem>
+      </Select>
+      </>
+      );
+  }
+}
+
+
 
 export default TaskEdit

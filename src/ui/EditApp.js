@@ -9,6 +9,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import LogOut from './Logout';
+import GoMain from './GoMain';
 
 function EditApp(){
 
@@ -209,7 +210,7 @@ function EditApp(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <LogOut/> </header>
+        <LogOut/> <GoMain/></header>
     <div className='Login'>
 
     <h2>Edit App</h2>
