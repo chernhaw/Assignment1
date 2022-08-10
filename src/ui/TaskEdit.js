@@ -25,6 +25,7 @@ function TaskEdit(){
 
     const [taskdescription, setTaskDescription]=useState();
     const [taskNotes, setTaskNotes] = useState();
+    const [appendtaskNotes, setAppendTaskNotes] = useState();
     const [taskplan, setTaskPlan] = useState();
     const [task_name, setTask_Name] = useState();
     const [task_id, setTask_Id] = useState();
@@ -90,23 +91,15 @@ function TaskEdit(){
 
             console.log("task_state "+data[0].task_state)
             setTask_State(data[0].task_state)
+            newTaskState=data[0].task_state
             console.log("task_createDate "+data[0].task_owner)
             setTask_createDate(data[0].task_createDate)
 
             console.log("task creator : "+ data[0].task_creator)
             setTaskCreator(data[0].task_creator)
 
-console.log("Checking for group able to access task at this state -- "+data[0].task_state)
-
-// if (data[0].task_state.search('Open')!=-1){
-//   console.log("To set to Todo -- getting group allow to todo in "+data[0].task_app_acronym)
-
-//   console.log("Checking application table in app_permit_todo, app_permit_doing")
-
-
-
-// }
-            
+            console.log("Checking for group able to access task at this state -- "+data[0].task_state)
+  
        
           const res2 = await Axios.post('http://localhost:8080/getaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
       
@@ -147,12 +140,7 @@ console.log("Checking for group able to access task at this state -- "+data[0].t
     },[])
 
     const handleTaskNoteChange=(event)=>{
-
-     
-
-      
-          setTaskNotes(taskNotes+"\n" +event.target.value+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date())
-        
+          setAppendTaskNotes(event.target.value)
     }
 
    
@@ -162,7 +150,7 @@ console.log("Checking for group able to access task at this state -- "+data[0].t
     }
 
     const handleTaskNameChange=(event)=>{
-    //    setTaskName(event.target.value)
+      setTask_Name(event.target.value)
     }
 
     const handleTaskDescriptionChange=(event)=>{
@@ -193,57 +181,20 @@ console.log("Checking for group able to access task at this state -- "+data[0].t
         taskName: ""+task_name+"",
         taskDescription: ""+taskdescription+"",
         taskState:""+newTaskState+"",
-        taskNotes:""+taskNotes+"",
+        taskNotes:""+taskNotes+"\n----------\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date(),
         taskOwner:""+logged+"",
+        taskId:""+task_id+""
 
+       
      });
+
+     getTaskDetailUpdate()
     } catch (e){
         console.error("Update task - there was error "+e.message);
     }
     }
 
-    const handleUpdateTaskInfo=async(event)=>{
-      event.preventDefault();
 
-      console.log("Task "+ task_id+" state is :"+task_State)
-    
-      if( task_State=="Open"){
-         setTask_State("Todo")
-         console.log("New task state "+task_State)
-      } else if (task_State=="Todo"){
-       setTask_State("Doing")
-       console.log("New task state "+task_State)
-      } else if (task_State=="Doing"){
-       setTask_State("Done")
-       console.log("New task state "+task_State)
-      }
-
-     console.log("Update Task : "+task_State)
-     console.log("app_acronym "+task_acronym)
-     console.log("task plan "+taskplan)
-     console.log("taskdescription "+taskdescription)
-     console.log("taskname "+task_name)
-    
-     console.log("taskNotes "+taskNotes)
-     
-     
-      console.log("Run update task for "+task_id)
-     
-      try {
-     const res = await Axios.post('http://localhost:8080/updatetask', 
-     {  app_acronym: "" + task_acronym + "",
-     taskPlan: ""+taskplan+"",
-     taskName: ""+task_name+"",
-     taskDescription: ""+taskdescription+"",
-     taskState:""+newTaskState+"",
-     taskNotes:""+taskNotes+"",
-     taskOwner:""+logged+"",
-
-  });
- } catch (e){
-     console.error("Update task - there was error "+e.message);
- }
- }
     return ( 
     
         <div>
@@ -303,9 +254,13 @@ console.log("Checking for group able to access task at this state -- "+data[0].t
                <br/>
                <textarea rows="4" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
                <br/>
-               <label>Task Notes</label>
+               <label>Existing Task Notes - Read only</label>
                <br/>
-               <textarea rows="10" cols="50" value={taskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
+               <textarea rows="10" cols="50" value={taskNotes}/>
+                <br/>
+                <label>Append to Task Notes</label>
+               <br/>
+               <textarea rows="10" cols="50" value={appendtaskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
                 <br/>
                
                 <input type="submit" value="Update Task"/>
@@ -315,9 +270,116 @@ console.log("Checking for group able to access task at this state -- "+data[0].t
     </div>
     </div>
     );
-   
-}
 
+    async function getTaskDetailUpdate(){
+
+    const res = await Axios.post('http://localhost:8080/gettaskdetail',{task_id:""+task_id+""});
+
+       var data = res.data;
+    
+      console.log("Task detail retrieved for " +task_id)
+      console.log("task_id "+data[0].task_id)
+      setTask_Id(data[0].task_id)
+      console.log("task_name "+data[0].task_name)
+      setTask_Name(data[0].task_name)
+    
+    
+      console.log("task_plan "+data[0].task_plan)
+      setTaskPlan(data[0].task_plan)
+    
+      console.log("task_description "+data[0].task_description)
+      setTaskDescription(data[0].task_description)
+    
+      console.log("task_notes "+data[0].task_notes)
+      setTaskNotes(data[0].task_notes)
+      console.log("task_app_acronym "+data[0].task_app_acronym)
+      setTask_acronym(data[0].task_app_acronym)
+      console.log("task_owner "+data[0].task_owner)
+      setTask_owner(data[0].task_owner)
+    
+      console.log("task_state "+data[0].task_state)
+      setTask_State(data[0].task_state)
+      newTaskState=data[0].task_state
+      console.log("task_createDate "+data[0].task_owner)
+      setTask_createDate(data[0].task_createDate)
+    
+      console.log("task creator : "+ data[0].task_creator)
+      setTaskCreator(data[0].task_creator)
+    
+      console.log("Checking for group able to access task at this state -- "+data[0].task_state)
+    
+    
+    const res2 = await Axios.post('http://localhost:8080/getaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
+    
+    var data = res2.data
+    
+    console.log("Users able to change update this state : ")
+    for (var i=0; i<data.length-1 ; i++){
+      console.log(data[i].access)
+    }
+    
+    //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
+    //  console.log("Current plan list" +data[0].object.)
+    
+    
+    }              
+  }
+   
+
+
+
+
+// async function getTaskDetailUpdate(){
+//   const res = await Axios.post('http://localhost:8080/gettaskdetail',{task_id:""+task_id+""});
+
+//    var data = res.data;
+
+//   console.log("Task detail retrieved for " +task_id)
+//   console.log("task_id "+data[0].task_id)
+//   setTask_Id(data[0].task_id)
+//   console.log("task_name "+data[0].task_name)
+//   setTask_Name(data[0].task_name)
+
+
+//   console.log("task_plan "+data[0].task_plan)
+//   setTaskPlan(data[0].task_plan)
+
+//   console.log("task_description "+data[0].task_description)
+//   setTaskDescription(data[0].task_description)
+
+//   console.log("task_notes "+data[0].task_notes)
+//   setTaskNotes(data[0].task_notes)
+//   console.log("task_app_acronym "+data[0].task_app_acronym)
+//   setTask_acronym(data[0].task_app_acronym)
+//   console.log("task_owner "+data[0].task_owner)
+//   setTask_owner(data[0].task_owner)
+
+//   console.log("task_state "+data[0].task_state)
+//   setTask_State(data[0].task_state)
+//   newTaskState=data[0].task_state
+//   console.log("task_createDate "+data[0].task_owner)
+//   setTask_createDate(data[0].task_createDate)
+
+//   console.log("task creator : "+ data[0].task_creator)
+//   setTaskCreator(data[0].task_creator)
+
+//   console.log("Checking for group able to access task at this state -- "+data[0].task_state)
+
+
+// const res2 = await Axios.post('http://localhost:8080/getaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
+
+// var data = res2.data
+
+// console.log("Users able to change update this state : ")
+// for (var i=0; i<data.length-1 ; i++){
+//   console.log(data[i].access)
+// }
+
+// //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
+// //  console.log("Current plan list" +data[0].object.)
+
+
+// }
 
 function TaskState(props){
 
@@ -352,7 +414,7 @@ function TaskState(props){
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={taskState}
+        value={newTask}
         label="Age"
         onChange={handleTaskStateChange}
       >
@@ -368,7 +430,7 @@ function TaskState(props){
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={taskState}
+        value={newTask}
         label="Age"
         onChange={handleTaskStateChange}
       >
@@ -385,7 +447,7 @@ function TaskState(props){
       <Select
         labelId="demo-simple-select-label"
         id="demo-simple-select"
-        value={taskState}
+        value={newTask}
         label="Age"
         onChange={handleTaskStateChange}
       >

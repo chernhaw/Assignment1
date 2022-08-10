@@ -23,6 +23,7 @@ function EditApp(){
 
     const [groupToOpenList, setGroupToOpenList] = useState('') // use to open list 
     const [groupToOpen, setGroupToOpen] = useState('') 
+    const [groupToOpenOption, setGroupToOpenOption] = useState('')
 
     const [groupTodoList, setGroupTodoList] = useState('') // use todo list 
     const [groupToDo, setGroupToDo] = useState('') 
@@ -102,10 +103,70 @@ function EditApp(){
     },[])
 
     
+    const handleAppOpenChange=(event)=>{
+
+        if (groupToOpenList.search(event.target.value)!=-1){
+          alert(event.target.value+" is already assigned")
+        } else {
+        setGroupToOpenList(groupToOpenList+" "+event.target.value)
+       // alert(groupToOpenList)\
+        }
+    }
+
+    const handleAppToDoChange=(event)=>{
+        if (groupTodoList.search(event.target.value)!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+            setGroupTodoList(groupTodoList+" "+event.target.value)
+          }
+      //  alert(groupTodoList)
+    }
+
+    const handleAppDoingChange=(event)=>{
+        if (groupDoingList.search(event.target.value)!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+        setGroupDoingList(groupDoingList+" "+event.target.value)
+          }
+      //  alert(groupDoingList)
+    }
+
+    const handleAppDoneChange=(event)=>{
+        if (groupDoneList.search(event.target.value)!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+        setGroupDoneList(groupDoneList+" "+event.target.value)
+          }
+
+        setGroupDoneList(groupDoneList+" "+event.target.value)
+     //   alert(groupDoneList)
+    }
 
    
-
+    const handleAppOpenRemove=(event)=>{
+        var currentList = ""+groupToOpenList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupToOpenList(currentList)
+    }
   
+    const handleAppTodoRemove=(event)=>{
+        var currentList = ""+groupTodoList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupTodoList(currentList)
+    }
+
+    const handleAppDoingRemove=(event)=>{
+        var currentList = ""+groupDoingList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupDoingList(currentList)
+    }
+
+    const handleAppDoneRemove=(event)=>{
+        var currentList = ""+groupDoneList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupDoneList(currentList)
+     //   alert(groupDoneList)
+    }
  
     const handleAppAcronym =(e) =>{
         setApp_acronym(e.target.value)
@@ -166,6 +227,10 @@ function EditApp(){
                  setGroupTodoList(data[0].app_permit_todolist);
                  setGroupDoingList(data[0].app_permit_doing);
                  setGroupDoneList(data[0].app_permit_done);
+
+                 var arrOpen = groupToOpenList.split(" ")
+
+                setGroupToOpenOption(JSON.stringify(arrOpen));
         
 
     } catch (e){
@@ -185,11 +250,11 @@ function EditApp(){
             app_description: ""+app_description+"",
             app_rnumber: ""+app_rnumber+"",
             app_start_date: ""+app_start_date+"",
-            app_end_date: ""+app_end_date+""
-           
-
-
-
+            app_end_date: ""+app_end_date+"",
+            app_permit_open: ""+groupToOpenList+"",
+            app_permit_todolist: ""+groupTodoList+"",
+            app_permit_doing:""+groupDoneList+"",
+            app_permit_done:""+groupDoneList+""
          });
             console.log("Response length:"+""+res.data+"".length)
             
@@ -264,6 +329,157 @@ function EditApp(){
      <label>Update end date</label>
     <input type="date" value={app_end_date}  onChange={(e) => { handleAppEndDate(e) }} />
     <br/>
+    <label><b>App Open  :</b></label><br/>        
+                    <label>Current group allow Open App ---</label>
+                  {groupToOpenList} 
+                    <br/>
+                    <label> Select to add</label>
+                    <Select 
+                value ={groupToOpen}
+                onChange = {handleAppOpenChange}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+                <br/>
+               </Select>
+
+               <br/>
+                <label> Remove Group to Open</label>    
+                <Select 
+                value ={groupToOpen}
+                onChange = {handleAppOpenRemove}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <br/>
+               <label><b>App Todo  :</b></label><br/> 
+               <label>Current Group allow App Todo ---</label>
+               {groupTodoList}
+               <br/>
+               <label> Select to add</label>
+                    <Select 
+                value ={groupToDo}
+                onChange = {handleAppToDoChange}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               
+               <br/>
+                <label> Remove Group to Todo</label>    
+                <Select 
+                value ={groupToDo}
+                onChange = {handleAppTodoRemove}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+          <br/>
+          
+               </Select>
+               <br/>
+               <label><b>App Doing  :</b></label><br/> 
+              
+               <label>Current Group allow App Doing --- {groupDoingList}</label>
+                <br/>
+                <label> Select to add </label>
+                    <Select 
+                value ={groupDoing}
+                onChange = {handleAppDoingChange}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <br/>
+            
+             <label> Select to remove from Doing List </label>
+                 <Select 
+             value ={groupDoing}
+             onChange = {handleAppDoingRemove}
+             input={<OutlinedInput label="Assign Open" />}>
+
+                 {grouplistresult.map((group) => (
+             <MenuItem
+             key={group.groupname}
+             value={group.groupname}  >
+           {group.groupname}
+         </MenuItem>
+       
+       ))}
+       
+            </Select>
+               <br/>
+               <label><b>App Done  :</b></label><br/>
+               <label>Current Group allow App Done --- {groupDoneList}</label>
+                <br/>
+                <label> Select to add </label>
+                    <Select 
+                value ={groupDone}
+                onChange = {handleAppDoneChange}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <br/>
+            
+             <label> Select to remove from Done List </label>
+                 <Select 
+             value ={groupDoing}
+             onChange = {handleAppDoneRemove}
+             input={<OutlinedInput label="Assign Open" />}>
+
+                 {grouplistresult.map((group) => (
+             <MenuItem
+             key={group.groupname}
+             value={group.groupname}  >
+           {group.groupname}
+         </MenuItem>
+       
+       ))}
+       
+            </Select>
 
     <br />
     <input type="submit" value="Update App "/>

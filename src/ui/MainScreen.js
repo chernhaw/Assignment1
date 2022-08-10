@@ -151,26 +151,6 @@ function MainScreen(){
     const handleAppTaskQuery=async(e)=>{
         e.preventDefault();
 
-/**
- *  Axios.post('http://localhost:8080/listdisabledusers')
-        .then((response)=>{
-        const data = response.data;
-          const size = response.data.length
-          
-          console.log("data" +data)
-         // console.log("data" +data[0].username)
-          
-          console.log("data size " +size)
-          
-           for ( var i=0; i<size; i++){
-            userlist = userlist+" "+data[i].username + " "
-                  console.log("listuser [" +i+ "]" + userlist)
-              }
-          console.log("final list user" +userlist)
-
-          setDisabledList(userlist)
- * 
- */
 
         try {             
             const res =  await Axios.post('http://localhost:8080/listapptasks',{  app_acronym: "" + app_acronym + ""});
