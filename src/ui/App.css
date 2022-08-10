@@ -3,6 +3,9 @@
 }
 
 
+.boxType {
+  border-style: double;
+}
 .column {
   float: left;
   border: 1px solid blue;

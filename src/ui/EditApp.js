@@ -108,8 +108,11 @@ function EditApp(){
         if (groupToOpenList.search(event.target.value)!=-1){
           alert(event.target.value+" is already assigned")
         } else {
-        setGroupToOpenList(groupToOpenList+" "+event.target.value)
-       // alert(groupToOpenList)\
+            var curgrouplist = ""+groupToOpenList
+            curgrouplist = curgrouplist + " "+event.target.value
+             console.log("curgrouplist "+curgrouplist)
+             setGroupToOpenList(curgrouplist)
+       
         }
     }
 
@@ -117,7 +120,10 @@ function EditApp(){
         if (groupTodoList.search(event.target.value)!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-            setGroupTodoList(groupTodoList+" "+event.target.value)
+            var currentToDoList = groupTodoList
+            currentToDoList =curgrouplist+" "+event.target.value
+            console.log("curgrouplist "+curgrouplist)
+            setGroupTodoList(curgrouplist)
           }
       //  alert(groupTodoList)
     }
@@ -239,11 +245,20 @@ function EditApp(){
     }
 
     const handleEditApp=async(e)=>{
-       // e.preventDefault();
+        e.preventDefault();
        
         console.log(groupTodoList)
     
         try {
+            console.log("app description "+app_description);
+                
+            console.log("app startdate "+app_start_date);
+            console.log("app enddate "+app_end_date);
+            console.log("app permit_open "+ groupToOpenList);
+            console.log("app permit_todolist "+ groupTodoList);
+            console.log("app permit_doing "+ groupDoingList);
+            console.log("app permit_done "+ groupDoneList
+            );
 
             const res = await Axios.post('http://localhost:8080/updateapp', 
             {  app_acronym: "" + app_acronym + "",
@@ -253,18 +268,15 @@ function EditApp(){
             app_end_date: ""+app_end_date+"",
             app_permit_open: ""+groupToOpenList+"",
             app_permit_todolist: ""+groupTodoList+"",
-            app_permit_doing:""+groupDoneList+"",
+            app_permit_doing:""+groupDoingList+"",
             app_permit_done:""+groupDoneList+""
          });
+
+        
+               
             console.log("Response length:"+""+res.data+"".length)
             
-            if(res.data.username===undefined){
-            
-            }else {
-           
-      //      navigate('../usermgt');
-            }
-        
+          
 
     } catch (e){
             console.error("Create app function - there was an updating app "+e.message);
@@ -301,17 +313,21 @@ function EditApp(){
     <form onSubmit={(e)=>{handleEditApp(e)}}>
 
    
-    
+    <div className='boxType'>
     <label><b>App Description : {app_description} </b></label><br/>
     <label>Update description</label><br/>
     <input type="text" value={app_description}  onChange={(e) => { handleAppDescription(e) }} />
     <br />
     <br />
+    </div>
+    <div className='boxType'>
     <label><b>App R number :</b></label><br/>
     <label>Update R number</label><br/>
     <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />
     <br />
     <br />
+    </div>
+    <div className='boxType'>
     <label><b>App start date :</b></label>
     <br/>
      Current value : {app_start_date.split('T')[0]} 
@@ -325,10 +341,12 @@ function EditApp(){
    
     Current value : {app_end_date.split('T')[0]} 
      <br/>
-    
      <label>Update end date</label>
     <input type="date" value={app_end_date}  onChange={(e) => { handleAppEndDate(e) }} />
     <br/>
+    <br/>
+    </div>
+    <div className='boxType'>
     <label><b>App Open  :</b></label><br/>        
                     <label>Current group allow Open App ---</label>
                   {groupToOpenList} 
@@ -351,6 +369,7 @@ function EditApp(){
                </Select>
 
                <br/>
+             
                 <label> Remove Group to Open</label>    
                 <Select 
                 value ={groupToOpen}
@@ -367,6 +386,8 @@ function EditApp(){
           ))}
                </Select>
                <br/>
+               </div>
+               <div className='boxType'>
                <label><b>App Todo  :</b></label><br/> 
                <label>Current Group allow App Todo ---</label>
                {groupTodoList}
@@ -406,6 +427,8 @@ function EditApp(){
           
                </Select>
                <br/>
+               </div>
+               <div className='boxType'>
                <label><b>App Doing  :</b></label><br/> 
               
                <label>Current Group allow App Doing --- {groupDoingList}</label>
@@ -444,6 +467,8 @@ function EditApp(){
        
             </Select>
                <br/>
+               </div>
+               <div className='boxType'>
                <label><b>App Done  :</b></label><br/>
                <label>Current Group allow App Done --- {groupDoneList}</label>
                 <br/>
@@ -480,7 +505,7 @@ function EditApp(){
        ))}
        
             </Select>
-
+            </div>
     <br />
     <input type="submit" value="Update App "/>
     </form>
