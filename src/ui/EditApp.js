@@ -120,10 +120,10 @@ function EditApp(){
         if (groupTodoList.search(event.target.value)!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-            var currentToDoList = groupTodoList
+            var currentToDoList = ""+groupTodoList
             currentToDoList =curgrouplist+" "+event.target.value
             console.log("curgrouplist "+curgrouplist)
-            setGroupTodoList(curgrouplist)
+            setGroupTodoList(currentToDoList)
           }
       //  alert(groupTodoList)
     }
@@ -132,7 +132,11 @@ function EditApp(){
         if (groupDoingList.search(event.target.value)!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-        setGroupDoingList(groupDoingList+" "+event.target.value)
+
+            var currentDoingList = ""+groupDoingList
+            currentDoingList =currentDoingList+" "+event.target.value
+            console.log("curgrouplist "+curgrouplist)
+        setGroupDoingList(currentDoingList)
           }
       //  alert(groupDoingList)
     }
@@ -141,10 +145,12 @@ function EditApp(){
         if (groupDoneList.search(event.target.value)!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-        setGroupDoneList(groupDoneList+" "+event.target.value)
+
+            var currentDoneList = groupDoingList+" "+event.target.value
+        setGroupDoneList(currentDoneList)
           }
 
-        setGroupDoneList(groupDoneList+" "+event.target.value)
+       
      //   alert(groupDoneList)
     }
 
@@ -246,8 +252,6 @@ function EditApp(){
 
     const handleEditApp=async(e)=>{
         e.preventDefault();
-       
-        console.log(groupTodoList)
     
         try {
             console.log("app description "+app_description);
@@ -274,7 +278,7 @@ function EditApp(){
 
         
                
-            console.log("Response length:"+""+res.data+"".length)
+            console.log("Response length:"+""+res.data+"")
             
           
 
