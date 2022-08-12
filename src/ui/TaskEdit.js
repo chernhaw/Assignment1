@@ -106,34 +106,7 @@ function TaskEdit(){
         
     },[])
 
-    const getAccess=async(event)=>{
-
-      console.log("Checking app "+task_acronym+ " for access "+ task_State)
-      const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+task_acronym+"", access_type:""+task_State+""});
-  
-      var data = res2.data
-     
-      
-      console.log("List of user able to change update this state : ")
-      
-      for (var i=0; i<data.length-1 ; i++){
-
-        console.log(data[i].access)
-      }
-      
-      for (var i=0; i<data.length-1 ; i++){
-
-        
-          console.log(data[i].access)
-          if (data[i].assess == logged){
-            return "Have access"
-          }
-          return "No access"
-      }
-       
-      return "Access"
-    }
-
+    
     const handleTaskNoteChange=(event)=>{
           setAppendTaskNotes(event.target.value)
     }
@@ -157,10 +130,10 @@ function TaskEdit(){
     const handleUpdateTask=async(event)=>{
          event.preventDefault();
 
-         var access = getAccess()
+        // var access = getAccess()
 
 
-        console.log("User "+logged+" has access "+access )
+        console.log("User "+logged)
         console.log("Task "+ task_id+" state is :"+task_State)
         console.log("Update Task state : "+newTaskState)
         console.log("update app_acronym "+task_acronym)
@@ -178,17 +151,26 @@ function TaskEdit(){
       
          console.log("Users able to change update this state : ")
          
-         for (var i=0; i<data.length ; i++){
-           console.log(data[i].access)
-         }
+        //  for (var i=0; i<data.length; i++){
+        //    console.log(data[i].access)
+        //  }
          
          var hasAccess = false
-         console.log("Access granted for :")
-         for (var i=0; i<data.length ; i++){
-           console.log(data[i].access)
-           if (data[i].access==logged){
-             console.log("User has access "+logged)
+       
+         for (var i=0; i<data.length; i++){
+           console.log("data["+i+"].access : " +data[i].access)
+          console.log("logged :" +logged)
+          //  console.log(""+data[i].access + " two equal "+logged+" is "+data[i].access==logged)
+          //  console.log(""+data[i].access + " three equal "+logged+" is "+data[i].access===logged)
+           var access_member_str = data[i].access.toString().replaceAll(' ','');
+           var logged_user= logged.toString().replaceAll(' ','');
+           console.log("access_member_str "+ access_member_str)
+           console.log("logged_user "+ logged_user)
+           console.log("logged_user equal access_member_str="+ access_member_str==logged_user)
+           if (access_member_str==logged_user){
+             console.log("Granting access "+logged)
              hasAccess = true
+             break
            }
          }
          console.log("User "+logged+ " has access : "+hasAccess)
