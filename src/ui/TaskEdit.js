@@ -35,7 +35,7 @@ function TaskEdit(){
     const [task_createDate, setTask_createDate] = useState('');
     const [task_State, setTask_State]=useState('')
 
-    var noOfTask = 0
+    
    
     useEffect(() => {
 
@@ -83,13 +83,6 @@ function TaskEdit(){
 
             console.log("Checking for group able to access task at this state -- "+data[0].task_state)
   
-       
-         
-
-         //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
-        //  console.log("Current plan list" +data[0].object.)
-          
-          
       }
        
         // get all plans
@@ -108,15 +101,8 @@ function TaskEdit(){
             setPlanListsResult(data)
         }
 
-
-        
-        
         getTaskDetail()
-       
-
         getAllPlans()
-
-      //  getAccess()
         
     },[])
 
@@ -183,28 +169,25 @@ function TaskEdit(){
         console.log("update taskname "+task_name)
        
         console.log("update taskNotes "+taskNotes)
-        
-        
          console.log("Run update task for "+task_id)
-
-
          console.log("Checking for group able to access task at this state -- "+task_State)
-    
     
          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+task_acronym+"", access_type:""+task_State+""});
          
          var data = res2.data
-         
+      
          console.log("Users able to change update this state : ")
-         for (var i=0; i<data.length-1 ; i++){
+         
+         for (var i=0; i<data.length ; i++){
            console.log(data[i].access)
          }
          
          var hasAccess = false
-     
-         for (var i=0; i<data.length-1 ; i++){
+         console.log("Access granted for :")
+         for (var i=0; i<data.length ; i++){
            console.log(data[i].access)
            if (data[i].access==logged){
+             console.log("User has access "+logged)
              hasAccess = true
            }
          }
@@ -233,10 +216,6 @@ function TaskEdit(){
           }
           getTaskDetailUpdate()
           }
-
-       
-        
-     
     }
 
 
@@ -265,8 +244,6 @@ function TaskEdit(){
           ))}
                </Select>
 
-
-               
                <br/>
                <label>Task  Acronym: {task_acronym}</label>
                <br/>
@@ -351,8 +328,6 @@ function TaskEdit(){
       console.log("task creator : "+ data[0].task_creator)
       setTaskCreator(data[0].task_creator)
     
-  
-    
     }              
   }
    
@@ -428,7 +403,6 @@ function TaskState(props){
         label="Age"
         onChange={handleTaskStateChange}
       >
-      
         <MenuItem value={"Doing"}>Doing</MenuItem>
         <MenuItem value={"Done"}>Done</MenuItem>
         <MenuItem value={"Close"}>Close</MenuItem>
