@@ -7,7 +7,21 @@ function LogOut(){
     const navigate = useNavigate();
     const goMain = () =>{
       
-        navigate('../main')
+        try{
+            var admin = window.localStorage.getItem("admin");
+            console.log("User has admin "+ admin)
+
+            navigate('../main')
+
+            if (admin!=0){
+                navigate('../main')
+            } else {
+                navigate('../mainUser')
+            }
+        } catch (error){
+        
+        
+        }
     }
     
     return ( <>

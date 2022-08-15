@@ -1,8 +1,6 @@
 import {useEffect,useState} from 'react';
-import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -34,15 +32,8 @@ function EditApp(){
     const [groupDoneList, setGroupDoneList] = useState('')
     const [groupDone, setGroupDone] = useState('') 
     const [grouplistresult, setGroupListsResult] = useState([]);
-
-    const [appacronym, setAppAcronym] = useState('')
-    
-    const [groupToOpenRemove, setGroupToOpenRemove] = useState('')
     const [applistresult, setAppListsResult] = useState([]);
 
-   
-
-    
     var curgrouplist="";
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
@@ -233,8 +224,26 @@ function EditApp(){
               
                  setApp_description(data[0].app_description);
                  setApp_rnumbern(data[0].app_rnumber);
-                 setApp_Start_Date(data[0].app_startdate);
-                 setApp_End_Date(data[0].app_enddate);
+
+                 try {
+
+                //  data[0].app_startdate
+                 setApp_Start_Date(""+data[0].app_startdate.split('T')[0]+"");
+                 } catch (error){
+                  setApp_Start_Date("not set");
+                 }
+
+                 
+                 try {
+
+
+                  setApp_End_Date(""+data[0].app_enddate.split('T')[0]+"");
+                  } catch (error){
+                   setApp_End_Date("not set");
+                  }
+
+                 
+              //   setApp_End_Date(data[0].app_enddate);
                  setGroupToOpenList(data[0].app_permit_open);
                  setGroupTodoList(data[0].app_permit_todolist);
                  setGroupDoingList(data[0].app_permit_doing);
@@ -334,7 +343,7 @@ function EditApp(){
     <div className='boxType'>
     <label><b>App start date :</b></label>
     <br/>
-     Current value : {app_start_date.split('T')[0]} 
+     Current value : {app_start_date} 
      <br/>
      <label>Update start date</label>
     <input type="date" value={app_start_date} onChange={(e) => { handleAppStartDate(e) }} />
@@ -343,7 +352,7 @@ function EditApp(){
     <label><b>App end date :</b></label>
     <br/>
    
-    Current value : {app_end_date.split('T')[0]} 
+    Current value : {app_end_date} 
      <br/>
      <label>Update end date</label>
     <input type="date" value={app_end_date}  onChange={(e) => { handleAppEndDate(e) }} />

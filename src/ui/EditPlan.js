@@ -125,7 +125,7 @@ function EditPlan(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
+        <header className='Header'> <h3>Welcome {logged} </h3>
         <LogOut/> <GoMain/></header>
     <div className='Login'>
     <h2>Edit Plan</h2>

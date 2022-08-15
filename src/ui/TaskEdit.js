@@ -128,10 +128,10 @@ function TaskEdit(){
     
     
     const handleUpdateTask=async(event)=>{
-         event.preventDefault();
+        
 
         // var access = getAccess()
-
+        window.localStorage.setItem("app", task_acronym);
 
         console.log("User "+logged)
         console.log("Task "+ task_id+" state is :"+task_State)
@@ -179,7 +179,7 @@ function TaskEdit(){
             alert("User "+logged+" do not have access for task at "+task_State)
             
           } else {
-
+            alert("Task updated by "+logged)
             try {
               const res = await Axios.post('http://localhost:8080/updatetask', 
               {  app_acronym: "" + task_acronym + "",
@@ -196,7 +196,7 @@ function TaskEdit(){
           } catch (e){
               console.error("Update task - there was error "+e.message);
           }
-          getTaskDetailUpdate()
+        
           }
     }
 
@@ -204,7 +204,7 @@ function TaskEdit(){
     return ( 
     
         <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
+        <header className='Header'> <h6>Welcome {logged} </h6>
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Edit Task Id : {task_id}</h2>
@@ -240,14 +240,10 @@ function TaskEdit(){
                <label>Task Owner: {task_owner}</label>
                <br/>
                <br/>
-               <label>Current Task State : {task_State}</label>
-               <br/>
-               <label>New Task State</label><TaskState taskState={task_State} />
-               <br/>
               
                <label>Current Task Name : {task_name}</label>
                <br/>
-                
+               <br/>
              
                <label>New Task Name : </label>
               
@@ -264,8 +260,13 @@ function TaskEdit(){
                 <br/>
                 <label>Append to Task Notes</label>
                <br/>
-               <textarea rows="10" cols="50" value={appendtaskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
+               <textarea rows="5" cols="50" value={appendtaskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
+              
                 <br/>
+               <label>Current Task State : {task_State}</label>
+               <br/>
+               <label>New Task State</label><TaskState taskState={task_State} />
+               <br/>
                
                 <input type="submit" value="Update Task"/>
                

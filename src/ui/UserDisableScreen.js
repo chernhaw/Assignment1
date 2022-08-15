@@ -136,15 +136,9 @@ function UserDisableScreen(){
             console.log("active "+res.data.active)
             console.log("email "+res.data.email)
             console.log("admin "+res.data.admin)
-
-            
            
             }
-         //   if (res.data.username =="undefined"){
-            
-            // } else {
-            //     alert ("No user with "+username+" found")
-            // }
+        
 
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);

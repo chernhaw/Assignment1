@@ -316,21 +316,21 @@ function MainScreen(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} {loggedEmail} </h1>
-      <LogOut />
-         <h2>
-        <Button onClick ={goProfile}>Change {logged} Password/Email </Button>
-        </h2>
+        <header className='Header'> <h3>Welcome {logged} {loggedEmail} </h3>
+         
+        <Button onClick ={goProfile}>Change {logged} Password/Email </Button> <LogOut />
+       
+        </header>
         <div>
         <div>
-        User and Group Management Functions
+        <b>User and Group Management Functions</b>
         </div>
         <div>
         <button  onClick ={goUser}>Create New User </button>
         <button  onClick ={goUserMgt}>User Management</button>
         <button  onClick ={goGroup}>Group Management</button> 
         </div>
-       <div>Kanban Function</div>
+       <div><b>Kanban Function</b></div>
         <div > 
     <button  onClick ={createApp}>Create App</button> 
     <button  onClick ={editApp}>Edit App</button> 
@@ -340,7 +340,7 @@ function MainScreen(){
     </div>
         </div>
        
-         </header>
+         
 
     <div></div>
    

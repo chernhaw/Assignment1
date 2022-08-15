@@ -131,35 +131,7 @@ function GroupEdit() {
 
 
         const handleAssignGroup = async (e) => {
-          //  e.preventDefault()
-           
-        //   if(showgroupmembers.split(" ").includes(assignmember)){
-        //     alert("User already in group");
-        //     window.location.reload();
-        //   }else{
-        //     var count = 0
-        //     await axios.post('http://localhost:8080/userexist',
-        //     { username: "" + assignmember + "" })
-        //     .then((res)=>{
-        //        if(res.data.usercount == 0){
-        //             count = res.data.usercount
-        //            alert("User does not exit")
-        //            window.location.reload();
-        //        }
-        //        })
-        //     .catch((err)=>console.log(err));
-        //     if(count != 0){
-        //         await axios.post('http://localhost:8080/groupassign',
-        //         { groupname: "" + group + "", username: "" + assignmember + "" })
-        //         .then((res)=>{
-        //             alert(`${assignmember} has been added into ${group}`)
-        //             window.location.reload();
-        //         })
-        //         .catch((err)=>{console.log(err)})
-        //     }
-         
-        //   }
-
+     
           
             var groupmembers = ""+showgroupmembers+""
             var usertoassign = ""+assignmember+""
@@ -262,7 +234,7 @@ function GroupEdit() {
     return (
         <div>
             <header className='Header'>
-                <h1>Welcome {logged} </h1>
+                <h3>Welcome {logged} </h3>
                 <h3>
                     <Button onClick={goMain}>Main </Button>
                     <Button onClick={goGroup}>Group Management </Button>

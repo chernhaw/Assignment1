@@ -15,7 +15,7 @@
 
   .Header {
     background-color: #282c34;
-    min-height: 8vh;
+    max-height: 10%;
     display: flex;
     flex-direction: column;
     align-items: center;

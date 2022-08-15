@@ -138,6 +138,36 @@ function CreateTask(){
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
 
+
+       
+    
+         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Open"});
+         
+         var data = res2.data
+      
+         console.log("Users able to open task in : "+app_acronym)
+         
+         for (var i=0; i<data.length ; i++){
+           console.log(data[i].access)
+         }
+         
+         var hasAccess = false
+         console.log("Access granted for :")
+         for (var i=0; i<data.length ; i++){
+           console.log(data[i].access)
+           if (data[i].access==logged){
+             
+             hasAccess = true
+           }
+           console.log("User "+logged+ " has right to Open task : "+hasAccess)
+         }
+        
+
+          if(!hasAccess){
+            alert("User "+logged+" do not have access to Open task")
+            
+          } else {
+        
         
          try {
         const res = await Axios.post('http://localhost:8080/createtask', 
@@ -154,6 +184,11 @@ function CreateTask(){
 
     }
 
+
+    ////////////////////////////////////////////////
+
+
+}
     return ( 
     
         <div>

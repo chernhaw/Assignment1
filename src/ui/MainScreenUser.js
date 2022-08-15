@@ -32,13 +32,7 @@ function MainScreenUser(){
     var doneTaskList=[]
     var closeTaskList=[]
    
-    const LogOutUser = () =>{
-        alert("You are logged out");
-        window.localStorage.removeItem("username");
-        window.localStorage.removeItem("email");
-        window.localStorage.removeItem("admin");
-        navigate('../login')
-    }
+  
 
     useEffect(() => {
 
@@ -246,9 +240,9 @@ function MainScreenUser(){
     return (
 
     <div>
-        <header className='Header'> <h1>Welcome {logged} {loggedEmail}</h1> 
-        <h2> <Button onClick ={goProfile}>Change {logged} Password/email </Button>
-        </h2> 
+        <header className='Header'> 
+        <h6>Welcome {logged} {loggedEmail}</h6> 
+        <Button onClick ={goProfile}>Change {logged} Password/email </Button>
         <LogOut />
         <div>Kanban Function</div>
         <div > 

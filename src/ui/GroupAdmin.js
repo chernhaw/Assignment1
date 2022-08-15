@@ -177,7 +177,7 @@ function GroupAdmin() {
     return (
         <div>
             <header className='Header'>
-                <h1>Welcome {logged} </h1>
+                <h6>Welcome {logged} </h6>
                 <h3>
                     <Button onClick={goMain}>Main </Button>
                     <Button onClick={goGroup}>Group Management </Button>
