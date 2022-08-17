@@ -191,7 +191,7 @@ function CreateTask(){
 }
     return ( 
     
-        <div>
+        <div className='boxType'>
         <header className='Header'> <h1>Welcome {logged} </h1>
         <LogOut/> <GoMain/> </header>
     <div className='Login'>

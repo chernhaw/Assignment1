@@ -25,6 +25,8 @@ function MainScreenUser(){
     const [doingTask, setDoingTask] = useState([]);
     const [doneTask, setDoneTask] = useState([]);
     const [closeTask, setCloseTask] = useState([]);
+    const [plan, setPlan] = useState('');
+    const [planlistresult, setPlanListsResult] = useState([]);
 
     var openTaskList =[]
     var todoTaskList=[]
@@ -45,6 +47,18 @@ function MainScreenUser(){
             setAppListsResult(data)
         }
         getAllApp()
+
+
+        async function getAllPlans(){
+            const res = await Axios.post('http://localhost:8080/listplans');
+        
+            var data = res.data;
+            console.log("Current plan list" +data)
+            setPlanListsResult(data)
+        }
+        
+    
+        getAllPlans()
         if (logged==null){
          navigate('../login')   
         }
@@ -57,6 +71,177 @@ function MainScreenUser(){
        
     }
 
+    const handlePlanTaskQuery=async(e)=>{
+        e.preventDefault();
+        try {             
+            const res =  await Axios.post('http://localhost:8080/listplantasks',{  plan: "" + plan + ""});
+           
+            console.log("Query task response for app "+plan+": "+ res.data);
+            
+           
+
+            //task_id, task_name, task_sta
+          const size = res.data.length
+           for ( var i=0; i<size; i++){
+              console.log("Task id :"+res.data[i].task_id)
+              console.log("Task name :"+res.data[i].task_name)  
+              console.log("Task status :"+res.data[i].task_state)             
+              // alert ("User "+res.data[i].username   
+             } 
+
+             // Populate into Open list
+
+             for ( var i=0; i<size; i++){
+
+                if (res.data[i].task_state=="Open"){
+                    console.log("Adding to Open list Task id :"+res.data[i].task_id)
+                    console.log("Task name :"+res.data[i].task_name)  
+                    console.log("Task status :"+res.data[i].task_state)      
+
+                    openTaskList.push(res.data[i])
+                } 
+            
+             }
+
+             console.log("Open list length :"+openTaskList.length) 
+
+
+             for ( var i=0; i<openTaskList.length; i++){
+
+                    console.log("Open list Task id :"+openTaskList[i].task_id + 
+                    " Task name :"+openTaskList[i].task_name +
+                    " Task status :"+openTaskList[i].task_state)      
+
+            
+             }
+
+
+             setOpenTask(openTaskList)
+             // Populate into ToDo list
+
+             for ( var i=0; i<size; i++){
+
+                if (res.data[i].task_state=="Todo"){
+                    console.log("Adding to Todo list Task id :"+res.data[i].task_id)
+                    console.log("Task name :"+res.data[i].task_name)  
+                    console.log("Task status :"+res.data[i].task_state)      
+
+                    todoTaskList.push(res.data[i])
+                } 
+            
+             }
+
+             console.log("Todo list length :"+todoTaskList.length) 
+
+
+             for ( var i=0; i<todoTaskList.length; i++){
+
+                    console.log("Todo list Task id :"+todoTaskList[i].task_id + 
+                    " Task name :"+todoTaskList[i].task_name +
+                    " Task status :"+todoTaskList[i].task_state)      
+
+            
+             }
+
+             setTodoTask(todoTaskList)
+             // Populate into Doing list
+
+             for ( var i=0; i<size; i++){
+
+                if (res.data[i].task_state=="Doing"){
+                    console.log("Adding to Doing list Task id :"+res.data[i].task_id)
+                    console.log("Task name :"+res.data[i].task_name)  
+                    console.log("Task status :"+res.data[i].task_state)      
+
+                    doingTaskList.push(res.data[i])
+                } 
+            
+             }
+
+             console.log("Doing list length :"+doingTaskList.length) 
+
+
+             for ( var i=0; i<doingTaskList.length; i++){
+
+                    console.log("Doing list Task id :"+doingTaskList[i].task_id + 
+                    " Task name :"+doingTaskList[i].task_name +
+                    " Task status :"+doingTaskList[i].task_state)      
+
+            
+             }
+          
+             setDoingTask(doingTaskList)
+             // Populate into Done list
+
+             for ( var i=0; i<size; i++){
+
+                if (res.data[i].task_state=="Done"){
+                    console.log("Adding to Done list Task id :"+res.data[i].task_id)
+                    console.log("Task name :"+res.data[i].task_name)  
+                    console.log("Task status :"+res.data[i].task_state)      
+
+                    doneTaskList.push(res.data[i])
+                } 
+            
+             }
+
+             console.log("Doing list length :"+doneTaskList.length) 
+
+
+             for ( var i=0; i<doneTaskList.length; i++){
+
+                    console.log("Done list Task id :"+doneTaskList[i].task_id + 
+                    " Task name :"+doneTaskList[i].task_name +
+                    " Task status :"+doneTaskList[i].task_state)      
+
+            
+             }
+
+             setDoneTask(doneTaskList)
+             
+             for ( var i=0; i<size; i++){
+
+                if (res.data[i].task_state=="Close"){
+                    console.log("Adding to Close list Task id :"+res.data[i].task_id)
+                    console.log("Task name :"+res.data[i].task_name)  
+                    console.log("Task status :"+res.data[i].task_state)      
+
+                    closeTaskList.push(res.data[i])
+                } 
+            
+             }
+
+             
+
+
+             for ( var i=0; i<closeTaskList.length; i++){
+
+                    console.log("Close list Task id :"+closeTaskList[i].task_id + 
+                    " Task name :"+closeTaskList[i].task_name +
+                    " Task status :"+closeTaskList[i].task_state)      
+
+            
+             }
+            
+             setCloseTask(closeTaskList)
+             console.log("Close list length :"+closeTaskList.length) 
+
+             
+        } catch (e){
+           console.error("Query group error - "+e.message);
+
+       }
+
+
+
+    }
+
+    const handlePlan=(event)=>{
+       
+        setPlan(event.target.value)
+      //  countTask()
+       
+    }
     const handleAppTaskQuery=async(e)=>{
         e.preventDefault();
 
@@ -276,6 +461,22 @@ function MainScreenUser(){
           ))}
                </Select>
                <input type="submit" value="Get App Task"/>
+               </form>
+               <form onSubmit={(e)=>{handlePlanTaskQuery(e)}}>        
+                 <Select 
+                value ={plan}
+                onChange = {handlePlan}
+                input={<OutlinedInput label="User to Check" />}>
+                {planlistresult.map((plan) => (
+                <MenuItem
+                key={plan.plan_app_acronym}
+                value={plan.plan_app_acronym }>
+              {plan.plan_app_acronym}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <input type="submit" value="Get Plan Task"/>
                </form>
     </div>
     

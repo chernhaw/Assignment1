@@ -250,7 +250,6 @@ function GroupEdit() {
           
            <div style={{display:"grid",gridTemplateColumns:"repeat(2,1fr)", }}>
             {showgroupmembers.split(" ").map((group)=>{
-                
                     return(
                         <div key={group} style={{border:"1px solid #000"}}>
                             {group}

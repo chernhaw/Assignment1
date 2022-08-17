@@ -2,12 +2,16 @@
   text-align: top;
 }
 
+label {
+ font-style: bold;
+ align-content: flex-start;
+}
 .Logout {
   height: 10px;
 }
 .Header {
   border: 3px;
-  height: 130px;
+  height: 160px;
 }
 .boxType {
   border-style: double;
