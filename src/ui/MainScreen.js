@@ -19,13 +19,14 @@ function MainScreen(){
     const [applistresult, setAppListsResult] = useState([]);
     const [ app_acronym, setApp_acronym] = useState('');
 
-    const [ plan, setPlan] = useState('');
     const [openTask, setOpenTask] = useState([]);
     const [todoTask, setTodoTask] = useState([]);
     const [doingTask, setDoingTask] = useState([]);
     const [doneTask, setDoneTask] = useState([]);
     const [closeTask, setCloseTask] = useState([]);
+    const [plan, setPlan] = useState('');
     const [planlistresult, setPlanListsResult] = useState([]);
+
 
     var openTaskList =[]
     var todoTaskList=[]
@@ -44,9 +45,8 @@ function MainScreen(){
             console.log("Current app list" +data)
             setAppListsResult(data)
         }
-
         getAllApp()
-       
+
         async function getAllPlans(){
             const res = await Axios.post('http://localhost:8080/listplans');
         
@@ -62,7 +62,15 @@ function MainScreen(){
 
     },[])
 
-    
+    function refresh(){
+        var refresh = window.localStorage.getItem("refresh")
+       // alert("Refresh "+refresh)
+        if (refresh=='true'){
+        window.location.reload()
+        window.localStorage.removeItem("refresh")
+        }
+
+    }
 
     
     //<Task task_id="00x" task_name="Tesing" task_state="Open"></Task>
@@ -94,7 +102,15 @@ function MainScreen(){
          
       }
 
-
+    // const setOpenTaskList = (data)=>{
+    //     const size = res.data.length
+    //     for ( var i=0; i<size; i++){
+    //        console.log("Task id :"+res.data[0].task_id)
+    //        console.log("Task name :"+res.data[0].task_name)  
+    //        console.log("Task status :"+res.data[0].task_state)             
+    //        // alert ("User "+res.data[i].username   
+    //       } 
+    // }
    
     const goProfile = () =>{
         
@@ -145,6 +161,7 @@ function MainScreen(){
        
     }
 
+    
     const handlePlanTaskQuery=async(e)=>{
         e.preventDefault();
         try {             
@@ -305,18 +322,14 @@ function MainScreen(){
            console.error("Query group error - "+e.message);
 
        }
-
-
-
     }
 
-   const handlePlan=(event)=>{
+    const handlePlan=(event)=>{
        
-    setPlan(event.target.value)
-  //  countTask()
-   
-}
-
+        setPlan(event.target.value)
+      //  countTask()
+       
+    }
 
     const handleAppTaskQuery=async(e)=>{
         e.preventDefault();
@@ -518,7 +531,7 @@ function MainScreen(){
     <div className='column'> 
    
 
-    <label>Select App or Plan to View Task</label>
+    <label>Select App to View Task</label>
         
     <form onSubmit={(e)=>{handleAppTaskQuery(e)}}>        
     <Select 

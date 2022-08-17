@@ -19,7 +19,7 @@ function TaskEdit(){
     var admin = window.localStorage.getItem("admin");
     console.log("Logged" +logged);
     console.log("Admin" +admin);
-
+    
     
     const [planlistresult, setPlanListsResult] = useState([]);
 
@@ -34,7 +34,7 @@ function TaskEdit(){
     const [task_owner, setTask_owner] = useState('');
     const [task_createDate, setTask_createDate] = useState('');
     const [task_State, setTask_State]=useState('')
-
+    const [hasAccess, setHasAccess]=useState()
     
    
     useEffect(() => {
@@ -46,6 +46,8 @@ function TaskEdit(){
         }
 
         var task_id = window.localStorage.getItem("task_id")
+
+        
       
         async function getTaskDetail(){
             const res = await Axios.post('http://localhost:8080/gettaskdetail',{task_id:""+task_id+""});
@@ -69,12 +71,16 @@ function TaskEdit(){
             setTaskNotes(data[0].task_notes)
             console.log("task_app_acronym "+data[0].task_app_acronym)
             setTask_acronym(data[0].task_app_acronym)
+            
+           
+             
             console.log("task_owner "+data[0].task_owner)
             setTask_owner(data[0].task_owner)
 
             console.log("task_state "+data[0].task_state)
             setTask_State(data[0].task_state)
             newTaskState=data[0].task_state
+           
             console.log("task_createDate "+data[0].task_owner)
             setTask_createDate(data[0].task_createDate)
 
@@ -82,7 +88,26 @@ function TaskEdit(){
             setTaskCreator(data[0].task_creator)
 
             console.log("Checking for group able to access task at this state -- "+data[0].task_state)
-  
+           
+
+          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
+         
+          var accessData = res2.data
+          var access_member_str=""
+          console.log("Users able to change update this state : ")
+          
+          for (var i=0; i<accessData.length; i++){
+            console.log(accessData[i].access)
+            access_member_str= access_member_str + accessData[i].access + " "
+            
+          }
+
+          if (access_member_str.indexOf(logged)!=-1){
+                console.log("Granting access "+logged)
+                setHasAccess(true)
+               
+          }
+          
       }
        
         // get all plans
@@ -101,11 +126,53 @@ function TaskEdit(){
             setPlanListsResult(data)
         }
 
+        // // check if user can access
+        // async function checkAccess(){
+        //   console.log("Checking "+logged+" has access to "+task_app_acronym+" as state "+task_state)
+
+        //   const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+task_acronym+"", access_type:""+task_State+""});
+         
+        //   var data = res2.data
+       
+        //   console.log("Users able to change update this state : ")
+          
+        //   for (var i=0; i<data.length; i++){
+        //     console.log(data[i].access)
+        //   }
+          
+        //   // var hasAccess = false
+        
+        //   // for (var i=0; i<data.length; i++){
+        //   //   console.log("data["+i+"].access : " +data[i].access)
+        //   //  console.log("logged :" +logged)
+        //   //  //  console.log(""+data[i].access + " two equal "+logged+" is "+data[i].access==logged)
+        //   //  //  console.log(""+data[i].access + " three equal "+logged+" is "+data[i].access===logged)
+        //   //   var access_member_str = data[i].access.toString().replaceAll(' ','');
+        //   //   var logged_user= logged.toString().replaceAll(' ','');
+        //   //   console.log("access_member_str "+ access_member_str)
+        //   //   console.log("logged_user "+ logged_user)
+        //   //   console.log("logged_user equal access_member_str="+ access_member_str==logged_user)
+        //   //   if (access_member_str==logged_user){
+        //   //     console.log("Granting access "+logged)
+        //   //     hasAccess = true
+        //   //     break
+        //   //   }
+        //   // }
+        //   // console.log("User "+logged+ " has access : "+hasAccess)
+  
+        //   //  if(!hasAccess){
+        //   //    alert("User "+logged+" do not have access for task at "+task_State)
+             
+        //   //  } 
+        // }
+
         getTaskDetail()
         getAllPlans()
+    //    checkAccess()
         
     },[])
 
+    
     
     const handleTaskNoteChange=(event)=>{
           setAppendTaskNotes(event.target.value)
@@ -145,34 +212,7 @@ function TaskEdit(){
          console.log("Run update task for "+task_id)
          console.log("Checking for group able to access task at this state -- "+task_State)
     
-         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+task_acronym+"", access_type:""+task_State+""});
          
-         var data = res2.data
-      
-         console.log("Users able to change update this state : ")
-         
-        //  for (var i=0; i<data.length; i++){
-        //    console.log(data[i].access)
-        //  }
-         
-         var hasAccess = false
-       
-         for (var i=0; i<data.length; i++){
-           console.log("data["+i+"].access : " +data[i].access)
-          console.log("logged :" +logged)
-          //  console.log(""+data[i].access + " two equal "+logged+" is "+data[i].access==logged)
-          //  console.log(""+data[i].access + " three equal "+logged+" is "+data[i].access===logged)
-           var access_member_str = data[i].access.toString().replaceAll(' ','');
-           var logged_user= logged.toString().replaceAll(' ','');
-           console.log("access_member_str "+ access_member_str)
-           console.log("logged_user "+ logged_user)
-           console.log("logged_user equal access_member_str="+ access_member_str==logged_user)
-           if (access_member_str==logged_user){
-             console.log("Granting access "+logged)
-             hasAccess = true
-             break
-           }
-         }
          console.log("User "+logged+ " has access : "+hasAccess)
 
           if(!hasAccess){
@@ -208,9 +248,22 @@ function TaskEdit(){
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Edit Task Id : {task_id}</h2>
+
+    <label>Task  Acronym: {task_acronym}</label>
+                <br/>
+               
+               <label>Task Creation Date: {task_createDate.split('T')[0]}</label>
+               <br/>
+               
+               <label>Task Creator: {task_creator}</label>
+               <br/>
+               
+               <label>Task Owner: {task_owner}</label>
+               <br/>
+              
     <form onSubmit={(e)=>{handleUpdateTask(e)}}>
-    
-               <label>Current Task Plan : {taskplan}</label><br/>
+                <div className='boxType'>
+               <label >Current Task Plan : {taskplan}</label><br/>
                <label>Select Plan for Task</label>
                 <Select 
                 value ={taskplan}
@@ -225,22 +278,10 @@ function TaskEdit(){
           
           ))}
                </Select>
-
+                  </div>
                <br/>
-               <label>Task  Acronym: {task_acronym}</label>
-               <br/>
-
-               <br/>
-               <label>Task Creation Date: {task_createDate}</label>
-               <br/>
-               <br/>
-               <label>Task Creator: {task_creator}</label>
-               <br/>
-               <br/>
-               <label>Task Owner: {task_owner}</label>
-               <br/>
-               <br/>
-              
+               
+               <div className='boxType'>
                <label>Current Task Name : {task_name}</label>
                <br/>
                <br/>
@@ -249,11 +290,16 @@ function TaskEdit(){
               
                <input type="text" value={task_name} required onChange={(e) => { handleTaskNameChange(e) }} />
                <br />
+               
                <br/>
+               </div>
+               <div className='boxType'>
                <label>Current Task Description: </label>
                <br/>
                <textarea rows="4" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
                <br/>
+               </div>
+               <div className='boxType'>
                <label>Existing Task Notes - Read only</label>
                <br/>
                <textarea rows="10" cols="50" value={taskNotes}/>
@@ -263,14 +309,16 @@ function TaskEdit(){
                <textarea rows="5" cols="50" value={appendtaskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
               
                 <br/>
+                </div>
+                <div className='boxType'>
                <label>Current Task State : {task_State}</label>
                <br/>
                <label>New Task State</label><TaskState taskState={task_State} />
                <br/>
+               </div>
+                <div>{hasAccess &&<input type="submit" value="Update Task"/>}</div>
                
-                <input type="submit" value="Update Task"/>
-               
-
+                <div>Back</div>
     </form>
     </div>
     </div>

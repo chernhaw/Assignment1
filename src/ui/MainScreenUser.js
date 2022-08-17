@@ -231,9 +231,6 @@ function MainScreenUser(){
            console.error("Query group error - "+e.message);
 
        }
-
-
-
     }
 
     const handlePlan=(event)=>{
