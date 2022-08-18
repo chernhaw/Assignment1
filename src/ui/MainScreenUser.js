@@ -27,6 +27,7 @@ function MainScreenUser(){
     const [closeTask, setCloseTask] = useState([]);
     const [plan, setPlan] = useState('');
     const [planlistresult, setPlanListsResult] = useState([]);
+    const [showAppPlan, setShowAppPlan] = useState('');
 
     var openTaskList =[]
     var todoTaskList=[]
@@ -67,7 +68,7 @@ function MainScreenUser(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
-      //  countTask()
+        setShowAppPlan(true)
        
     }
 
@@ -402,6 +403,13 @@ function MainScreenUser(){
 
        }
 
+       const res = await Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""});
+    
+       var data = res.data;
+       console.log("Current plan list" +data)
+       setPlanListsResult(data)
+   
+
 
     }
    
@@ -430,7 +438,7 @@ function MainScreenUser(){
         <div > 
   
     <button onClick={createPlan}>Create Plan</button>
-    <button onClick={editPlan}>Edit Plan</button>
+   
    
     </div>
         </header>
@@ -459,7 +467,7 @@ function MainScreenUser(){
                </Select>
                <input type="submit" value="Get App Task"/>
                </form>
-               <form onSubmit={(e)=>{handlePlanTaskQuery(e)}}>        
+               {showAppPlan&&<div><form onSubmit={(e)=>{handlePlanTaskQuery(e)}}>        
                  <Select 
                 value ={plan}
                 onChange = {handlePlan}
@@ -475,6 +483,7 @@ function MainScreenUser(){
                </Select>
                <input type="submit" value="Get Plan Task"/>
                </form>
+               </div>}
     </div>
     
     <div className='column'> 

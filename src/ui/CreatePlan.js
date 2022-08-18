@@ -17,6 +17,7 @@ function CreatePlan(){
    
     const [ plan_start_date, setPlan_Start_Date] = useState('');
     const [ plan_end_date, setPlan_End_Date] = useState('');
+    const [hasAccess, setHasAccess]=useState()
 
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
@@ -25,6 +26,9 @@ function CreatePlan(){
     console.log("Admin" +admin);
    
     useEffect(() => {
+
+        setHasAccess(false)
+       
 
         if (logged==null){
          navigate('../login')   
@@ -41,14 +45,47 @@ function CreatePlan(){
         
         getAllApp()
         
+        
     },[])
+
+    const goMain = () => {
+        var refresh="true"
+        window.localStorage.setItem("refresh", refresh )
+  
+        navigate('../main')
+    }
 
     const handlePlanMVPNameChange=(event)=>{
         setPlan_MVP_Name(event.target.value)
     }
   
-    const handleAppAcronym=(event)=>{
+    const handleAppAcronym=async(event)=>{
         setApp_acronym(event.target.value)
+
+        const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Todo"});
+         
+        var accessData = res2.data
+        var access_member_str=""
+        console.log("Users able to change update this state : ")
+        
+        for (var i=0; i<accessData.length; i++){
+          console.log(accessData[i].access)
+          access_member_str= access_member_str + accessData[i].access + " "
+          
+        }
+
+        if (access_member_str.indexOf(logged)!=-1){
+              console.log("Granting access "+logged)
+              setHasAccess(true)
+             
+        } else {
+          setHasAccess(false)
+        }
+
+
+       
+
+
     }
 
 
@@ -107,7 +144,7 @@ function CreatePlan(){
     <div className='Login'>
     <h2>Create new Plan</h2>
     <div>
-    <form onSubmit={(e)=>{handleCreatePlan(e)}}>
+    
     
     <label>Select App for Plan</label>
                 <Select 
@@ -124,7 +161,12 @@ function CreatePlan(){
           ))}
                </Select>
     
-    <br /><br/>
+    <br />
+    {!hasAccess && <div>{app_acronym} : You do not have right to create plan </div>} 
+    {hasAccess && 
+    <div>
+    <form onSubmit={(e)=>{handleCreatePlan(e)}}>
+        <br/>
     <label>App Acronym : {app_acronym}</label> <br/><br/>
     <label>Plan MVP name :</label>
     <input type="text" value={plan_mvp_name} required onChange={(e) => { handlePlanMVPNameChange(e) }} />
@@ -135,9 +177,15 @@ function CreatePlan(){
     <label>Plan end date :</label>
     <input type="date" value={plan_end_date} onChange={(e) => { handlePlanEndDate(e) }} />
     <br/>
+    <br/>
     <input type="submit" value="Create Plan"/>
     </form>
+`   </div>}
+
     </div>
+    <br/>
+    <br/>
+    <button onClick={goMain}>Main Kanban Board</button>
     </div>
     </div>
    

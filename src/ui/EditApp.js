@@ -334,10 +334,9 @@ function EditApp(){
     <br />
     </div>
     <div className='boxType'>
-    <label><b>App R number :</b></label><br/>
-    <label>Update R number</label><br/>
-    <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />
-    <br />
+    <label><b>App R number :</b>{app_rnumber}</label><br/>
+   
+
     <br />
     </div>
     <div className='boxType'>

@@ -19,7 +19,7 @@ function TaskEdit(){
     var admin = window.localStorage.getItem("admin");
     console.log("Logged" +logged);
     console.log("Admin" +admin);
-    
+   
     
     const [planlistresult, setPlanListsResult] = useState([]);
 
@@ -47,7 +47,7 @@ function TaskEdit(){
 
         var task_id = window.localStorage.getItem("task_id")
 
-        
+        console.log("Opening task "+task_id)
       
         async function getTaskDetail(){
             const res = await Axios.post('http://localhost:8080/gettaskdetail',{task_id:""+task_id+""});
@@ -89,8 +89,14 @@ function TaskEdit(){
 
             console.log("Checking for group able to access task at this state -- "+data[0].task_state)
            
+            var task_access=""
+            if (data[0].task_state=="Open"){
+              task_access="Todo"
+            } else {
+              task_access= ""+data[0].task_state
+            }
 
-          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+data[0].task_state+""});
+          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+task_access+""});
          
           var accessData = res2.data
           var access_member_str=""
@@ -192,6 +198,12 @@ function TaskEdit(){
     setTaskDescription(event.target.value)
     }
 
+    const goMain = () => {
+      var refresh="true"
+      window.localStorage.setItem("refresh", refresh )
+
+      navigate('../main')
+  }
     
     
     const handleUpdateTask=async(event)=>{
@@ -263,7 +275,10 @@ function TaskEdit(){
               
     <form onSubmit={(e)=>{handleUpdateTask(e)}}>
                 <div className='boxType'>
-               <label >Current Task Plan : {taskplan}</label><br/>
+                <label >Current Task Plan : {taskplan}</label><br/>
+                {hasAccess &&
+                  <div>
+               
                <label>Select Plan for Task</label>
                 <Select 
                 value ={taskplan}
@@ -278,18 +293,16 @@ function TaskEdit(){
           
           ))}
                </Select>
+                  </div>}
                   </div>
                <br/>
                
                <div className='boxType'>
-               <label>Current Task Name : {task_name}</label>
+               <label>Task Name : {task_name}</label>
                <br/>
-               <br/>
+               
              
-               <label>New Task Name : </label>
-              
-               <input type="text" value={task_name} required onChange={(e) => { handleTaskNameChange(e) }} />
-               <br />
+               
                
                <br/>
                </div>
@@ -304,22 +317,33 @@ function TaskEdit(){
                <br/>
                <textarea rows="10" cols="50" value={taskNotes}/>
                 <br/>
+                
+                  
+               <div>{hasAccess &&
+                <div>
                 <label>Append to Task Notes</label>
                <br/>
-               <textarea rows="5" cols="50" value={appendtaskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
-              
+               <textarea rows="5" cols="50" value={appendtaskNotes} onChange={(e) => { handleTaskNoteChange(e) }} />
+               </div>
+              }</div>
+
+
                 <br/>
                 </div>
                 <div className='boxType'>
                <label>Current Task State : {task_State}</label>
                <br/>
-               <label>New Task State</label><TaskState taskState={task_State} />
+               
+               
+               <div>{hasAccess &&<div><label>New Task State</label><TaskState taskState={task_State} /></div>}</div>
                <br/>
                </div>
                 <div>{hasAccess &&<input type="submit" value="Update Task"/>}</div>
                
-                <div>Back</div>
+               
     </form>
+
+    <button onClick={goMain}>Main Kanban Board</button>
     </div>
     </div>
     );
@@ -386,7 +410,7 @@ function TaskState(props){
     label="task State"
     onChange={handleTaskStateChange}
   >
-    <MenuItem value={"Open"}>Open</MenuItem>
+    
     <MenuItem value={"Todo"}>Todo</MenuItem>
   </Select>
 
@@ -403,6 +427,7 @@ function TaskState(props){
       >
         <MenuItem value={"Todo"}>Todo</MenuItem>
         <MenuItem value={"Doing"}>Doing</MenuItem>
+        
       </Select>
     
       </>
@@ -419,7 +444,7 @@ function TaskState(props){
       >
         <MenuItem value={"Todo"}>Todo</MenuItem>
         <MenuItem value={"Doing"}>Doing</MenuItem>
-        <MenuItem value={"Done"}>Done</MenuItem>
+       
       </Select>
     
       </>

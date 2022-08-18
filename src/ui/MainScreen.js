@@ -14,7 +14,7 @@ function MainScreen(){
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var loggedEmail = window.localStorage.getItem("email");
-    var admin = window.localStorage.getItem("admin")
+  
     console.log(logged);
     const [applistresult, setAppListsResult] = useState([]);
     const [ app_acronym, setApp_acronym] = useState('');
@@ -26,6 +26,7 @@ function MainScreen(){
     const [closeTask, setCloseTask] = useState([]);
     const [plan, setPlan] = useState('');
     const [planlistresult, setPlanListsResult] = useState([]);
+    const [showAppPlan, setShowAppPlan] = useState('');
 
 
     var openTaskList =[]
@@ -58,20 +59,16 @@ function MainScreen(){
     
         getAllPlans()
 
+        // get Open user
+
+        setShowAppPlan(false)
+
+        // get PM user 
 
 
     },[])
 
-    function refresh(){
-        var refresh = window.localStorage.getItem("refresh")
-       // alert("Refresh "+refresh)
-        if (refresh=='true'){
-        window.location.reload()
-        window.localStorage.removeItem("refresh")
-        }
-
-    }
-
+   
     
     //<Task task_id="00x" task_name="Tesing" task_state="Open"></Task>
       const userlist = (e) =>{
@@ -102,15 +99,7 @@ function MainScreen(){
          
       }
 
-    // const setOpenTaskList = (data)=>{
-    //     const size = res.data.length
-    //     for ( var i=0; i<size; i++){
-    //        console.log("Task id :"+res.data[0].task_id)
-    //        console.log("Task name :"+res.data[0].task_name)  
-    //        console.log("Task status :"+res.data[0].task_state)             
-    //        // alert ("User "+res.data[i].username   
-    //       } 
-    // }
+    
    
     const goProfile = () =>{
         
@@ -157,6 +146,9 @@ function MainScreen(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
+        setShowAppPlan(true)
+
+
       //  countTask()
        
     }
@@ -319,9 +311,11 @@ function MainScreen(){
 
              
         } catch (e){
-           console.error("Query group error - "+e.message);
+           console.error("Query task error - "+e.message);
 
        }
+
+     
     }
 
     const handlePlan=(event)=>{
@@ -333,7 +327,7 @@ function MainScreen(){
 
     const handleAppTaskQuery=async(e)=>{
         e.preventDefault();
-
+       
 
         try {             
             const res =  await Axios.post('http://localhost:8080/listapptasks',{  app_acronym: "" + app_acronym + ""});
@@ -494,6 +488,15 @@ function MainScreen(){
 
        }
 
+       
+        const res = await Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""});
+    
+        var data = res.data;
+        console.log("Current plan list" +data)
+        setPlanListsResult(data)
+    
+
+
 
     }
     return (
@@ -515,10 +518,10 @@ function MainScreen(){
         </div>
        <div><b>Kanban Function</b></div>
         <div > 
-    <button  onClick ={createApp}>Create App</button> 
+    <button  onClick ={createApp}>  Create App</button> 
     <button  onClick ={editApp}>Edit App</button> 
     <button onClick={createPlan}>Create Plan</button>
-    <button onClick={editPlan}>Edit Plan</button>
+    
     <button onClick={createTask}>Create Task</button>
     </div>
         </div>
@@ -546,9 +549,15 @@ function MainScreen(){
             </MenuItem>
           
           ))}
+
+
                </Select>
                <input type="submit" value="Get App Task"/>
+               
+               
                </form>
+
+               {showAppPlan&&<div>
                <form onSubmit={(e)=>{handlePlanTaskQuery(e)}}>        
                  <Select 
                 value ={plan}
@@ -563,8 +572,11 @@ function MainScreen(){
           
           ))}
                </Select>
+
+              
                <input type="submit" value="Get Plan Task"/>
                </form>
+               </div>}
     </div>
     
     <div className='column'> 

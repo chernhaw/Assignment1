@@ -27,8 +27,7 @@ const goEditTask = () =>{
             
             <div>{props.task_id}</div>    
             <div> {props.task_name}</div>    
-            <div>{props.task_state}</div>   
-
+            
          <button onClick={goEditTask}>Edit Task</button>
     </div>)
 }

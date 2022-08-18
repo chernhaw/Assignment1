@@ -130,14 +130,55 @@ function CreateApp(){
     }
 
     const handleAppStartDate=(e)=>{
+
+        var endDate
+            var startDate
+
+        try{
+        startDate = Date.parse(""+e.target.value+"")
+        endDate = Date.parse(""+app_end_date+"")
+
+        console.log("start date "+startDate)
+        console.log("end date "+endDate)
+        if (endDate<startDate){ 
+            alert ("End date must be later than start date ")
+        } else {
+            setApp_Start_Date(""+e.target.value+"")
+        }
        
+    } catch (error){
         setApp_Start_Date(""+e.target.value+"")
-        console.log("App "+app_acronym+" start date "+ app_start_date)
+    }
+        
     }
 
     const handleAppEndDate=(e)=>{
-        setApp_End_Date(""+e.target.value+"")
-        console.log("App "+app_acronym+" end date "+ app_end_date)
+        
+            var endDate
+            var startDate
+             
+        try {
+
+            endDate = Date.parse(""+e.target.value+"")
+            startDate = Date.parse(""+app_start_date+"")
+
+            console.log("start date "+startDate)
+            console.log("end date "+endDate)
+            if (endDate<startDate){ 
+                alert ("End date must be later than start date ")
+            } else {
+                setApp_End_Date(""+e.target.value+"")
+            }
+
+        } catch (error){
+            setApp_End_Date(""+e.target.value+"")
+        }
+            
+       
+
+           // setApp_End_Date(""+e.target.value+"")
+            console.log("App "+app_acronym+" end date "+ app_end_date)
+        
     }
 
     const handleCreateApp=async(e)=>{
@@ -192,8 +233,10 @@ function CreateApp(){
     <input type="text" value={app_acronym} required onChange={(e) => { handleAppAcronym(e) }} />
     
     <br /><br/>
-    <label>App Description :</label>
-    <input type="text" value={app_description} required onChange={(e) => { handleAppDescription(e) }} />
+    <label>App Description :</label><br/>
+
+    <textarea rows="5" cols="50" value={app_description} onChange={(e) => { handleAppDescription(e) }} />
+    
     <br /><br/>
     <label>App R number :</label>
     <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />

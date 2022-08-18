@@ -27,6 +27,7 @@ function CreateTask(){
     const [taskplan, setTaskPlan] = useState();
     const [taskName, setTaskName] = useState();
     const [app_acronym, setApp_acronym] = useState('');
+    const [hasAccess, setHasAccess]=useState()
 
     var noOfTask = 0
    
@@ -62,29 +63,70 @@ function CreateTask(){
             setPlanListsResult(data)
         }
         
+       
+  
+   
+        
+        
         getAllApp()
         getAllPlans()
+       
+
+
         
     },[])
 
     const handleTaskNoteChange=(event)=>{
-
+      
+        setTaskNotes(event.target.value)
        
-           
-            setTaskNotes(event.target.value)
-        
-
-
-       // setTaskNotes(event.target.value+"\n"+"State: Open, User :"+logged+" "+currentDate)
-
+      
+          
     }
 
-    const handleAppAcronym=(event)=>{
+    const goMain = () => {
+      var refresh="true"
+      window.localStorage.setItem("refresh", refresh )
+
+      navigate('../main')
+  }
+
+    const handleAppAcronym=async(event)=>{
+
+       
+      lasttaskid(event.target.value)
        
         setApp_acronym(event.target.value)
-        countTask()
+        // check permission to create task
+
+      
+
+        const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Open"});
+         
+        var accessData = res2.data
+        var access_member_str=""
+        console.log("Users able to change update this state : ")
+        
+        for (var i=0; i<accessData.length; i++){
+          console.log(accessData[i].access)
+          access_member_str= access_member_str + accessData[i].access + " "
+          
+        }
+
+        if (access_member_str.indexOf(logged)!=-1){
+              console.log("Granting access "+logged)
+              setHasAccess(true)
+             
+        } else {
+          setHasAccess(false)
+        }
        
+        
     }
+
+    
+  
+
 
     const handleTaskPlan=(event)=>{
         setTaskPlan(event.target.value)
@@ -99,14 +141,19 @@ function CreateTask(){
     }
 
     
-    const countTask=async()=>{
+    async function lasttaskid(app_acronym){
      
         console.log("Count for app "+app_acronym)
         try {
-            const res = await Axios.post('http://localhost:8080/counttask', 
+            const res = await Axios.post('http://localhost:8080/apptaskid', 
             {  app_acronym: "" + app_acronym + "" });
-            var  noOfTask = res.data[0].taskcount
-                console.log("No of task for "+app_acronym+ " : " + noOfTask)
+           
+            var length = res.data.length
+
+            for (var i=0; i<length-1; i++){
+                console.log(res.data[i].task_id)
+               
+            }
               
         } catch (e){
            console.error("Create task function - there was error "+e.message);
@@ -116,16 +163,7 @@ function CreateTask(){
     const handleCreateTask=async(event)=>{
         event.preventDefault();
        
-        // console.log("Count for app "+app_acronym)
-        // try {
-        //     const res = await Axios.post('http://localhost:8080/counttask', 
-        //     {  app_acronym: "" + app_acronym + "" });
-        //         noOfTask = res.data[0].taskcount
-        //         console.log("No of task for "+app_acronym+ " : " + noOfTask)
-              
-        // } catch (e){
-        //    console.error("Create task function - there was error "+e.message);
-        // }
+       
       
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
@@ -144,6 +182,10 @@ function CreateTask(){
          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Open"});
          
          var data = res2.data
+
+         if (taskNotes==''){
+
+         }
       
          console.log("Users able to open task in : "+app_acronym)
          
@@ -167,7 +209,6 @@ function CreateTask(){
             alert("User "+logged+" do not have access to Open task")
             
           } else {
-        
         
          try {
         const res = await Axios.post('http://localhost:8080/createtask', 
@@ -196,6 +237,8 @@ function CreateTask(){
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Create new Task</h2>
+
+   
     <form onSubmit={(e)=>{handleCreateTask(e)}}>
     
     <label>Select App for Task</label>
@@ -211,9 +254,12 @@ function CreateTask(){
             </MenuItem>
           
           ))}
+         
                </Select>
-
+               {!hasAccess && <div>{app_acronym} : You do not have right to create task </div>} 
+                 
                 <br/>
+                {hasAccess && <div> 
                <label>Select Plan for Task</label>
                 <Select 
                 value ={taskplan}
@@ -240,12 +286,20 @@ function CreateTask(){
                <br/>
                <label>Task Notes</label>
                <br/>
-               <textarea rows="10" cols="50" value={taskNotes} required onChange={(e) => { handleTaskNoteChange(e) }} />
+               <textarea rows="7" cols="50" value={taskNotes}  onChange={(e) => { handleTaskNoteChange(e) }} />
                 <br/>
-               <input type="submit" value="Create Task"/>
+                 <input type="submit" value="Create Task"/>
+               
+               </div>}
     </form>
     </div>
+    
+    
+
+    <button onClick={goMain}>Main Kanban Board</button>
     </div>
+   
+  
     );
    
 }
