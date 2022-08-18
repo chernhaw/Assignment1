@@ -359,11 +359,12 @@ function EditApp(){
     <br/>
     </div>
     <div className='boxType'>
-    <label><b>App Open  :</b></label><br/>        
-                    <label>Current group allow Open App ---</label>
-                  {groupToOpenList} 
+    <label><b>App Open - current groups:</b></label><br/>        
+                   
                     <br/>
-                    <label> Select to add</label>
+                  <div className='boxTypeInner'>{groupToOpenList} </div>
+                    <br/>
+                    <label> Add Group allow to Open</label>
                     <Select 
                 value ={groupToOpen}
                 onChange = {handleAppOpenChange}
@@ -382,7 +383,7 @@ function EditApp(){
 
                <br/>
              
-                <label> Remove Group to Open</label>    
+                <label>Remove Group allow to Open</label>    
                 <Select 
                 value ={groupToOpen}
                 onChange = {handleAppOpenRemove}
@@ -400,11 +401,11 @@ function EditApp(){
                <br/>
                </div>
                <div className='boxType'>
-               <label><b>App Todo  :</b></label><br/> 
-               <label>Current Group allow App Todo ---</label>
-               {groupTodoList}
+               <label><b>App Todo - current groups:</b></label><br/> 
+               <div className='boxTypeInner'> {groupTodoList} </div>
+              
                <br/>
-               <label> Select to add</label>
+               <label> Select to group allow todo</label>
                     <Select 
                 value ={groupToDo}
                 onChange = {handleAppToDoChange}
@@ -421,7 +422,7 @@ function EditApp(){
                </Select>
                
                <br/>
-                <label> Remove Group to Todo</label>    
+                <label> Remove Group allowed Todo</label>    
                 <Select 
                 value ={groupToDo}
                 onChange = {handleAppTodoRemove}
@@ -441,9 +442,10 @@ function EditApp(){
                <br/>
                </div>
                <div className='boxType'>
-               <label><b>App Doing  :</b></label><br/> 
+               <label><b>App Doing - current groups:</b></label><br/> 
               
-               <label>Current Group allow App Doing --- {groupDoingList}</label>
+               
+               <div className='boxTypeInner'> {groupDoingList} </div>
                 <br/>
                 <label> Select to add </label>
                     <Select 
@@ -462,7 +464,7 @@ function EditApp(){
                </Select>
                <br/>
             
-             <label> Select to remove from Doing List </label>
+             <label> Select group to remove from Doing  </label>
                  <Select 
              value ={groupDoing}
              onChange = {handleAppDoingRemove}
@@ -481,8 +483,9 @@ function EditApp(){
                <br/>
                </div>
                <div className='boxType'>
-               <label><b>App Done  :</b></label><br/>
-               <label>Current Group allow App Done --- {groupDoneList}</label>
+               <label><b>App Done -current groups :</b></label><br/>
+               
+               <div className='boxTypeInner'> {groupDoneList} </div>
                 <br/>
                 <label> Select to add </label>
                     <Select 

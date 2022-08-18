@@ -77,10 +77,16 @@ function CreateTask(){
     },[])
 
     const handleTaskNoteChange=(event)=>{
-      
-        setTaskNotes(event.target.value)
+
        
-      
+          var notes = ""+event.target.value+""
+          console.log("Task notes "+notes)
+          if (notes === undefined){
+            setTaskNotes(" ")
+          } else {
+            setTaskNotes(event.target.value)
+          }
+        
           
     }
 
@@ -163,7 +169,7 @@ function CreateTask(){
     const handleCreateTask=async(event)=>{
         event.preventDefault();
        
-       
+        
       
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
@@ -172,6 +178,10 @@ function CreateTask(){
         console.log("Task description "+taskdescription)
         console.log("Taskname "+taskName)
        
+        console.log("Task notes "+taskNotes)
+        if (taskNotes===undefined){
+          setTaskNotes(" ")
+        }
         console.log("Task notes "+taskNotes)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
@@ -282,7 +292,7 @@ function CreateTask(){
                <br />
                <label>Task Description</label>
                <br/>
-               <textarea rows="5" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
+               <textarea rows="5" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} />
                <br/>
                <label>Task Notes</label>
                <br/>

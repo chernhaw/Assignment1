@@ -16,6 +16,11 @@ label {
 .boxType {
   border-style: double;
 }
+
+.boxTypeInner{
+  border: 1px solid white;
+  text-align: center;
+}
 .column {
   float: left;
   border: 1px solid blue;
