@@ -63,16 +63,11 @@ function CreateTask(){
             setPlanListsResult(data)
         }
         
-       
-  
-   
-        
         
         getAllApp()
         getAllPlans()
+        setTaskNotes("")
        
-
-
         
     },[])
 
@@ -107,7 +102,7 @@ function CreateTask(){
 
       
 
-        const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Open"});
+        const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Create"});
          
         var accessData = res2.data
         var access_member_str=""
@@ -119,7 +114,7 @@ function CreateTask(){
           
         }
 
-        if (access_member_str.indexOf(logged)!=-1){
+        if (access_member_str.indexOf(logged+" ")!=-1){
               console.log("Granting access "+logged)
               setHasAccess(true)
              
@@ -129,10 +124,6 @@ function CreateTask(){
        
         
     }
-
-    
-  
-
 
     const handleTaskPlan=(event)=>{
         setTaskPlan(event.target.value)
@@ -169,6 +160,10 @@ function CreateTask(){
     const handleCreateTask=async(event)=>{
         event.preventDefault();
        
+        console.log("Task notes "+taskNotes)
+        
+         
+        
         
       
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
@@ -178,10 +173,7 @@ function CreateTask(){
         console.log("Task description "+taskdescription)
         console.log("Taskname "+taskName)
        
-        console.log("Task notes "+taskNotes)
-        if (taskNotes===undefined){
-          setTaskNotes(" ")
-        }
+        
         console.log("Task notes "+taskNotes)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
@@ -189,36 +181,10 @@ function CreateTask(){
 
        
     
-         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Open"});
+         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Create"});
          
          var data = res2.data
 
-         if (taskNotes==''){
-
-         }
-      
-         console.log("Users able to open task in : "+app_acronym)
-         
-         for (var i=0; i<data.length ; i++){
-           console.log(data[i].access)
-         }
-         
-         var hasAccess = false
-         console.log("Access granted for :")
-         for (var i=0; i<data.length ; i++){
-           console.log(data[i].access)
-           if (data[i].access==logged){
-             
-             hasAccess = true
-           }
-           console.log("User "+logged+ " has right to Open task : "+hasAccess)
-         }
-        
-
-          if(!hasAccess){
-            alert("User "+logged+" do not have access to Open task")
-            
-          } else {
         
          try {
         const res = await Axios.post('http://localhost:8080/createtask', 
@@ -233,7 +199,7 @@ function CreateTask(){
         console.error("Create task function - there was error "+e.message);
     }
 
-    }
+    
 
 
     ////////////////////////////////////////////////

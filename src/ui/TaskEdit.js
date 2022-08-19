@@ -45,6 +45,8 @@ function TaskEdit(){
 
         }
 
+        setAppendTaskNotes("")
+
         var task_id = window.localStorage.getItem("task_id")
 
         console.log("Opening task "+task_id)
@@ -68,6 +70,8 @@ function TaskEdit(){
             setTaskDescription(data[0].task_description)
 
             console.log("task_notes "+data[0].task_notes)
+
+            
             setTaskNotes(data[0].task_notes)
             console.log("task_app_acronym "+data[0].task_app_acronym)
             setTask_acronym(data[0].task_app_acronym)
@@ -132,49 +136,10 @@ function TaskEdit(){
             setPlanListsResult(data)
         }
 
-        // // check if user can access
-        // async function checkAccess(){
-        //   console.log("Checking "+logged+" has access to "+task_app_acronym+" as state "+task_state)
-
-        //   const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+task_acronym+"", access_type:""+task_State+""});
-         
-        //   var data = res2.data
-       
-        //   console.log("Users able to change update this state : ")
-          
-        //   for (var i=0; i<data.length; i++){
-        //     console.log(data[i].access)
-        //   }
-          
-        //   // var hasAccess = false
-        
-        //   // for (var i=0; i<data.length; i++){
-        //   //   console.log("data["+i+"].access : " +data[i].access)
-        //   //  console.log("logged :" +logged)
-        //   //  //  console.log(""+data[i].access + " two equal "+logged+" is "+data[i].access==logged)
-        //   //  //  console.log(""+data[i].access + " three equal "+logged+" is "+data[i].access===logged)
-        //   //   var access_member_str = data[i].access.toString().replaceAll(' ','');
-        //   //   var logged_user= logged.toString().replaceAll(' ','');
-        //   //   console.log("access_member_str "+ access_member_str)
-        //   //   console.log("logged_user "+ logged_user)
-        //   //   console.log("logged_user equal access_member_str="+ access_member_str==logged_user)
-        //   //   if (access_member_str==logged_user){
-        //   //     console.log("Granting access "+logged)
-        //   //     hasAccess = true
-        //   //     break
-        //   //   }
-        //   // }
-        //   // console.log("User "+logged+ " has access : "+hasAccess)
-  
-        //   //  if(!hasAccess){
-        //   //    alert("User "+logged+" do not have access for task at "+task_State)
-             
-        //   //  } 
-        // }
-
+      
         getTaskDetail()
         getAllPlans()
-    //    checkAccess()
+   
         
     },[])
 
@@ -190,10 +155,7 @@ function TaskEdit(){
        setTaskPlan(event.target.value)
     }
 
-    const handleTaskNameChange=(event)=>{
-      setTask_Name(event.target.value)
-    }
-
+   
     const handleTaskDescriptionChange=(event)=>{
     setTaskDescription(event.target.value)
     }
@@ -221,11 +183,19 @@ function TaskEdit(){
         console.log("update taskname "+task_name)
        
         console.log("update taskNotes "+taskNotes)
+
+        if (appendtaskNotes===undefined){
+          setAppendTaskNotes(" ")
+         
+        }
+       
          console.log("Run update task for "+task_id)
          console.log("Checking for group able to access task at this state -- "+task_State)
     
          
          console.log("User "+logged+ " has access : "+hasAccess)
+
+        
 
           if(!hasAccess){
             alert("User "+logged+" do not have access for task at "+task_State)
@@ -368,7 +338,8 @@ function TaskEdit(){
       setTaskDescription(data[0].task_description)
     
       console.log("task_notes "+data[0].task_notes)
-      setTaskNotes(data[0].task_notes)
+
+     
       console.log("task_app_acronym "+data[0].task_app_acronym)
       setTask_acronym(data[0].task_app_acronym)
       console.log("task_owner "+data[0].task_owner)

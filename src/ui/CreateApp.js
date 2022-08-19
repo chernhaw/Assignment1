@@ -88,34 +88,113 @@ function CreateApp(){
         
     },[])
 
-    
 
-    const handleAppOpenChange=(event)=>{
-
-        if (groupDoingList.search(event.target.value)==-1){
-          alert(event.target.value+" is already assigned")
-        }
-        setGroupToOpenList(groupToOpenList+" "+event.target.value)
-       // alert(groupToOpenList)
+    const handleAppCreateTaskChange=(event)=>{
+        if (groupCreateList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+              var curgrouplist = ""+groupToOpenList
+              curgrouplist = curgrouplist + " "+event.target.value
+               console.log("curgrouplist "+curgrouplist)
+               setGroupCreateList(curgrouplist)
+         
+          }
     }
 
-    const handleAppToDoChange=(event)=>{
-        setGroupTodoList(groupTodoList+" "+event.target.value)
-        alert(groupTodoList)
+    const handleAppCreateTaskRemove=(event)=>{
+        if (groupCreateList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+              var curgrouplist = ""+groupToOpenList
+              curgrouplist = curgrouplist + " "+event.target.value
+               console.log("curgrouplist "+curgrouplist)
+               setGroupCreateList(curgrouplist)
+         
+          }
+    }
+
+    const handleAppOpenRemove=(event)=>{
+        var currentList = ""+groupToOpenList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupToOpenList(currentList)
+    }
+  
+
+    const handleAppOpenChange=(event)=>{
+        if (groupToOpenList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+              var curgrouplist = ""+groupToOpenList
+              curgrouplist = curgrouplist + " "+event.target.value
+               console.log("curgrouplist "+curgrouplist)
+               setGroupToOpenList(curgrouplist)
+         
+          }
+        
+    }
+
+    const handleAppTodoChange=(event)=>{
+
+        if (groupTodoList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+            var currentToDoList = ""+groupTodoList
+            currentToDoList =currentToDoList+" "+event.target.value
+            console.log("curgrouplist "+curgrouplist)
+            setGroupTodoList(currentToDoList)
+          }
+          
+    }
+
+    const handleAppTodoRemove=(event)=>{
+        var currentList = ""+groupTodoList
+        currentList = currentList.replace(event.target.value,'')
+       
+        setGroupTodoList(currentList)
+          
     }
 
     const handleAppDoingChange=(event)=>{
-        
-        setGroupDoingList(groupDoingList+" "+event.target.value)
-        alert(groupDoingList)
+
+        if (groupDoingList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+            var currentToDoList = ""+groupTodoList
+            currentToDoList =currentToDoList+" "+event.target.value
+            console.log("curgrouplist "+curgrouplist)
+            setGroupTodoList(currentToDoList)
+          }
+    }
+
+    const handleAppDoingRemove=(event)=>{
+        var currentList = ""+groupDoingList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupDoingList(currentList)
+
     }
 
     const handleAppDoneChange=(event)=>{
-        setGroupDoneList(groupDoneList+" "+event.target.value)
-        alert(groupDoneList)
+       
+        if (groupDoneList.search(event.target.value+" ")!=-1){
+            alert(event.target.value+" is already assigned")
+          } else {
+
+            var currentDoneList =" " +groupDoneList
+            currentDoneList =currentDoneList +" "+ event.target.value
+        setGroupDoneList(currentDoneList)
+          }
+          
+    }
+
+    const handleAppDoneRemove=(event)=>{
+        var currentList = ""+groupDoneList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupDoneList(currentList)
+          
     }
 
     const handleAppAcronym =(e) =>{
+       
         setApp_acronym(e.target.value)
     }
 
@@ -200,6 +279,7 @@ function CreateApp(){
             app_permit_open: ""+groupToOpenList+"",
             app_permit_todolist: ""+groupTodoList+"",
             app_permit_doing:""+groupDoneList+"",
+            app_permit_create:""+groupCreateList+"",
             app_permit_done:""+groupDoneList+""
 
 
@@ -229,6 +309,8 @@ function CreateApp(){
     <h2>Create new App</h2>
     <div>
     <form onSubmit={(e)=>{handleCreateApp(e)}}>
+
+
     <label>App Acronym :</label>
     <input type="text" value={app_acronym} required onChange={(e) => { handleAppAcronym(e) }} />
     
@@ -247,11 +329,55 @@ function CreateApp(){
     <label>App end date :</label>
     <input type="date" value={app_end_date} onChange={(e) => { handleAppEndDate(e) }} />
     <br/>
-    <br/>           
-                    <label>Current group allow Open App ---</label>
-                  {groupToOpenList} 
+    <br/>  
+    <div className='boxType'>
+                 
+    <label> Selected Group allow to Create Task in App </label><br/>
+    <div className='boxTypeInner'>{groupToOpenList} </div>
+                 
                     <br/>
-                    <label> Select to add</label>
+                    <label> Add groups allow create Task</label>
+                    <Select 
+                value ={groupToOpen}
+                onChange = {handleAppCreateTaskChange}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <br/>
+               <label> Remove groups allow create Task</label>
+                    <Select 
+                value ={groupToOpen}
+                onChange = {handleAppCreateTaskRemove}
+                input={<OutlinedInput label="Assign Open" />}>
+
+                    {grouplistresult.map((group) => (
+                <MenuItem
+                key={group.groupname}
+                value={group.groupname}  >
+              {group.groupname}
+            </MenuItem>
+          
+          ))}
+               </Select>
+               <br/>
+               
+                    <br/>
+</div>         
+    <div className='boxType'>
+                 
+    <label> Selected Group allow to Open App </label><br/>
+    <div className='boxTypeInner'>{groupToOpenList} </div>
+                 
+                    <br/>
+                    <label> Add groups allow Open App</label>
                     <Select 
                 value ={groupToOpen}
                 onChange = {handleAppOpenChange}
@@ -267,37 +393,10 @@ function CreateApp(){
           ))}
                </Select>
                <br/>
-
-               <label>Current Group allow App Todo ---</label>
-               {groupTodoList}
-               <br/>
-               <label> Select to add</label>
+               <label> Remove groups allow Open App</label>
                     <Select 
-                value ={groupToDo}
-                onChange = {handleAppToDoChange}
-                input={<OutlinedInput label="Assign Open" />}>
-
-                    {grouplistresult.map((group) => (
-                <MenuItem
-                key={group.groupname}
-                value={group.groupname}  >
-              {group.groupname}
-            </MenuItem>
-          
-          ))}
-               </Select>
-               <br/>
-
-            
-               <label>Current Group allow App Doing --- </label>
-
-                
-                {groupDoingList}
-                <br/>
-                <label> Select to add</label>
-                    <Select 
-                value ={groupDoing}
-                onChange = {handleAppDoingChange}
+                value ={groupToOpen}
+                onChange = {handleAppOpenRemove}
                 input={<OutlinedInput label="Assign Open" />}>
 
                     {grouplistresult.map((group) => (
@@ -311,23 +410,135 @@ function CreateApp(){
                </Select>
                <br/>
                
-                <label>Existing selected group --- {groupDoneList}</label><br/>
-                <label> Select to add</label>    
-                <Select 
-                value ={groupDone}
-                onChange = {handleAppDoneChange}
-                input={<OutlinedInput label="Assign Open" />}>
+                    <br/>
+</div>
+<div className='boxType'>
+                 
+                 <label> Selected Group allow to Todo App </label><br/>
+                 <div className='boxTypeInner'>{groupTodoList} </div>
+                              
+                                 <br/>
+                                 <label> Add groups allow Todo App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppTodoChange}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            <label> Remove groups allow Todo App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppTodoRemove}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            
+                                 <br/>
+             </div>
 
-                    {grouplistresult.map((group) => (
-                <MenuItem
-                key={group.groupname}
-                value={group.groupname}  >
-              {group.groupname}
-            </MenuItem>
-          
-          ))}
-               </Select>
-               <br/>
+             <div className='boxType'>
+                 
+                 <label> Selected Group allow to Doing App </label><br/>
+                 <div className='boxTypeInner'>{groupDoingList} </div>
+                              
+                                 <br/>
+                                 <label> Add groups allow Doing App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppDoingChange}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            <label> Remove groups allow Doing App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppDoingRemove}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            
+                                 <br/>
+             </div>
+             <div className='boxType'>
+                 
+                 <label> Selected Group allow to Done App </label><br/>
+                 <div className='boxTypeInner'>{groupDoneList} </div>
+                              
+                                 <br/>
+                                 <label> Add groups allow Done App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppDoneChange}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            <label> Remove groups allow Done App</label>
+                                 <Select 
+                             value ={groupToOpen}
+                             onChange = {handleAppDoneRemove}
+                             input={<OutlinedInput label="Assign Open" />}>
+             
+                                 {grouplistresult.map((group) => (
+                             <MenuItem
+                             key={group.groupname}
+                             value={group.groupname}  >
+                           {group.groupname}
+                         </MenuItem>
+                       
+                       ))}
+                            </Select>
+                            <br/>
+                            
+                                 <br/>
+             </div>
+
+
+               
     <input type="submit" value="Create App"/>
     </form>
 

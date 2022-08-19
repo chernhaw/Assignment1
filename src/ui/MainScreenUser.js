@@ -426,6 +426,9 @@ function MainScreenUser(){
         navigate('../editPlan')
     }
 
+    const createTask=() =>{
+        navigate('../createTask')
+    }
    
     return (
 
@@ -438,6 +441,7 @@ function MainScreenUser(){
         <div > 
   
     <button onClick={createPlan}>Create Plan</button>
+    <button onClick={createTask}>Create Task</button>
    
    
     </div>
