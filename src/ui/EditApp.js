@@ -100,6 +100,7 @@ function EditApp(){
 
 
     const handleAppCreateTaskChange=(event)=>{
+     // alert(groupCreateList)
       if (groupCreateList.search(event.target.value+" ")!=-1){
           alert(event.target.value+" is already assigned")
         } else {
@@ -109,6 +110,7 @@ function EditApp(){
              setGroupCreateList(curgrouplist)
        
         }
+        
   }
 
     const handleAppCreateTaskRemove=(event)=>{
@@ -272,11 +274,54 @@ function EditApp(){
 
                  
               //   setApp_End_Date(data[0].app_enddate);
-              setGroupCreateList(data[0].app_permit_create);
-                 setGroupToOpenList(data[0].app_permit_open);
-                 setGroupTodoList(data[0].app_permit_todolist);
-                 setGroupDoingList(data[0].app_permit_doing);
-                 setGroupDoneList(data[0].app_permit_done);
+                 
+                    
+                try {
+                  data[0].app_permit_create.split("")
+                  setGroupCreateList(data[0].app_permit_create);
+
+                } catch (error){
+                  setGroupCreateList("");
+                }
+
+
+
+                try {
+                  data[0].app_permit_open.split("")
+                  setGroupToOpenList(data[0].app_permit_open);
+
+                } catch (error){
+                  setGroupToOpenList("");
+                }
+
+
+                try {
+                  data[0].app_permit_todo.split("")
+                  setGroupTodoList(data[0].app_permit_todolist);
+
+                } catch (error){
+                  setGroupTodoList("");
+                }
+               //  setGroupToOpenList(data[0].app_permit_open);
+                
+                 
+               try {
+                data[0].app_permit_doing.split("")
+                setGroupDoingList(data[0].app_permit_doing);
+
+              } catch (error){
+                setGroupDoingList("");
+              }
+               
+
+              try {
+                data[0].app_permit_done.split("")
+                setGroupDoneList(data[0].app_permit_done);
+
+              } catch (error){
+                setGroupDoneList("");
+              }
+              
 
                  var arrOpen = groupToOpenList.split(" ")
 

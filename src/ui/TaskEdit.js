@@ -95,7 +95,7 @@ function TaskEdit(){
            
             var task_access=""
             if (data[0].task_state=="Open"){
-              task_access="Todo"
+              task_access="Open"
             } else {
               task_access= ""+data[0].task_state
             }
@@ -104,7 +104,7 @@ function TaskEdit(){
          
           var accessData = res2.data
           var access_member_str=""
-          console.log("Users able to change update this state : ")
+          console.log("Users able to change update this state : "+task_access)
           
           for (var i=0; i<accessData.length; i++){
             console.log(accessData[i].access)
@@ -209,7 +209,7 @@ function TaskEdit(){
               taskName: ""+task_name+"",
               taskDescription: ""+taskdescription+"",
               taskState:""+newTaskState+"",
-              taskNotes:""+taskNotes+"\n----------\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date(),
+              taskNotes:appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+""+taskNotes,
               taskOwner:""+logged+"",
               taskId:""+task_id+""
            });
@@ -353,7 +353,7 @@ function TaskEdit(){
     
       console.log("task creator : "+ data[0].task_creator)
       setTaskCreator(data[0].task_creator)
-    
+       
     }              
   }
    
@@ -415,7 +415,7 @@ function TaskState(props){
       >
         <MenuItem value={"Todo"}>Todo</MenuItem>
         <MenuItem value={"Doing"}>Doing</MenuItem>
-       
+        <MenuItem value={"Done"}>Done</MenuItem>
       </Select>
     
       </>
