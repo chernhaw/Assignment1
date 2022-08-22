@@ -93,7 +93,7 @@ function CreateApp(){
         if (groupCreateList.search(event.target.value+" ")!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-              var curgrouplist = ""+groupToOpenList
+              var curgrouplist = ""+groupCreateList
               curgrouplist = curgrouplist + " "+event.target.value
                console.log("curgrouplist "+curgrouplist)
                setGroupCreateList(curgrouplist)
@@ -102,15 +102,10 @@ function CreateApp(){
     }
 
     const handleAppCreateTaskRemove=(event)=>{
-        if (groupCreateList.search(event.target.value+" ")!=-1){
-            alert(event.target.value+" is already assigned")
-          } else {
-              var curgrouplist = ""+groupToOpenList
-              curgrouplist = curgrouplist + " "+event.target.value
-               console.log("curgrouplist "+curgrouplist)
-               setGroupCreateList(curgrouplist)
-         
-          }
+        var currentList = ""+groupCreateList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupCreateList(currentList)
+       
     }
 
     const handleAppOpenRemove=(event)=>{
@@ -333,12 +328,12 @@ function CreateApp(){
     <div className='boxType'>
                  
     <label> Selected Group allow to Create Task in App </label><br/>
-    <div className='boxTypeInner'>{groupToOpenList} </div>
+    <div className='boxTypeInner'>{groupCreateList} </div>
                  
                     <br/>
                     <label> Add groups allow create Task</label>
                     <Select 
-                value ={groupToOpen}
+                value ={groupCreate}
                 onChange = {handleAppCreateTaskChange}
                 input={<OutlinedInput label="Assign Open" />}>
 

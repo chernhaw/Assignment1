@@ -19,6 +19,8 @@ function EditApp(){
 
     const [appListOption, setAppListOption]=useState([])
 
+
+
     const [groupToOpenList, setGroupToOpenList] = useState('') // use to open list 
     const [groupToOpen, setGroupToOpen] = useState('') 
     const [groupToOpenOption, setGroupToOpenOption] = useState('')
@@ -34,6 +36,8 @@ function EditApp(){
     const [grouplistresult, setGroupListsResult] = useState([]);
     const [applistresult, setAppListsResult] = useState([]);
     const [groupCreateList, setGroupCreateList] = useState('')
+    const [groupCreate, setGroupCreate] = useState('') 
+
 
     var curgrouplist="";
     const navigate = useNavigate();
@@ -99,7 +103,7 @@ function EditApp(){
       if (groupCreateList.search(event.target.value+" ")!=-1){
           alert(event.target.value+" is already assigned")
         } else {
-            var curgrouplist = ""+groupToOpenList
+            var curgrouplist = ""+groupCreateList
             curgrouplist = curgrouplist + " "+event.target.value
              console.log("curgrouplist "+curgrouplist)
              setGroupCreateList(curgrouplist)
@@ -107,17 +111,13 @@ function EditApp(){
         }
   }
 
-  const handleAppCreateTaskRemove=(event)=>{
-      if (groupCreateList.search(event.target.value+" ")!=-1){
-          alert(event.target.value+" is already assigned")
-        } else {
-            var curgrouplist = ""+groupToOpenList
-            curgrouplist = curgrouplist + " "+event.target.value
-             console.log("curgrouplist "+curgrouplist)
-             setGroupCreateList(curgrouplist)
+    const handleAppCreateTaskRemove=(event)=>{
+        var currentList = ""+groupCreateList
+        currentList = currentList.replace(event.target.value,'')
+        setGroupCreateList(currentList)
        
-        }
-  }
+    }
+
 
     
     const handleAppOpenChange=(event)=>{
@@ -272,6 +272,7 @@ function EditApp(){
 
                  
               //   setApp_End_Date(data[0].app_enddate);
+              setGroupCreateList(data[0].app_permit_create);
                  setGroupToOpenList(data[0].app_permit_open);
                  setGroupTodoList(data[0].app_permit_todolist);
                  setGroupDoingList(data[0].app_permit_doing);
@@ -397,7 +398,7 @@ function EditApp(){
                     <br/>
                     <label> Add groups allow create Task</label>
                     <Select 
-                value ={groupToOpen}
+                value ={groupCreate}
                 onChange = {handleAppCreateTaskChange}
                 input={<OutlinedInput label="Assign Open" />}>
 
@@ -429,8 +430,7 @@ function EditApp(){
                <br/>
                
                     <br/>
-
-    </div>
+</div>         
     <div className='boxType'>
     <label><b>App Open - current groups:</b></label><br/>        
                    
