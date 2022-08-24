@@ -2,7 +2,7 @@
 import {useEffect,useState} from 'react';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-
+import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 function UserScreen(){
@@ -13,19 +13,29 @@ function UserScreen(){
     const [ email, setEmail] = useState('');
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
-    console.log(logged);
+    var admin = window.localStorage.getItem("admin");
+    console.log("logged user " +logged);
+    console.log("admin user "+ admin);
    
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
+        window.localStorage.removeItem("username");
+       
+        window.localStorage.removeItem("admin");
         navigate('../login')
     }
 
     useEffect(() => {
+        
         if (logged==null){
          navigate('../login')   
         }
+
+        if (admin=='N'){
+            navigate('../login')   
+           }
     },[])
 
     const handlePassChange = (event) =>{
@@ -46,15 +56,7 @@ function UserScreen(){
         
     }
 
-    const checkHandler =()=>{
-        console.log("Checkbox clicked");
-        if (isAdmin){
-            setisAdmin(false)
-        } else {
-            setisAdmin(true)
-        }
     
-    }
 
     const handSubmit=async(e)=>{
         e.preventDefault();
@@ -69,28 +71,34 @@ function UserScreen(){
         }
        
         try {
-            alert("New user creation \n You have submitted "+username+" "+password+" "+email);
+            alert("New user creation \n You have submitted "+username+"  "+email);
             const res = await Axios.post('http://localhost:8080/newuser', 
             {username:""+username+ "",password:""+password+"", email:""+email+"", admin:""+isAdmin+", active:Y"});
+          //  alert("Email "+ email.length)
             console.log("UserScreen - new user creation started ");
             const duplicateResult = res.data;
             console.log("UserScreen - checking for duplicates "+duplicateResult);
             
             var showErr = false;
             var errMsg = "";
-            console.log("UserScreen - "+duplicateResult.indexOf("username"));
+            console.log("UserScreen - "+duplicateResult.indexOf("name"));
             console.log("UserScreen - "+duplicateResult.indexOf("email"));
-            if (duplicateResult.indexOf("username")>0){
+            if (duplicateResult.indexOf("name")>-1){
                 showErr=true;
                 errMsg = "Username " +username+ " already taken up - please use another\n"
             }
-            if (duplicateResult.indexOf("email")>0){
+            if (email.length!==0){
+                 if (duplicateResult.indexOf("email")>-1){
                 showErr=true;
-                errMsg = "Email " +email+ " already taken up - please use another\n"
+                errMsg = errMsg+"Email " +email+ " already taken up - please use another\n"
+                }
             }
 
             if (showErr){
                 alert (errMsg);
+            }
+            if (!showErr){
+                alert("User "+username+" created")
             }
 
     } catch (e){
@@ -100,6 +108,7 @@ function UserScreen(){
   
     const goMain = () =>{
         
+     //   alert("go to main")
         navigate('../main')
     }
 
@@ -141,10 +150,14 @@ function UserScreen(){
     };
     return (
 
+    
+
     <div>
-        <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={LogOutUser}>Logout {logged}</button>
-        <button onClick={goMain}>Main Menu</button> </header>
+        <header className='Header'> <h1>Welcome {logged}  </h1>
+        <h3>
+        <Button onClick={LogOutUser}>Logout {logged}</Button>
+        <Button onClick={goMain}>Previous Screen</Button> 
+        </h3></header>
     <div className='Login'>
     <h1>New User Creation</h1>
     <form onSubmit={(e)=>{handSubmit(e)}}>
@@ -161,17 +174,10 @@ function UserScreen(){
             <br />
             <br />
             <label>Email: </label>
-            <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
+            <input type="email" value={email} onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
             <br/>
-            <label htmlFor="checkbox">Check if this user is an admin user</label>
-            <input type="checkbox" 
-            id="checkbox" 
-            
-            checked={isAdmin} 
-            onChange ={checkHandler}
-            />
-            <br/>
+           
             <input type="submit" value="Create User"/>
         </form>
     </div>

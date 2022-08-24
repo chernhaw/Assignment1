@@ -1,10 +1,51 @@
 .App {
-  text-align: center;
+  text-align: top;
 }
 
+label {
+ font-style: bold;
+ align-content: flex-start;
+}
+.Logout {
+  height: 10px;
+}
+.Header {
+  border: 3px;
+  height: 160px;
+}
+.boxType {
+  border-style: double;
+}
 
+.boxTypeInner{
+  border: 1px solid white;
+  text-align: center;
+}
+.column {
+  float: left;
+  border: 1px solid blue;
+  width: 16.0%;
+}
 
+.task {
+  border: 2px solid red;
+  width: 95%;
+}
 
+.columnLabel {
+  border: 1px solid ;
+  width: 100%;
+}
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+  }
+.container {
+  display: grid;
+  grid-template-columns: 100px, 100px, 100px;
+ 
+}
 
 .App-header {
   background-color: #282c34;
@@ -21,14 +62,8 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.solid { border: 1px solid red;
+  background-color: #282c34;}
 
 .images {
   display: flex;

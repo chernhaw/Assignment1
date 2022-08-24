@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react';
 import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import {commonHeader} from "./common/CommonHeader";
+import Button from '@mui/material/Button';
 import './LoginForm.css';
 
 function SearchUser(){
@@ -11,7 +11,9 @@ function SearchUser(){
     const [ email, setEmail] = useState('');
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
-    console.log(logged);
+    var admin = window.localStorage.getItem("admin");
+    console.log("Logged" +logged);
+    console.log("Admin" +admin);
    
     const LogOutUser = () =>{
         alert("You are logged out");
@@ -25,6 +27,9 @@ function SearchUser(){
         if (logged==null){
          navigate('../login')   
         }
+        if (admin===0){
+            navigate('../login')   
+           }
     },[])
 
 
@@ -46,7 +51,9 @@ function SearchUser(){
 
             const res = await Axios.post('http://localhost:8080/byemail', 
             {email:""+email+""});
-            
+            if(res.data.username===undefined){
+                alert("No user found for "+email+" :"+res.data.username);
+                }else {
             console.log("username "+res.data.username)
             console.log("active "+res.data.active)
             console.log("email "+res.data.email)
@@ -60,9 +67,14 @@ function SearchUser(){
             window.localStorage.setItem("usernameusermgt", res.data.username);
             window.localStorage.setItem("userActiveStatus", res.data.active);
             window.localStorage.setItem("userAdmin", res.data.admin)
+        
 
              navigate('../usermgt');
+                }
        //   navigate('../queryresult');
+            // } else {
+            //     alert ("No user with "+email+" found")
+            // }
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
         }
@@ -77,17 +89,28 @@ function SearchUser(){
 
             const res = await Axios.post('http://localhost:8080/byusername', 
             {username:""+username+""});
+            console.log("Response length:"+""+res.data+"".length)
+            
+            if(res.data.username===undefined){
+            alert("No user found for "+username + " ");
+            }else {
             console.log(res.data)
             console.log("username "+res.data.username)
             console.log("active "+res.data.active)
             console.log("email "+res.data.email)
             console.log("admin "+res.data.admin)
-                  
             window.localStorage.setItem("emailusermgt", res.data.email); 
             window.localStorage.setItem("usernameusermgt", res.data.username);
             window.localStorage.setItem("userActiveStatus", res.data.active);
             window.localStorage.setItem("userAdmin", res.data.admin)
             navigate('../usermgt');
+            }
+         //   if (res.data.username =="undefined"){
+            
+            // } else {
+            //     alert ("No user with "+username+" found")
+            // }
+
     } catch (e){
             console.error("Login function - there was an error extracting email "+e.message);
         }
@@ -104,8 +127,8 @@ function SearchUser(){
 
     <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={LogOutUser}>Logout {logged}</button>
-        <button onClick={goMain}>Main Menu</button> </header>
+        <h3><Button onClick={LogOutUser}>Logout {logged}</Button>
+        <Button onClick={goMain}>Previous Screen</Button></h3> </header>
     <div className='Login'>
     <h2>User Management - Search By Username</h2>
     <div>

@@ -1,28 +1,56 @@
-
 import {useEffect,useState} from 'react';
-import { ReactDOM } from 'react-dom/client';
 import Axios from 'axios';
+import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import './LoginForm.css';
+import LogOut from './Logout';
+
 
 function UserManagement(){
 
-   
+
+    useEffect( async() => {
+
+       
+    
+    
+    
+    Axios.get('http://localhost:8080/listusers')
+    .then((response)=>{
+    const data = response.data;
+    setUserListOption(data);
+    }).catch((err)=>{});
+    
+    }, [])
+    var initialActivate = window.localStorage.getItem("userActiveStatus");
+    var initialAdmin = window.localStorage.getItem("userAdmin");
     const [ password, setPassword] = useState('');
     const [ email, setEmail] = useState('');
-    const [ isAdmin, setisAdmin] = useState(true);
-    const [ isActive, setActive] = useState(true);
+    const [ isAdmin, setisAdmin] = useState(initialAdmin);
+    const [ isActive, setActive] = useState(initialActivate);
+//    const [ isActive, setActive] = useState(''+window.localStorage.getItem("userActiveStatus")+'');
+    
+    const [ newEmail, setNewEmail ] = useState('')
+    
+   
+   
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
+    var admin = window.localStorage.getItem("admin");
     var emailusermgt = window.localStorage.getItem("emailusermgt");
+ //   setNewEmail(emailusermgt);
     var usernameusermgt = window.localStorage.getItem('usernameusermgt');
-    console.log(logged);
-   
+    const [userlistoption, setUserListOption] = useState([])
+
+    console.log("logged "+logged);
+    console.log("Admin is "+isAdmin)
+    console.log("Active is "+isActive)
     const LogOutUser = () =>{
         alert("You are logged out");
         window.localStorage.removeItem("username");
         window.localStorage.removeItem("email");
-
+       
+        window.localStorage.removeItem("admin");
         window.localStorage.removeItem("emailusermgt");
         window.localStorage.removeItem("");
         navigate('../login')
@@ -32,17 +60,20 @@ function UserManagement(){
         if (logged==null){
          navigate('../login')   
         }
+        if (admin===0){
+            navigate('../login')   
+           }
     },[])
 
    
 
     const checkAdminHandler =()=>{
         console.log("Checkbox clicked");
-        if (isAdmin){
+        if (isAdmin=='Y'){
            
-            setisAdmin(false)
+            setisAdmin('N')
         } else {
-            setisAdmin(true)
+            setisAdmin('Y')
         }
         console.log("Admin right : "+isAdmin)
     }
@@ -51,12 +82,12 @@ function UserManagement(){
     const checkUserActiveHandler =()=>{
         console.log("Checkbox clicked "+isActive);
 
-        if (isActive){
+        if (isActive=='Y'){
            
-            setActive(false)
+            setActive('N')
         } else {
     
-        setActive(true)
+        setActive('Y')
         }
         console.log("User "+usernameusermgt+" is "+isActive)
     }
@@ -85,12 +116,14 @@ function UserManagement(){
         alert("You have submitted email change");
         try {
             const res = await Axios.post('http://localhost:8080/updateemail', {username:""+usernameusermgt+ "",email:""+email+""})
-            var updateRes = res.data;
-            console.log("Response from backend -updateemail "+updateRes);
-            if (updateRes.length>0){
+            var duplicate = res.data[0].duplicateemail;
+           // res.data
+            console.log("Response from backend -updateemail "+duplicate);
+            if (duplicate>0){
                 alert("Email is already being used - "+email+"\nPlease use a different email.");
             } else {
                 alert("You have changed your email successfully");
+                setNewEmail(email);
             }
             
          
@@ -106,9 +139,6 @@ function UserManagement(){
             const res = await Axios.post('http://localhost:8080/activate', {username:""+usernameusermgt+ "",active:""+isActive+""})
             var updateRes = res.data;
             console.log("Response from backend -updateemail "+updateRes);
-           
-            
-            
          
     } catch (e){
             console.error("UserProfileScreen email there was an error"+e.error);
@@ -147,20 +177,20 @@ function UserManagement(){
     return (
         <div>
         <header className='Header'> <h1>Welcome {logged} </h1>
-        <button onClick={goMain}>Main Menu</button>
-        <button onClick={LogOutUser}>Logout {logged}</button>
-        
-         
+            <h3>
+        <Button onClick={goMain}>Previous Page</Button>
+       <LogOut/>
+        </h3>
         </header>
         <div>
-        <h2>User Management- Management -  Admin</h2>
+        <h2>User Management- Management - Admin</h2>
              <h2>Username : {usernameusermgt} </h2>
              
         </div>
         <div >
         <form onSubmit={(e)=>{handUpdateEmail(e)}}>
            
-            <label>Current Email:{emailusermgt}</label><br/>
+            <label>Current Email {emailusermgt}</label><br/>
             <label>New Email:</label>
             <input type="email" value={email} required onChange={(e)=>{handleEmailChange(e)}}/>
             <br/>
@@ -198,7 +228,7 @@ function UserManagement(){
                
                 
                 <button  onClick={(e)=>{checkAdminHandler(e)}}>Add or Remove admin</button>
-               <br/>
+               
                <input type="submit" value="Confirm update user admin status"/>
            </form>
         </div>

@@ -16,6 +16,11 @@ import GroupAdmin from './ui/GroupAdmin';
 import GroupEdit from './ui/GroupEdit';
 import UserDisableScreen from './ui/UserDisableScreen';
 import UserNonAdminScreen from './ui/UserNonAdminScreen';
+import CreateApp from './ui/CreateApp';
+import EditApp from './ui/EditApp';
+import CreatePlan from './CreatePlan';
+import CreateTask from './CreateTask';
+import EditTask from './ui/EditTask';
 
 
 function App() {
@@ -41,10 +46,15 @@ function App() {
           <Route exact path="/profile" element={<UserProfileScreen />} />
           <Route exact path="/profileuser" element={<UserNonAdminScreen />} />
           <Route exact path="/mainuser" element={<MainUser />}/>
-          <Route exact path="/usersearch" element={<SearchUser />} />
           <Route exact path="/disableuser" element={<UserDisableScreen />} />
           <Route exact path="/usermgt" element={<UserManagement />} />
-        
+          <Route exact path="/createApp" element={<CreateApp />} />
+          <Route exact path="/editApp" element={<EditApp />} />
+          <Route exact path="/createplan" element={<CreatePlan />} />
+          <Route exact path="/updateplan" element={<EditPlan />} />
+          <Route exact path="/taskedit" element={<EditTask />} />
+          <Route exact path="/createTask" element={<CreateTask />} />
+          
       </Routes>
     </BrowserRouter>
    
