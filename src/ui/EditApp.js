@@ -210,20 +210,71 @@ function EditApp(){
         setApp_description(e.target.value)
     }
 
-    const handleAppRnumber=(e)=>{
-        setApp_rnumbern(e.target.value)
-    }
+    // const handleAppRnumber=(e)=>{
 
+    //   const reg = new RegExp('^[0-9]+$');
+    //   --
+    //     setApp_rnumbern(e.target.value)
+    // }
+
+
+    function checkForNums (input) {
+      let result = /^\d+$/.test(input);
+      console.log(result);
+      return result
+    }
     const handleAppStartDate=(e)=>{
-       
-        setApp_Start_Date(""+e.target.value+"")
-        console.log("App "+app_acronym+" start date "+ app_start_date)
-    }
 
-    const handleAppEndDate=(e)=>{
-        setApp_End_Date(""+e.target.value+"")
-        console.log("App "+app_acronym+" end date "+ app_end_date)
-    }
+      var endDate
+      var startDate
+
+      try{
+      startDate = Date.parse(""+e.target.value+"")
+      endDate = Date.parse(""+app_end_date+"")
+
+      console.log("start date "+startDate)
+      console.log("end date "+endDate)
+      if (endDate<startDate){ 
+          alert ("End date must be later than start date ")
+      } else {
+          setApp_Start_Date(""+e.target.value+"")
+      }
+     
+  } catch (error){
+      setApp_Start_Date(""+e.target.value+"")
+  }
+      
+  }
+
+  const handleAppEndDate=(e)=>{
+      
+          var endDate
+          var startDate
+           
+      try {
+
+          endDate = Date.parse(""+e.target.value+"")
+          startDate = Date.parse(""+app_start_date+"")
+
+          console.log("start date "+startDate)
+          console.log("end date "+endDate)
+          if (endDate<startDate){ 
+              alert ("End date must be later than start date ")
+          } else {
+              setApp_End_Date(""+e.target.value+"")
+          }
+
+      } catch (error){
+          setApp_End_Date(""+e.target.value+"")
+      }
+          
+     
+
+         // setApp_End_Date(""+e.target.value+"")
+          console.log("App "+app_acronym+" end date "+ app_end_date)
+      
+  }
+
 
     const handleAppCheck=async(e)=>{
         e.preventDefault();

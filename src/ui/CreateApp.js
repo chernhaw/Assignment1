@@ -38,8 +38,10 @@ function CreateApp(){
     const [groupToOpenRemove, setGroupToOpenRemove] = useState('')
     const [grouplistresult, setGroupListsResult] = useState([]);
 
+    const [applistresult, setAppListsResult] = useState('');
     
     var curgrouplist="";
+    var curapplist ="";
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
@@ -54,13 +56,31 @@ function CreateApp(){
     }
 
     useEffect(() => {
-
+        setApp_Start_Date("")
+        setApp_End_Date("")
 
         if (logged==null){
          navigate('../login')   
         }
 
+        async function getAllApp(){
+            const res = await Axios.post('http://localhost:8080/listapp');
+        
+            
+          
+             const size = res.data.length;
+ 
+             //curgrouplist = "{"
+              for ( var i=0; i<size; i++){
+                
+                curapplist = curapplist+ " " +res.data[i].app_acronym
+                 console.log("current user list "+ curapplist)
+              }
 
+             // setAppListsResult(curapplist)
+
+        }
+        getAllApp()
 
         async function getAllGroup(){
             const res = await Axios.post('http://localhost:8080/listgroup',
@@ -88,6 +108,23 @@ function CreateApp(){
         
     },[])
 
+    async function getAllApp(){
+        const res = await Axios.post('http://localhost:8080/listapp');
+    
+        
+      
+         const size = res.data.length;
+
+         //curgrouplist = "{"
+          for ( var i=0; i<size; i++){
+            
+            curapplist = curapplist+ " " +res.data[i].app_acronym
+             console.log("current user list "+ curapplist)
+          }
+
+         // setAppListsResult(curapplist)
+
+    }
 
     const handleAppCreateTaskChange=(event)=>{
         if (groupCreateList.search(event.target.value+" ")!=-1){
@@ -195,18 +232,37 @@ function CreateApp(){
 
    
 
+    function checkForNums (input) {
+        let result = /^\d+$/.test(input);
+
+       
+        
+        return result
+      }
+        
+        
     const handleAppDescription =(e) =>{
-        setApp_description(e.target.value)
+        if(""+e.target.value+"".length>500){
+            alert("Sorry you have exceeded maximum lenght of 500 char")
+
+        } else {
+            setApp_description(e.target.value)
+        }
+       
     }
 
     const handleAppRnumber=(e)=>{
-        setApp_rnumbern(e.target.value)
+       
+        var app_rnumber_nospace = ""+e.target.value+"".replaceAll(' ','')
+        setApp_rnumbern(app_rnumber_nospace)
+         //   setApp_rnumbern(e.target.value)
+       
     }
 
     const handleAppStartDate=(e)=>{
 
         var endDate
-            var startDate
+        var startDate
 
         try{
         startDate = Date.parse(""+e.target.value+"")
@@ -256,14 +312,65 @@ function CreateApp(){
     }
 
     const handleCreateApp=async(e)=>{
-        e.preventDefault();
+       e.preventDefault();
+
+        getAllApp()
        
+        var tocreateApp = true
+
         console.log("Create app "+app_acronym)
         console.log("app description "+app_description)
         console.log("app start date "+app_start_date)
         console.log("app end date "+app_end_date)
-    
+//groupCreateList.search(event.target.value+" ")!=-1
+
+            console.log("Current apps "+ curapplist)
+            if(curapplist.search(app_acronym)!=-1){
+                alert("App "+app_acronym+" already exist - please use another name")
+                tocreateApp=false
+            }
+           
+           // var app_rnumber_nospace = ""+app_rnumber+"".replaceAll(' ','')
+           // setApp_rnumbern(app_rnumber_nospace)
+           if ( checkForNums(app_rnumber)==false){
+            alert("Please enter a integer for R Number")
+            tocreateApp=false
+           }
+
+
+           try {
+
+            const res = await Axios.post('http://localhost:8080/checkapp', 
+            {  app_acronym: "" + app_acronym + ""});
+            console.log("Response length:"+""+res.data+"".length)
+            
+            const data = res.data
+          // alert("app result "+data.app_acronym)
+                console.log("app result "+data[0].app_acronym);
+                
+                if (data[0].app_acronym==app_acronym){
+                    tocreateApp=false
+                    alert ("App already exist - "+app_acronym)
+                }
+                
+    } catch (err){
+        console.error("Create app function - there was an creating app "+e.message);
+    }
+
+    if(tocreateApp){
+
+
+      
+
+           
+            
+
+
+
         try {
+
+            // 
+
 
             const res = await Axios.post('http://localhost:8080/createapp', 
             {  app_acronym: "" + app_acronym + "",
@@ -277,24 +384,18 @@ function CreateApp(){
             app_permit_create:""+groupCreateList+"",
             app_permit_done:""+groupDoneList+""
 
-
-
          });
             console.log("Response length:"+""+res.data+"".length)
             
-            if(res.data.username===undefined){
-            
-            }else {
            
-      //      navigate('../usermgt');
-            }
+  
         
 
     } catch (e){
             console.error("Create app function - there was an creating app "+e.message);
         }
     }
-  
+}
     return (
 
     <div>
@@ -316,7 +417,7 @@ function CreateApp(){
     
     <br /><br/>
     <label>App R number :</label>
-    <input type="text" value={app_rnumber}  onChange={(e) => { handleAppRnumber(e) }} />
+    <input type="number" value={app_rnumber} onChange={(e) => { handleAppRnumber(e) }} />
     <br /><br/>
     <label>App start date :</label>
     <input type="date" value={app_start_date}  onChange={(e) => { handleAppStartDate(e) }} />

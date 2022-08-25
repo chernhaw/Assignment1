@@ -112,7 +112,7 @@ function TaskEdit(){
             
           }
 
-          if (access_member_str.indexOf(logged)!=-1){
+          if (access_member_str.indexOf(""+logged+" ")!=-1){
                 console.log("Granting access "+logged)
                 setHasAccess(true)
                
@@ -209,7 +209,7 @@ function TaskEdit(){
               taskName: ""+task_name+"",
               taskDescription: ""+taskdescription+"",
               taskState:""+newTaskState+"",
-              taskNotes:appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+""+taskNotes,
+              taskNotes:"\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes,
               taskOwner:""+logged+"",
               taskId:""+task_id+""
            });
@@ -285,7 +285,7 @@ function TaskEdit(){
                <div className='boxType'>
                <label>Existing Task Notes - Read only</label>
                <br/>
-               <textarea rows="10" cols="50" value={taskNotes}/>
+               <textarea rows="10" cols="70" value={taskNotes}/>
                 <br/>
                 
                   
@@ -293,7 +293,7 @@ function TaskEdit(){
                 <div>
                 <label>Append to Task Notes</label>
                <br/>
-               <textarea rows="5" cols="50" value={appendtaskNotes} onChange={(e) => { handleTaskNoteChange(e) }} />
+               <textarea rows="15" cols="70" value={appendtaskNotes} onChange={(e) => { handleTaskNoteChange(e) }} />
                </div>
               }</div>
 
@@ -305,7 +305,7 @@ function TaskEdit(){
                <br/>
                
                
-               <div>{hasAccess &&<div><label>New Task State</label><TaskState taskState={task_State} /></div>}</div>
+               <div>{hasAccess &&<div><label><b>Set New Task State</b></label><TaskState taskState={task_State} /></div>}</div>
                <br/>
                </div>
                 <div>{hasAccess &&<input type="submit" value="Update Task"/>}</div>
