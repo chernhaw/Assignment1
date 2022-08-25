@@ -28,11 +28,13 @@ function CreateTask(){
     const [taskName, setTaskName] = useState();
     const [app_acronym, setApp_acronym] = useState('');
     const [hasAccess, setHasAccess]=useState()
+    const [readOnly, setReadOnly]=useState()
 
     var noOfTask = 0
    
     useEffect(() => {
 
+      setReadOnly(false)
         if (logged==null){
          navigate('../login')   
         }
@@ -130,7 +132,12 @@ function CreateTask(){
     }
 
     const handleTaskNameChange=(event)=>{
+
+        if (""+event.target.value+"".length >100){
+          alert("Task name must be less than 100 characters")
+        } else {
         setTaskName(event.target.value)
+        }
     }
 
     const handleTaskDescriptionChange=(event)=>{
@@ -151,6 +158,8 @@ function CreateTask(){
                 console.log(res.data[i].task_id)
                
             }
+
+            setReadOnly(true)
               
         } catch (e){
            console.error("Create task function - there was error "+e.message);
@@ -158,48 +167,61 @@ function CreateTask(){
 
     }
     const handleCreateTask=async(event)=>{
-        event.preventDefault();
        
+        var proceedToCreate = true
+        event.preventDefault();
+
+        if (taskName.length>100){
+          var proceedToCreate = false
+
+        alert("Task name must be less than 100 chars")
+      }
+
+      if(proceedToCreate){
+
+        setReadOnly('true')
         console.log("Task notes "+taskNotes)
-        
-         
-        
-        
-      
+     
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
         console.log("Create task for app "+app_acronym)
-        console.log("Create task for task "+taskplan)
+        console.log("Create plan for task "+taskplan)
         console.log("Task description "+taskdescription)
         console.log("Taskname "+taskName)
        
-        
+       
         console.log("Task notes "+taskNotes)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
 
-
-       
+        
     
          const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Create"});
          
          var data = res2.data
 
-        
+        var res= null
          try {
-        const res = await Axios.post('http://localhost:8080/createtask', 
+         res = await Axios.post('http://localhost:8080/createtask', 
         {  app_acronym: "" + app_acronym + "",
         taskPlan: ""+taskplan+"",
         taskName: ""+taskName+"",
         taskDescription: ""+taskdescription+"",
         taskNotes:""+taskNotes+"",
         taskCreator:""+logged+""
-     });
+     }
+   
+     
+    
+     );
+
+     
+     console.log("Result form query "+res.affectedRows)
     } catch (e){
         console.error("Create task function - there was error "+e.message);
     }
 
-    
+  }
 
 
     ////////////////////////////////////////////////
@@ -232,7 +254,7 @@ function CreateTask(){
           ))}
          
                </Select>
-               {!hasAccess && <div>{app_acronym} : You do not have right to create task </div>} 
+               {!hasAccess && <div>{taskName} : You do not have right to create task </div>} 
                  
                 <br/>
                 {hasAccess && <div> 
@@ -254,19 +276,27 @@ function CreateTask(){
 
                <label>Task Name :</label>
                <br/>
-               <input type="text" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} />
+               <div>{!readOnly&&<div><textarea rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>
+               <div>{readOnly&&<div>{taskName}</div>}</div>
+
+              
+               
                <br />
                <label>Task Description</label>
                <br/>
-               <textarea rows="5" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} />
+               <div>{!readOnly&&<div><textarea rows="5" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} /></div>}</div>
+               <div>{readOnly&&<div><textarea rows="5" cols="50" value={taskdescription}   /></div>}</div>
                <br/>
                <label>Task Notes</label>
+
                <br/>
-               <textarea rows="7" cols="50" value={taskNotes}  onChange={(e) => { handleTaskNoteChange(e) }} />
+               <div>{!readOnly&&<textarea rows="7" cols="50" value={taskNotes}  onChange={(e) => { handleTaskNoteChange(e) }} />}</div>
+               <div>{readOnly&&<div><textarea rows="7" cols="50" value={taskNotes}   /></div>}</div>
                 <br/>
-                 <input type="submit" value="Create Task"/>
-               
-               </div>}
+                <div>{!readOnly&&<input type="submit" value="Create Task"/>}</div>
+                <div>{readOnly&&<div>Task created - please go to Main Kanban Board to View Task</div>}</div>
+               </div>
+               }
     </form>
     </div>
     
