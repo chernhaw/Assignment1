@@ -32,9 +32,10 @@ function CreateTask(){
 
     var noOfTask = 0
    
+    
     useEffect(() => {
 
-      setReadOnly(false)
+     
         if (logged==null){
          navigate('../login')   
         }
@@ -69,6 +70,8 @@ function CreateTask(){
         getAllApp()
         getAllPlans()
         setTaskNotes("")
+        
+        setReadOnly(false)
        
         
     },[])
@@ -159,7 +162,7 @@ function CreateTask(){
                
             }
 
-            setReadOnly(true)
+            setReadOnly(false)
               
         } catch (e){
            console.error("Create task function - there was error "+e.message);
@@ -179,7 +182,7 @@ function CreateTask(){
 
       if(proceedToCreate){
 
-        setReadOnly('true')
+        setReadOnly(true)
         console.log("Task notes "+taskNotes)
      
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
@@ -235,8 +238,7 @@ function CreateTask(){
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Create new Task</h2>
-
-   
+    
     <form onSubmit={(e)=>{handleCreateTask(e)}}>
     
     <label>Select App for Task</label>
@@ -273,7 +275,7 @@ function CreateTask(){
           ))}
                </Select>
                <br/>
-
+                    
                <label>Task Name :</label>
                <br/>
                <div>{!readOnly&&<div><textarea rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>
@@ -291,7 +293,7 @@ function CreateTask(){
 
                <br/>
                <div>{!readOnly&&<textarea rows="7" cols="50" value={taskNotes}  onChange={(e) => { handleTaskNoteChange(e) }} />}</div>
-               <div>{readOnly&&<div><textarea rows="7" cols="50" value={taskNotes}   /></div>}</div>
+               <div>{readOnly&&<div><textarea rows="7" cols="50" value={taskNotes}/></div>}</div>
                 <br/>
                 <div>{!readOnly&&<input type="submit" value="Create Task"/>}</div>
                 <div>{readOnly&&<div>Task created - please go to Main Kanban Board to View Task</div>}</div>
