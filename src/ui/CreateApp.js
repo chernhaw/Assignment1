@@ -39,6 +39,8 @@ function CreateApp(){
     const [grouplistresult, setGroupListsResult] = useState([]);
 
     const [applistresult, setAppListsResult] = useState('');
+
+    const [hasAccess, setHasAccess]=useState('true')
     
     var curgrouplist="";
     var curapplist ="";
@@ -59,9 +61,45 @@ function CreateApp(){
         setApp_Start_Date("")
         setApp_End_Date("")
 
+        setHasAccess(false)
         if (logged==null){
          navigate('../login')   
         }
+
+        // check if user has APPLEAD Access
+        async function checkAssess(){
+            const res = await Axios.post('http://localhost:8080/appaccess');
+
+            const size = res.data.length;
+
+            var userlist =""
+
+          
+
+            
+
+              var accessData = res.data
+        var access_member_str=""
+        console.log("Users able to change update this state : ")
+        
+        for (var i=0; i<accessData.length; i++){
+          console.log(accessData[i].username)
+          access_member_str= access_member_str + accessData[i].username + " "
+          
+        }
+
+        if (access_member_str.indexOf(logged)!=-1){
+              console.log("Granting access "+logged)
+              setHasAccess(true)
+             
+        } else {
+          setHasAccess(false)
+        }
+
+        }
+
+        checkAssess()
+        console.log(logged+ " has access "+hasAccess)
 
         async function getAllApp(){
             const res = await Axios.post('http://localhost:8080/listapp');
@@ -74,7 +112,7 @@ function CreateApp(){
               for ( var i=0; i<size; i++){
                 
                 curapplist = curapplist+ " " +res.data[i].app_acronym
-                 console.log("current user list "+ curapplist)
+                 console.log("current app list "+ curapplist)
               }
 
              // setAppListsResult(curapplist)
@@ -360,17 +398,9 @@ function CreateApp(){
     if(tocreateApp){
 
 
-      
-
-           
-            
-
-
-
         try {
 
             // 
-
 
             const res = await Axios.post('http://localhost:8080/createapp', 
             {  app_acronym: "" + app_acronym + "",
@@ -403,6 +433,9 @@ function CreateApp(){
         <LogOut/> <GoMain/> </header>
     <div className='Login'>
     <h2>Create new App</h2>
+    {!hasAccess && <div>You did not have right to create App </div>} 
+
+    {hasAccess && 
     <div>
     <form onSubmit={(e)=>{handleCreateApp(e)}}>
 
@@ -639,7 +672,7 @@ function CreateApp(){
     </form>
 
     
-    </div>
+    </div>}
     </div>
     
     </div>

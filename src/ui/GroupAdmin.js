@@ -10,8 +10,6 @@ import LogOut from './Logout';
 
 function GroupAdmin() {
 
-
-
     var adminnames=""
     const [usernameAdmin, setusernameAdmin] = useState('');
 
@@ -89,6 +87,12 @@ function GroupAdmin() {
             navigate('../main')
         }
  
+        const goRole = () => {
+            var refresh="true"
+            window.localStorage.setItem("refresh", refresh )
+
+            navigate('../groupRole')
+        }
 
 
         function refresh(){
@@ -181,6 +185,7 @@ function GroupAdmin() {
                 <h3>
                     <Button onClick={goMain}>Main </Button>
                     <Button onClick={goGroup}>Group Management </Button>
+                    <Button onClick={goRole}>Group Role </Button>
                 </h3>
                 <LogOut/>
             </header>

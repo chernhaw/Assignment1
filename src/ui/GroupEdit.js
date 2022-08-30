@@ -34,7 +34,7 @@ function GroupEdit() {
         //window.location.reload(blnReload)
         if (logged == null) {
 
-           
+
 
             navigate('../login')
         }
@@ -102,7 +102,7 @@ function GroupEdit() {
                 if (size==0){
                     groupmembers ="Nil"
                     }
-                console.log("final groupmember names " +groupmembers)
+               
             console.log("final groupmember names " +groupmembers)
            setShowGroupmembers(groupmembers);
            setGroup(groupedit)
@@ -286,7 +286,8 @@ function GroupEdit() {
                 <form onSubmit={(e) => { handGroupUnassign(e) }}>
                    
                    <label>Unassign user:</label><br />
-                   <input type="text" value={unassignmember} required onChange={(e) => { handleUserNameChangeUnassign(e) }} />
+                   <input type="text" value={unassignmember} required onChange={(e) => {                    <input type="text" value={unassignmember} required onChange={(e) => { handleUserNameChangeUnassign(e) }} />
+(e) }} />
                    <br />
 
                    <input type="submit" value="Unassign User to Group" />

@@ -165,23 +165,22 @@ function GroupRole() {
         //groupassigntopjlead
 
         const handleUpdateAppLeadRemoveGroup=async(event)=>{
-            event.preventDefault()
-            var appLeadList = ""+assignedAppLeadgroup+""
-            console.log("applead list "+appLeadList)
-            appLeadList = appLeadList.replace(""+groupremovetolead+"","") 
+            
+           
+           var appLeadRemove = ""+groupremovetolead
 
             console.log("new applead list "+appLeadList)
 
-          //  const res = await Axios.post('http://localhost:8080/updateAppLead',
+            const res = await Axios.post('http://localhost:8080/removeApplead',
     
-          //           { groupnames: "" + appLeadList +"" });
+                   { groupname: "" + appLeadRemove +"" });
 
         }
        
 
         const handleUpdateAppLeadGroup=async(event)=>{
 
-            var appleadgroup = ""+ groupassigntolead+""
+            var appleadgroup = ""+groupassigntolead+""
 
             const res = await Axios.post('http://localhost:8080/updateAppLead',
     
@@ -192,20 +191,18 @@ function GroupRole() {
 
         const handleRemovePjtLeadGroup=async(event)=>{
 
-            var updateprojectLeads = projectLeadList
-            updateprojectLeads=updateprojectLeads.replace(""+groupassigntopjlead+"","") 
-            const res = await Axios.post('http://localhost:8080/updateLead',
+            var leadgroup = ""+groupRemoveToProjectLd+""
+           
+            const res = await Axios.post('http://localhost:8080/removeLead',
     
-                     { groupnames: "" + updateprojectLeads +"" });
+                     { groupname: "" +leadgroup+"" });
 
         }
 
 
         const handleUpdatePjtLeadGroup=async(event)=>{
 
-            var updateprojectLeads = projectLeadList+"" 
-
-            updateprojectLeads = updateprojectLeads + ' '+groupassigntopjlead
+            var updateprojectLeads = ""+projectLeadList+"" 
             const res = await Axios.post('http://localhost:8080/updateLead',
     
                      { groupnames: "" + updateprojectLeads +"" });
@@ -228,12 +225,11 @@ function GroupRole() {
 
         const handleRemovePMGroup=async(event)=>{
 
-            var updatePM = pmList
-            updatePM = pmList.replace(groupRemoveToPM,"")
+            var updatePM = ""+groupRemoveToPM+""
 
-            const res = await Axios.post('http://localhost:8080/updatePM',
+            const res = await Axios.post('http://localhost:8080/removePM',
     
-                     { groupnames: "" + updatePM +"" });
+                     { groupname: "" + updatePM +"" });
 
            
 
@@ -363,7 +359,7 @@ function GroupRole() {
                     <br/>
                     <input type="submit" value="Assign Group to PM" />
                 </form>
-                <form onSubmit={(e) => { handleUpdatePMGroup(e)}}>
+                <form onSubmit={(e) => { handleRemovePMGroup(e)}}>
            
            <label>Enter Group to unassign as Project Manager</label>
            <input type="text" value={groupRemoveToPM} required onChange={(e) => { handleProjectMgerGroupRemoveChange(e) }} />

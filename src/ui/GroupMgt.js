@@ -105,7 +105,6 @@ async function getAllGroup(){
     }
      
 
-
     console.log("Current group list" +curgrouplist)
     setShowGroups(curgrouplist)
 }
@@ -209,44 +208,7 @@ getAllGroup()
     }
 
 
-    const grouplist = async (e) => {
-
-
-        //  window.localStorage.setItem("groupquery", querygroup);
-        var groupnames = "";
-        try {
-          //  alert("group" + querygroup)
-
-            const res = await Axios.post('http://localhost:8080/listgroup',
-                { groupname: "" + groupnames + "" });
-
-            console.log("Query group response " + res.data);
-
-            //const size = res.data.length;
-
-
-            const size = res.data.length;
-            for ( var i=0; i<size; i++){
-               if (i!=size-1){
-              groupnames = groupnames+" "+res.data[i].groupname + ","
-               } else {
-                   groupnames = groupnames+" "+res.data[i].groupname+""
-               }
-             
-            }
-            setGroupListsResult(groupnames);
-
-            alert(groupnames);
-
-
-        } catch (e) {
-            console.error("Query group error - " + e.message);
-
-        }
-
-
-        return groupnames
-    }
+    
 
    
 
@@ -301,15 +263,10 @@ getAllGroup()
                 
                     return(
                         
-                        
-                        
                         <div key={group} style={{border:"1px solid #000"}}>
                             {group}
                         </div>
-                        
                     )
-                
-               
             })}
             </div>
             <div >
