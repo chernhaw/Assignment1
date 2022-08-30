@@ -119,7 +119,7 @@ function CreateTask(){
           
         }
 
-        if (access_member_str.indexOf(logged+" ")!=-1){
+        if (access_member_str.indexOf(""+logged+" ")!=-1){
               console.log("Granting access "+logged)
               setHasAccess(true)
              
@@ -136,11 +136,9 @@ function CreateTask(){
 
     const handleTaskNameChange=(event)=>{
 
-        if (""+event.target.value+"".length >100){
-          alert("Task name must be less than 100 characters")
-        } else {
+      
         setTaskName(event.target.value)
-        }
+        
     }
 
     const handleTaskDescriptionChange=(event)=>{
@@ -296,7 +294,7 @@ function CreateTask(){
                <div>{readOnly&&<div><textarea rows="7" cols="50" value={taskNotes}/></div>}</div>
                 <br/>
                 <div>{!readOnly&&<input type="submit" value="Create Task"/>}</div>
-                <div>{readOnly&&<div>Task created - please go to Main Kanban Board to View Task</div>}</div>
+                <div>{readOnly&&<div><div>Task created - please go to Main Kanban Board to View Task</div><GoMain/></div>}</div>
                </div>
                }
     </form>

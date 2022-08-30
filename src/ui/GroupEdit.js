@@ -145,7 +145,7 @@ function GroupEdit() {
            // alert("User in group "+groupmembers.search(usertoassign))
 
 
-            if (groupmembers.search(" "+usertoassign+" ")!==-1){
+            if (groupmembers.search(usertoassign+" ")!==-1){
                 assignGp=false;
                 alert("User already in group")
             }

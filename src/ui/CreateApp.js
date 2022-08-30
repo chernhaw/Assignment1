@@ -41,6 +41,8 @@ function CreateApp(){
     const [applistresult, setAppListsResult] = useState('');
 
     const [hasAccess, setHasAccess]=useState('true')
+
+    const [readOnly, setReadOnly]=useState()
     
     var curgrouplist="";
     var curapplist ="";
@@ -72,11 +74,7 @@ function CreateApp(){
 
             const size = res.data.length;
 
-            var userlist =""
-
-          
-
-            
+            var userlist =""  
 
               var accessData = res.data
         var access_member_str=""
@@ -101,6 +99,7 @@ function CreateApp(){
         checkAssess()
         console.log(logged+ " has access "+hasAccess)
 
+        setHasAccess(true)
         async function getAllApp(){
             const res = await Axios.post('http://localhost:8080/listapp');
         
@@ -229,10 +228,10 @@ function CreateApp(){
         if (groupDoingList.search(event.target.value+" ")!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-            var currentToDoList = ""+groupTodoList
-            currentToDoList =currentToDoList+" "+event.target.value
-            console.log("curgrouplist "+curgrouplist)
-            setGroupTodoList(currentToDoList)
+            var currentDoingList = ""+groupTodoList
+            currentDoingList =currentDoingList+" "+event.target.value
+            console.log("curgrouplist "+currentDoingList)
+            setGroupDoingList(currentDoingList)
           }
     }
 
@@ -350,8 +349,7 @@ function CreateApp(){
     }
 
     const handleCreateApp=async(e)=>{
-       e.preventDefault();
-
+        e.preventDefault()
         getAllApp()
        
         var tocreateApp = true
@@ -361,6 +359,7 @@ function CreateApp(){
         console.log("app start date "+app_start_date)
         console.log("app end date "+app_end_date)
 //groupCreateList.search(event.target.value+" ")!=-1
+
 
             console.log("Current apps "+ curapplist)
             if(curapplist.search(app_acronym)!=-1){
@@ -374,8 +373,15 @@ function CreateApp(){
             alert("Please enter a integer for R Number")
             tocreateApp=false
            }
+          if( app_description.length>200) {
+            alert("The description should be less than 200 char")
+            tocreateApp=false
+          }
 
-
+          if( app_acronym.length>40) {
+            alert("The acronym should be less than 40 char")
+            tocreateApp=false
+          }
            try {
 
             const res = await Axios.post('http://localhost:8080/checkapp', 
@@ -400,7 +406,7 @@ function CreateApp(){
 
         try {
 
-            // 
+            setReadOnly(true)
 
             const res = await Axios.post('http://localhost:8080/createapp', 
             {  app_acronym: "" + app_acronym + "",
@@ -418,8 +424,8 @@ function CreateApp(){
             console.log("Response length:"+""+res.data+"".length)
             
            
-  
-        
+            
+       
 
     } catch (e){
             console.error("Create app function - there was an creating app "+e.message);
@@ -565,7 +571,7 @@ function CreateApp(){
                             <br/>
                             <label> Remove groups allow Todo App</label>
                                  <Select 
-                             value ={groupToOpen}
+                             value ={groupTodoList}
                              onChange = {handleAppTodoRemove}
                              input={<OutlinedInput label="Assign Open" />}>
              
@@ -591,7 +597,7 @@ function CreateApp(){
                                  <br/>
                                  <label> Add groups allow Doing App</label>
                                  <Select 
-                             value ={groupToOpen}
+                             value ={groupDoing}
                              onChange = {handleAppDoingChange}
                              input={<OutlinedInput label="Assign Open" />}>
              
@@ -668,7 +674,8 @@ function CreateApp(){
 
 
                
-    <input type="submit" value="Create App"/>
+             <div>{!readOnly&&<div><input type="submit" value="Create App"/></div>}</div>
+    <div>{readOnly&&<div>App created - please go to Main Kanban Board access the Kanban for App <GoMain/></div>}</div>
     </form>
 
     

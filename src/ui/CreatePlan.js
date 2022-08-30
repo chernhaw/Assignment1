@@ -19,6 +19,8 @@ function CreatePlan(){
     const [ plan_end_date, setPlan_End_Date] = useState('');
     const [hasAccess, setHasAccess]=useState()
 
+    const [readOnly, setReadOnly]=useState()
+
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
@@ -28,7 +30,7 @@ function CreatePlan(){
     useEffect(() => {
 
         setHasAccess(false)
-       
+        setReadOnly(false)
 
         if (logged==null){
          navigate('../login')   
@@ -103,6 +105,19 @@ function CreatePlan(){
     const handleCreatePlan=async(e)=>{
         e.preventDefault();
         
+
+        var proceed = true
+
+        console.log(plan_mvp_name)
+        console.log("length "+plan_mvp_name.length)
+        if (plan_mvp_name.length>40){
+            proceed = false
+            alert("Plan name must be less than 40 chars")
+        }
+
+        setReadOnly(true)
+
+        if(proceed){
         console.log("Create plan for  "+app_acronym)
         console.log("plan start date "+plan_start_date)
         console.log("plan end date "+plan_end_date)
@@ -129,11 +144,12 @@ function CreatePlan(){
                 alert("Plan with same name found - "+plan_mvp_name+", please use another name")
             
             }
-        
+       
 
     } catch (e){
             console.error("Create plan function - there was error "+e.message);
         }
+    }
     }
   
     return (
@@ -177,18 +193,15 @@ function CreatePlan(){
     <label>Plan end date :</label>
     <input type="date" value={plan_end_date} onChange={(e) => { handlePlanEndDate(e) }} />
     <br/>
-    <br/>
-    <input type="submit" value="Create Plan"/>
+    <div>{!readOnly&&<div><input type="submit" value="Create Plan"/></div>}</div>
+    <div>{readOnly&&<div>Plan created go to main Kanban to view or edit </div>}</div>
     </form>
 `   </div>}
-
     </div>
-    <br/>
     <br/>
     <button onClick={goMain}>Main Kanban Board</button>
     </div>
     </div>
-   
 );
  }
 

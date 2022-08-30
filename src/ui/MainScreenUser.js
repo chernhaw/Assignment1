@@ -234,6 +234,10 @@ function MainScreenUser(){
        }
     }
 
+    const createApp = () =>{
+        navigate('../createApp')
+    }
+
     const handlePlan=(event)=>{
        
         setPlan(event.target.value)
@@ -439,7 +443,7 @@ function MainScreenUser(){
         <LogOut />
         <div>Kanban Function</div>
         <div > 
-  
+        <button  onClick ={createApp}>  Create App</button> 
     <button onClick={createPlan}>Create Plan</button>
     <button onClick={createTask}>Create Task</button>
    
