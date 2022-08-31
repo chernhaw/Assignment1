@@ -35,9 +35,12 @@ function TaskEdit(){
     const [task_createDate, setTask_createDate] = useState('');
     const [task_State, setTask_State]=useState('')
     const [hasAccess, setHasAccess]=useState()
+    const [updateMsg, setUpdateMsg]= useState()
     
    
     useEffect(() => {
+
+      setUpdateMsg('')
 
         if (logged==null){
          navigate('../login')   
@@ -100,6 +103,7 @@ function TaskEdit(){
               task_access= ""+data[0].task_state
             }
 
+            
           const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+task_access+""});
          
           var accessData = res2.data
@@ -118,6 +122,9 @@ function TaskEdit(){
                
           }
           
+          if (data[0].task_state=="Close"){
+            setHasAccess(false)
+          }
       }
        
         // get all plans
@@ -147,17 +154,21 @@ function TaskEdit(){
     
     const handleTaskNoteChange=(event)=>{
           setAppendTaskNotes(event.target.value)
+          
+          setUpdateMsg("")
     }
 
    
 
     const handleTaskPlan=(event)=>{
        setTaskPlan(event.target.value)
+       setUpdateMsg("")
     }
 
    
     const handleTaskDescriptionChange=(event)=>{
     setTaskDescription(event.target.value)
+     setUpdateMsg("")
     }
 
     const goMain = () => {
@@ -184,9 +195,21 @@ function TaskEdit(){
        
         console.log("update taskNotes "+taskNotes)
 
+        var proceedToCreate = true
+
         if (appendtaskNotes===undefined){
           setAppendTaskNotes(" ")
          
+        }
+
+        if(appendtaskNotes.indexOf("'")>-1){
+          var proceedToCreate = false
+          alert(" ' character are not allowed in task notes")
+        }
+
+        if(taskdescription.indexOf("'")>-1){
+          var proceedToCreate = false
+          alert(" ' character are not allowed in task description")
         }
        
          console.log("Run update task for "+task_id)
@@ -196,12 +219,14 @@ function TaskEdit(){
          console.log("User "+logged+ " has access : "+hasAccess)
 
         
-
+          if(proceedToCreate){
           if(!hasAccess){
             alert("User "+logged+" do not have access for task at "+task_State)
             
           } else {
             alert("Task updated by "+logged)
+
+
             try {
               const res = await Axios.post('http://localhost:8080/updatetask', 
               {  app_acronym: "" + task_acronym + "",
@@ -214,12 +239,13 @@ function TaskEdit(){
               taskId:""+task_id+""
            });
       
-           
+           setUpdateMsg("Task Updated -")
           } catch (e){
               console.error("Update task - there was error "+e.message);
           }
         
           }
+        }
     }
 
 
@@ -309,11 +335,12 @@ function TaskEdit(){
                <br/>
                </div>
                 <div>{hasAccess &&<input type="submit" value="Update Task"/>}</div>
+                <div>{!hasAccess &&<GoMain/>}</div>
                
                
     </form>
 
-    <button onClick={goMain}>Main Kanban Board</button>
+
     </div>
     </div>
     );

@@ -70,8 +70,9 @@ function CreateApp(){
 
         // check if user has APPLEAD Access
         async function checkAssess(){
-            const res = await Axios.post('http://localhost:8080/appaccess');
+          //  const res = await Axios.post('http://localhost:8080/appaccess');
 
+          const res = await Axios.post('http://localhost:8080/lead');  // create app
             const size = res.data.length;
 
             var userlist =""  
@@ -270,21 +271,16 @@ function CreateApp(){
    
 
     function checkForNums (input) {
-        let result = /^\d+$/.test(input);
-
-       
-        
+        let result = /^\d+$/.test(input)
         return result
       }
         
         
     const handleAppDescription =(e) =>{
-        if(""+e.target.value+"".length>500){
-            alert("Sorry you have exceeded maximum lenght of 500 char")
-
-        } else {
+      
+           
             setApp_description(e.target.value)
-        }
+        
        
     }
 
@@ -367,19 +363,27 @@ function CreateApp(){
                 tocreateApp=false
             }
            
+
            // var app_rnumber_nospace = ""+app_rnumber+"".replaceAll(' ','')
            // setApp_rnumbern(app_rnumber_nospace)
            if ( checkForNums(app_rnumber)==false){
             alert("Please enter a integer for R Number")
             tocreateApp=false
            }
-          if( app_description.length>200) {
-            alert("The description should be less than 200 char")
-            tocreateApp=false
+         
+
+          if(app_description.indexOf("'")>-1){
+            var tocreateApp = false
+            alert("App description should not have ' character")
           }
 
           if( app_acronym.length>40) {
             alert("The acronym should be less than 40 char")
+            tocreateApp=false
+          }
+
+          if( app_acronym.indexOf("'")>-1) {
+            alert("App description should not have ' character")
             tocreateApp=false
           }
            try {
@@ -409,16 +413,16 @@ function CreateApp(){
             setReadOnly(true)
 
             const res = await Axios.post('http://localhost:8080/createapp', 
-            {  app_acronym: "" + app_acronym + "",
-            app_description: ""+app_description+"",
-            app_rnumber: ""+app_rnumber+"",
-            app_start_date: ""+app_start_date+"",
-            app_end_date: ""+app_end_date+"",
-            app_permit_open: ""+groupToOpenList+"",
-            app_permit_todolist: ""+groupTodoList+"",
-            app_permit_doing:""+groupDoneList+"",
-            app_permit_create:""+groupCreateList+"",
-            app_permit_done:""+groupDoneList+""
+            {  app_acronym: app_acronym ,
+            app_description: app_description,
+            app_rnumber: app_rnumber,
+            app_start_date: app_start_date,
+            app_end_date: app_end_date,
+            app_permit_open: groupToOpenList,
+            app_permit_todolist: groupTodoList,
+            app_permit_doing:groupDoneList,
+            app_permit_create:groupCreateList,
+            app_permit_done:groupDoneList
 
          });
             console.log("Response length:"+""+res.data+"".length)
@@ -456,13 +460,13 @@ function CreateApp(){
     
     <br /><br/>
     <label>App R number :</label>
-    <input type="number" value={app_rnumber} onChange={(e) => { handleAppRnumber(e) }} />
+    <input type="number" value={app_rnumber} required onChange={(e) => { handleAppRnumber(e) }} />
     <br /><br/>
     <label>App start date :</label>
-    <input type="date" value={app_start_date}  onChange={(e) => { handleAppStartDate(e) }} />
+    <input type="date" value={app_start_date} required onChange={(e) => { handleAppStartDate(e) }} />
     <br/><br/>
     <label>App end date :</label>
-    <input type="date" value={app_end_date} onChange={(e) => { handleAppEndDate(e) }} />
+    <input type="date" value={app_end_date} required onChange={(e) => { handleAppEndDate(e) }} />
     <br/>
     <br/>  
     <div className='boxType'>

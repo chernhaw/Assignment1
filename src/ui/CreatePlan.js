@@ -64,15 +64,15 @@ function CreatePlan(){
     const handleAppAcronym=async(event)=>{
         setApp_acronym(event.target.value)
 
-        const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Todo"});
+        const res2 = await Axios.post('http://localhost:8080/planaccess', {  app_acronym: "" + app_acronym + ""});
          
-        var accessData = res2.data
+        var data = res2.data
         var access_member_str=""
         console.log("Users able to change update this state : ")
         
-        for (var i=0; i<accessData.length; i++){
-          console.log(accessData[i].access)
-          access_member_str= access_member_str + accessData[i].access + " "
+        for (var i=0; i<data.length; i++){
+          console.log(data[i].username)
+          access_member_str= access_member_str + "" +data[i].username + " "
           
         }
 
@@ -114,6 +114,13 @@ function CreatePlan(){
             proceed = false
             alert("Plan name must be less than 40 chars")
         }
+
+
+        if(plan_mvp_name.indexOf("'")>-1){
+           proceed = true
+    
+            alert("Plan name should not have ' character")
+          }
 
         setReadOnly(true)
 
@@ -188,10 +195,10 @@ function CreatePlan(){
     <input type="text" value={plan_mvp_name} required onChange={(e) => { handlePlanMVPNameChange(e) }} />
     <br /><br/>
     <label>Plan start date :</label>
-    <input type="date" value={plan_start_date}  onChange={(e) => { handlePlanStartDate(e) }} />
+    <input type="date" value={plan_start_date} required onChange={(e) => { handlePlanStartDate(e) }} />
     <br/><br/>
     <label>Plan end date :</label>
-    <input type="date" value={plan_end_date} onChange={(e) => { handlePlanEndDate(e) }} />
+    <input type="date" value={plan_end_date} required onChange={(e) => { handlePlanEndDate(e) }} />
     <br/>
     <div>{!readOnly&&<div><input type="submit" value="Create Plan"/></div>}</div>
     <div>{readOnly&&<div>Plan created go to main Kanban to view or edit </div>}</div>

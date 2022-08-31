@@ -172,9 +172,24 @@ function CreateTask(){
         var proceedToCreate = true
         event.preventDefault();
 
+        if(taskName.indexOf("'")>-1){
+          var proceedToCreate = false
+          alert("Task name should not have ' character")
+        }
+
+
+        if(taskdescription.indexOf("'")>-1){
+          var proceedToCreate = false
+          alert("Task description should not have ' character")
+        }
+
+        if(taskNotes.indexOf("'")>-1){
+          var proceedToCreate = false
+          alert("Task notes should not have ' character")
+        }
+
         if (taskName.length>100){
           var proceedToCreate = false
-
         alert("Task name must be less than 100 chars")
       }
 
@@ -213,11 +228,10 @@ function CreateTask(){
      }
    
      
-    
      );
 
      
-     console.log("Result form query "+res.affectedRows)
+     console.log("Result form query "+res.data)
     } catch (e){
         console.error("Create task function - there was error "+e.message);
     }

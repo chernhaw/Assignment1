@@ -28,8 +28,15 @@ label {
 }
 
 .task {
-  border: 2px solid red;
+  border: 2px solid green;
+  overflow: hidden;
   width: 95%;
+}
+
+.text{
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .columnLabel {

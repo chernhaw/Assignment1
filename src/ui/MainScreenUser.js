@@ -417,6 +417,9 @@ function MainScreenUser(){
 
     }
    
+    const editApp = () =>{
+        navigate('../editApp')
+    }
     const goProfile = () =>{
         
         navigate('../profileuser')
@@ -446,6 +449,7 @@ function MainScreenUser(){
         <button  onClick ={createApp}>  Create App</button> 
     <button onClick={createPlan}>Create Plan</button>
     <button onClick={createTask}>Create Task</button>
+    <button  onClick ={editApp}>Edit App</button> 
    
    
     </div>

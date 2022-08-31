@@ -13,7 +13,7 @@ function EditApp(){
 
     const [ app_acronym, setApp_acronym] = useState('');
     const [ app_description, setApp_description] = useState('');
-    const [ app_rnumber, setApp_rnumbern] = useState('');
+    const [ app_rnumber, setApp_rnumber] = useState('');
     const [ app_start_date, setApp_Start_Date] = useState('');
     const [ app_end_date, setApp_End_Date] = useState('');
 
@@ -37,6 +37,7 @@ function EditApp(){
     const [applistresult, setAppListsResult] = useState([]);
     const [groupCreateList, setGroupCreateList] = useState('')
     const [groupCreate, setGroupCreate] = useState('') 
+    const [showupdatemsg, setShowUpdateMsg]=useState()
 
 
     var curgrouplist="";
@@ -49,13 +50,13 @@ function EditApp(){
    
 
     useEffect(() => {
-
+      setShowUpdateMsg('')
 
         if (logged==null){
          navigate('../login')   
         }
 
-
+       
        
 
 
@@ -108,6 +109,8 @@ function EditApp(){
             curgrouplist = curgrouplist + " "+event.target.value
              console.log("curgrouplist "+curgrouplist)
              setGroupCreateList(curgrouplist)
+             setShowUpdateMsg("")
+
        
         }
         
@@ -117,6 +120,8 @@ function EditApp(){
         var currentList = ""+groupCreateList
         currentList = currentList.replace(event.target.value,'')
         setGroupCreateList(currentList)
+        setShowUpdateMsg("")
+
        
     }
 
@@ -131,6 +136,8 @@ function EditApp(){
             curgrouplist = curgrouplist + " "+event.target.value
              console.log("curgrouplist "+curgrouplist)
              setGroupToOpenList(curgrouplist)
+             setShowUpdateMsg("")
+
        
         }
     }
@@ -143,6 +150,8 @@ function EditApp(){
             currentToDoList =currentToDoList+" "+event.target.value
             console.log("curgrouplist "+curgrouplist)
             setGroupTodoList(currentToDoList)
+            setShowUpdateMsg("")
+
           }
       //  alert(groupTodoList)
     }
@@ -156,6 +165,8 @@ function EditApp(){
             currentDoingList =currentDoingList+" "+event.target.value
             console.log("curgrouplist "+curgrouplist)
         setGroupDoingList(currentDoingList)
+        setShowUpdateMsg("")
+
           }
       //  alert(groupDoingList)
     }
@@ -168,6 +179,8 @@ function EditApp(){
             var currentDoneList =" " +groupDoneList
             currentDoneList =currentDoneList +" "+ event.target.value
         setGroupDoneList(currentDoneList)
+        setShowUpdateMsg("")
+
           }
 
        
@@ -179,50 +192,59 @@ function EditApp(){
         var currentList = ""+groupToOpenList
         currentList = currentList.replace(event.target.value,'')
         setGroupToOpenList(currentList)
+        setShowUpdateMsg("")
+
     }
   
     const handleAppTodoRemove=(event)=>{
         var currentList = ""+groupTodoList
         currentList = currentList.replace(event.target.value,'')
         setGroupTodoList(currentList)
+        setShowUpdateMsg("")
+
     }
 
     const handleAppDoingRemove=(event)=>{
         var currentList = ""+groupDoingList
         currentList = currentList.replace(event.target.value,'')
         setGroupDoingList(currentList)
+        setShowUpdateMsg("")
+
     }
 
     const handleAppDoneRemove=(event)=>{
         var currentList = ""+groupDoneList
         currentList = currentList.replace(event.target.value,'')
         setGroupDoneList(currentList)
+        setShowUpdateMsg("")
+
      //   alert(groupDoneList)
     }
  
     const handleAppAcronym =(e) =>{
         setApp_acronym(e.target.value)
+        setShowUpdateMsg("")
+
     }
 
    
 
     const handleAppDescription =(e) =>{
         setApp_description(e.target.value)
+        setShowUpdateMsg("")
+
     }
 
-    // const handleAppRnumber=(e)=>{
+    const handleAppRnumber=(e)=>{
 
-    //   const reg = new RegExp('^[0-9]+$');
-    //   --
-    //     setApp_rnumbern(e.target.value)
-    // }
-
-
-    function checkForNums (input) {
-      let result = /^\d+$/.test(input);
-      console.log(result);
-      return result
+      const reg = new RegExp('^[0-9]+$');
+    
+        setApp_rnumber(e.target.value)
+        setShowUpdateMsg("")
     }
+
+
+   
     const handleAppStartDate=(e)=>{
 
       var endDate
@@ -243,7 +265,7 @@ function EditApp(){
   } catch (error){
       setApp_Start_Date(""+e.target.value+"")
   }
-      
+  setShowUpdateMsg()
   }
 
   const handleAppEndDate=(e)=>{
@@ -269,6 +291,7 @@ function EditApp(){
       }
           
      
+      setShowUpdateMsg()
 
          // setApp_End_Date(""+e.target.value+"")
           console.log("App "+app_acronym+" end date "+ app_end_date)
@@ -304,7 +327,7 @@ function EditApp(){
 
               
                  setApp_description(data[0].app_description);
-                 setApp_rnumbern(data[0].app_rnumber);
+                 setApp_rnumber(data[0].app_rnumber);
 
                  try {
 
@@ -384,9 +407,31 @@ function EditApp(){
         }
     }
 
+    function checkForNums (input) {
+      let result = /^\d+$/.test(input);
+      return result
+    }
+
     const handleEditApp=async(e)=>{
         e.preventDefault();
-    
+        
+        var proceed = true 
+        if ( checkForNums(app_rnumber)==false){
+          alert("Please enter a integer for R Number")
+          proceed=false
+         }
+
+        
+
+        if(app_description.indexOf("'")>-1){
+          proceed = true 
+         
+          alert("App description should not have ' character")
+        }
+
+        if (proceed){
+          
+
         try {
             console.log("app description "+app_description);
                 
@@ -412,14 +457,15 @@ function EditApp(){
          });
 
         
-               
+         setShowUpdateMsg("App Updated")
             console.log("Response length:"+""+res.data+"")
             
-          
+           
 
     } catch (e){
             console.error("Create app function - there was an updating app "+e.message);
         }
+      }
     }
   
     return (
@@ -430,8 +476,10 @@ function EditApp(){
     <div className='Login'>
 
     <h2>Edit App</h2>
+
+     <div>
     <form onSubmit={(e)=>{handleAppCheck(e)}}>
-        <label>Select App to Edit</label>
+    <label>Select App to Edit</label>
                 <Select 
                 value ={app_acronym}
                 onChange = {handleAppAcronym}
@@ -447,8 +495,9 @@ function EditApp(){
                </Select>
                <input type="submit" value="Edit App" />
         </form>
-   
+        </div> 
     <div>
+    
     <form onSubmit={(e)=>{handleEditApp(e)}}>
 
       
@@ -464,9 +513,11 @@ function EditApp(){
     </div>
     <div className='boxType'>
     <label><b>App R number :</b>{app_rnumber}</label><br/>
-   
+    <br /><br/>
+    <label>App R number :</label>
+    <input type="number" value={app_rnumber} required onChange={(e) => { handleAppRnumber(e) }} ></input>
 
-    <br />
+
     </div>
     <div className='boxType'>
     <label><b>App start date :</b></label>
@@ -690,8 +741,14 @@ function EditApp(){
        
             </Select>
             </div>
+
+
+
     <br />
-    <input type="submit" value="Update App "/>
+
+    <div><input type="submit" value="Update App"/>{showupdatemsg}</div>
+    
+   
     </form>
 
     
