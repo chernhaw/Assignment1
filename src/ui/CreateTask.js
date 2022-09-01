@@ -19,6 +19,9 @@ function CreateTask(){
     console.log("Logged" +logged);
     console.log("Admin" +admin);
 
+    var description=""
+    var taskname=""
+
     const [applistresult, setAppListsResult] = useState([]);
     const [planlistresult, setPlanListsResult] = useState([]);
 
@@ -61,6 +64,7 @@ function CreateTask(){
 
        
           var notes = ""+event.target.value+""
+          notes = notes.replaceAll( "'", "''")
           console.log("Task notes "+notes)
           if (notes === undefined){
             setTaskNotes(" ")
@@ -131,13 +135,22 @@ function CreateTask(){
 
     const handleTaskNameChange=(event)=>{
 
-      
-        setTaskName(event.target.value)
+      taskname=""+event.target.value+""
+     
+        setTaskName(taskname)
         
     }
 
     const handleTaskDescriptionChange=(event)=>{
-    setTaskDescription(event.target.value)
+
+       description= ""+event.target.value+""
+
+      if (description.length==0){
+     
+        description=" "
+      } 
+       
+    setTaskDescription(description)
     }
 
     
@@ -171,6 +184,8 @@ function CreateTask(){
         var proceedToCreate = true
         event.preventDefault();
 
+        
+      
         if(taskName.indexOf("'")>-1){
           var proceedToCreate = false
           alert("Task name should not have ' character")
@@ -201,11 +216,15 @@ function CreateTask(){
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
         console.log("Create task for app "+app_acronym)
         console.log("Create plan for task "+taskplan)
-        console.log("Task description "+taskdescription)
-        console.log("Taskname "+taskName)
        
+        var descriptionStr = taskdescription.replaceAll( "'", "''")
+       // var descriptionStr = taskdescription.replaceAll( "'", "''")
+        console.log("Task description "+descriptionStr)
        
-        console.log("Task notes "+taskNotes)
+       var tasknameStr = taskName.replaceAll( "'", "''")
+       console.log("Taskname "+tasknameStr)
+       var taskNoteStr = taskNotes.replaceAll( "'", "''")
+        console.log("Task notes "+taskNoteStr)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
 
@@ -220,9 +239,9 @@ function CreateTask(){
          res = await Axios.post('http://localhost:8080/createtask', 
         {  app_acronym: "" + app_acronym + "",
         taskPlan: ""+taskplan+"",
-        taskName: ""+taskName+"",
-        taskDescription: ""+taskdescription+"",
-        taskNotes:""+taskNotes+"",
+        taskName: ""+tasknameStr+"",
+        taskDescription: ""+descriptionStr+"",
+        taskNotes:""+taskNoteStr+"",
         taskCreator:""+logged+""
      }
    
@@ -267,26 +286,18 @@ function CreateTask(){
           ))}
          
                </Select>
+
+
                {!hasAccess && <div>{taskName} : You do not have right to create task </div>} 
                  
                 <br/>
                 {hasAccess && <div> 
-               <label>Select Plan for Task</label>
-                <Select 
-                value ={taskplan}
-                onChange = {handleTaskPlan}
-                input={<OutlinedInput label="User to Check" />}>
-                {planlistresult.map((plan) => (
-                <MenuItem
-                key={plan.plan_app_acronym}
-                value={plan.plan_app_acronym }>
-              {plan.plan_app_acronym}
-            </MenuItem>
-          
-          ))}
-               </Select>
-               <br/>
-                    
+              
+                 
+                 
+         
+
+                
                <label>Task Name :</label>
                <br/>
                <div>{!readOnly&&<div><textarea className='deacriptionText' rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>

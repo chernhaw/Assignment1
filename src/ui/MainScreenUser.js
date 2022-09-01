@@ -70,7 +70,7 @@ function MainScreenUser(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
-        getAppPlans(event.target.value)
+      //  getAppPlans(event.target.value)
         setShowAppPlan(true)
        
 
@@ -507,10 +507,8 @@ function MainScreenUser(){
                 key={plan.plan_app_acronym}
                 value={plan.plan_app_acronym }>
 
-<Typography variant="inherit" noWrap>
 {plan.plan_app_acronym}
-          </Typography>
-             
+         
             </MenuItem>
           
           ))}

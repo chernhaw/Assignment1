@@ -7,7 +7,6 @@ import LogOut from './Logout';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
 import Task from './Task';
 
 function MainScreen(){
@@ -49,16 +48,16 @@ function MainScreen(){
         }
         getAllApp()
 
-        // async function getAllPlans(){
-        //     const res = await Axios.post('http://localhost:8080/listplans');
+        async function getAllPlans(){
+            const res = await Axios.post('http://localhost:8080/listplans');
         
-        //     var data = res.data;
-        //     console.log("Current plan list" +data)
-        //     setPlanListsResult(data)
-        // }
+            var data = res.data;
+            console.log("Current plan list" +data)
+            setPlanListsResult(data)
+        }
         
     
-       // getAllPlans()
+        getAllPlans()
 
         // get Open user
 
@@ -148,24 +147,12 @@ function MainScreen(){
        
         setApp_acronym(event.target.value)
         setShowAppPlan(true)
- 
-    }
 
 
-    async function getAppPlans(app_acronym){
-        const res = await Axios.post('http://localhost:8080/listappplan',{app_acronym:""+app_acronym+""});
-    
-        var data = res.data
+      //  countTask()
        
-  
-       //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
-      //  console.log("Current plan list" +data[0].object.)
-        
-        var none = { 'plan_app_acronym': 'none' }
-        data.push(none)
-        setPlanListsResult(data)
     }
-  
+
     
     const handlePlanTaskQuery=async(e)=>{
         e.preventDefault();
@@ -201,6 +188,7 @@ function MainScreen(){
 
              console.log("Open list length :"+openTaskList.length) 
 
+
              for ( var i=0; i<openTaskList.length; i++){
 
                     console.log("Open list Task id :"+openTaskList[i].task_id + 
@@ -209,6 +197,7 @@ function MainScreen(){
 
             
              }
+
 
              setOpenTask(openTaskList)
              // Populate into ToDo list
@@ -382,7 +371,6 @@ function MainScreen(){
             
              }
 
-             getAppPlans(app_acronym)
 
              setOpenTask(openTaskList)
              // Populate into ToDo list
@@ -554,18 +542,11 @@ function MainScreen(){
                 onChange = {handleAppAcronym}
                 input={<OutlinedInput label="User to Check" />}>
                 {applistresult.map((app) => (
-                     <div className='descriptionText'>
                 <MenuItem
                 key={app.app_acronym}
                 value={app.app_acronym }>
-                   
-
-                   <Typography variant="inherit" noWrap>
-            
               {app.app_acronym}
-             </Typography>
             </MenuItem>
-            </div>
           
           ))}
 
@@ -583,7 +564,7 @@ function MainScreen(){
                 onChange = {handlePlan}
                 input={<OutlinedInput label="User to Check" />}>
                 {planlistresult.map((plan) => (
-                <MenuItem 
+                <MenuItem
                 key={plan.plan_app_acronym}
                 value={plan.plan_app_acronym }>
               {plan.plan_app_acronym}

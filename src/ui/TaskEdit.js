@@ -14,13 +14,15 @@ import GoMain from './GoMain';
 var newTaskState =""
 function TaskEdit(){
 
+
+
     const navigate = useNavigate();
     var logged = window.localStorage.getItem("username");
     var admin = window.localStorage.getItem("admin");
     console.log("Logged" +logged);
     console.log("Admin" +admin);
    
-    
+    var description=""  
     const [planlistresult, setPlanListsResult] = useState([]);
 
     const [taskdescription, setTaskDescription]=useState();
@@ -35,6 +37,7 @@ function TaskEdit(){
     const [task_createDate, setTask_createDate] = useState('');
     const [task_State, setTask_State]=useState('')
     const [hasAccess, setHasAccess]=useState()
+    const [assignplan, setAssignPlan]=useState(false)
     const [updateMsg, setUpdateMsg]= useState()
     
    
@@ -58,6 +61,7 @@ function TaskEdit(){
             const res = await Axios.post('http://localhost:8080/gettaskdetail',{task_id:""+task_id+""});
         
              var data = res.data;
+             
         
             console.log("Task detail retrieved for " +task_id)
             console.log("task_id "+data[0].task_id)
@@ -70,8 +74,10 @@ function TaskEdit(){
             setTaskPlan(data[0].task_plan)
 
             console.log("task_description "+data[0].task_description)
+            if (data[0].task_description=="undefined"){
+             }else { 
             setTaskDescription(data[0].task_description)
-
+          }
             console.log("task_notes "+data[0].task_notes)
 
             
@@ -99,6 +105,8 @@ function TaskEdit(){
             var task_access=""
             if (data[0].task_state=="Open"){
               task_access="Open"
+              setAssignPlan(true)
+
             } else {
               task_access= ""+data[0].task_state
             }
@@ -150,15 +158,14 @@ function TaskEdit(){
     //    getAllPlans()
    
         
+        
     },[])
 
     
     
     const handleTaskNoteChange=(event)=>{
-          setAppendTaskNotes(event.target.value)
-          
-          setUpdateMsg("")
-    }
+      setAppendTaskNotes(event.target.value)
+}
 
    
 
@@ -169,7 +176,16 @@ function TaskEdit(){
 
    
     const handleTaskDescriptionChange=(event)=>{
-    setTaskDescription(event.target.value)
+   
+      description= ""+event.target.value+""
+
+      if (description.length==0){
+     
+        description=" "
+      } 
+       
+    setTaskDescription(description)
+
      setUpdateMsg("")
     }
 
@@ -186,11 +202,23 @@ function TaskEdit(){
         console.log("Update Task state : "+newTaskState)
         console.log("update app_acronym "+task_acronym)
         console.log("update task plan "+taskplan)
-        console.log("update taskdescription "+taskdescription)
+        var descriptionStr = ""
+         descriptionStr = 
+         taskdescription.replaceAll( "'", "''")
+        console.log("update taskdescription "+descriptionStr)
         console.log("update taskname "+task_name)
        
         console.log("update taskNotes "+taskNotes)
 
+        
+        
+         console.log("Task description "+descriptionStr)
+        
+        // var appendNoteStr =  appendtaskNotes.replaceAll( "'", "''")
+        // var taskNotes="\n"+appendNoteStr+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes
+        
+
+        
         var proceedToCreate = true
 
         if (appendtaskNotes===undefined){
@@ -203,7 +231,7 @@ function TaskEdit(){
           alert(" ' character are not allowed in task notes")
         }
 
-        if(taskdescription.indexOf("'")>-1){
+       if(taskdescription.indexOf("'")>-1){
           var proceedToCreate = false
           alert(" ' character are not allowed in task description")
         }
@@ -225,6 +253,7 @@ function TaskEdit(){
 
             try {
               const res = await Axios.post('http://localhost:8080/updatetask', 
+             // const res = await Axios.post('http://localhost:8080/updatetask', 
               {  app_acronym: "" + task_acronym + "",
               taskPlan: ""+taskplan+"",
               taskName: ""+task_name+"",
@@ -283,7 +312,7 @@ function TaskEdit(){
                 <label >Current Task Plan : {taskplan}</label><br/>
                 {hasAccess &&
                   <div>
-               
+               {assignplan && <div>
                <label>Select Plan for Task</label>
                 <Select 
                 value ={taskplan}
@@ -298,7 +327,7 @@ function TaskEdit(){
           
           ))}
                </Select>
-                  </div>}
+               </div>}  </div>}
                   </div>
                <br/>
                
