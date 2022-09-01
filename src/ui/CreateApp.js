@@ -369,21 +369,22 @@ function CreateApp(){
             tocreateApp=false
            }
          
+           var app_descriptionStr = app_description.replace("'", "~")
 
-          if(app_description.indexOf("'")>-1){
-            var tocreateApp = false
-            alert("App description should not have ' character")
-          }
+          // if(app_description.indexOf("'")>-1){
+          //   var tocreateApp = false
+          //   alert("App description should not have ' character")
+          // }
 
-          if( app_acronym.length>40) {
-            alert("The acronym should be less than 40 char")
-            tocreateApp=false
-          }
+          // if( app_acronym.length>40) {
+          //   alert("The acronym should be less than 40 char")
+          //   tocreateApp=false
+          // }
 
-          if( app_acronym.indexOf("'")>-1) {
-            alert("App description should not have ' character")
-            tocreateApp=false
-          }
+          // if( app_acronym.indexOf("'")>-1) {
+          //   alert("App description should not have ' character")
+          //   tocreateApp=false
+          // }
            try {
 
             const res = await Axios.post('http://localhost:8080/checkapp', 

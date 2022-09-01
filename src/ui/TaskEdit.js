@@ -76,12 +76,12 @@ function TaskEdit(){
             console.log("task_description "+data[0].task_description)
             if (data[0].task_description=="undefined"){
              }else { 
-            setTaskDescription(data[0].task_description)
+            setTaskDescription(data[0].task_description.replaceAll("^","'"))
           }
             console.log("task_notes "+data[0].task_notes)
 
             
-            setTaskNotes(data[0].task_notes)
+            setTaskNotes(data[0].task_notes.replaceAll("^","'"))
             console.log("task_app_acronym "+data[0].task_app_acronym)
             setTask_acronym(data[0].task_app_acronym)
             
@@ -164,6 +164,9 @@ function TaskEdit(){
     
     
     const handleTaskNoteChange=(event)=>{
+
+     
+     
       setAppendTaskNotes(event.target.value)
 }
 
@@ -202,22 +205,21 @@ function TaskEdit(){
         console.log("Update Task state : "+newTaskState)
         console.log("update app_acronym "+task_acronym)
         console.log("update task plan "+taskplan)
-        var descriptionStr = ""
-         descriptionStr = 
-         taskdescription.replaceAll( "'", "''")
-        console.log("update taskdescription "+descriptionStr)
-        console.log("update taskname "+task_name)
        
+        console.log("update taskdescription "+taskdescription)
+        console.log("update taskname "+task_name)
+     
+
         console.log("update taskNotes "+taskNotes)
 
         
         
-         console.log("Task description "+descriptionStr)
+   
         
-        // var appendNoteStr =  appendtaskNotes.replaceAll( "'", "''")
-        // var taskNotes="\n"+appendNoteStr+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes
         
-
+         var taskNotesStr="\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes
+        
+         taskNotesStr=taskNotesStr.replaceAll("'","^")
         
         var proceedToCreate = true
 
@@ -226,15 +228,15 @@ function TaskEdit(){
          
         }
 
-        if(appendtaskNotes.indexOf("'")>-1){
-          var proceedToCreate = false
-          alert(" ' character are not allowed in task notes")
-        }
+      //   if(appendtaskNotes.indexOf("'")>-1){
+      //     var proceedToCreate = false
+      //     alert(" ' character are not allowed in task notes")
+      //   }
 
-       if(taskdescription.indexOf("'")>-1){
-          var proceedToCreate = false
-          alert(" ' character are not allowed in task description")
-        }
+      //  if(taskdescription.indexOf("'")>-1){
+      //     var proceedToCreate = false
+      //     alert(" ' character are not allowed in task description")
+      //   }
        
          console.log("Run update task for "+task_id)
          console.log("Checking for group able to access task at this state -- "+task_State)
@@ -259,7 +261,8 @@ function TaskEdit(){
               taskName: ""+task_name+"",
               taskDescription: ""+taskdescription+"",
               taskState:""+newTaskState+"",
-              taskNotes:"\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes,
+              taskNotes:taskNotesStr,
+             // taskNotes:"\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes,
               taskOwner:""+logged+"",
               taskId:""+task_id+""
            });

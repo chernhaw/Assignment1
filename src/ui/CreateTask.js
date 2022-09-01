@@ -192,20 +192,20 @@ function CreateTask(){
         }
 
 
-        if(taskdescription.indexOf("'")>-1){
-          var proceedToCreate = false
-          alert("Task description should not have ' character")
-        }
+      //   if(taskdescription.indexOf("'")>-1){
+      //     var proceedToCreate = false
+      //     alert("Task description should not have ' character")
+      //   }
 
-        if(taskNotes.indexOf("'")>-1){
-          var proceedToCreate = false
-          alert("Task notes should not have ' character")
-        }
+      //   if(taskNotes.indexOf("'")>-1){
+      //     var proceedToCreate = false
+      //     alert("Task notes should not have ' character")
+      //   }
 
-        if (taskName.length>100){
-          var proceedToCreate = false
-        alert("Task name must be less than 100 chars")
-      }
+      //   if (taskName.length>100){
+      //     var proceedToCreate = false
+      //   alert("Task name must be less than 100 chars")
+      // }
 
       if(proceedToCreate){
 
@@ -217,13 +217,13 @@ function CreateTask(){
         console.log("Create task for app "+app_acronym)
         console.log("Create plan for task "+taskplan)
        
-        var descriptionStr = taskdescription.replaceAll( "'", "''")
+        var descriptionStr = taskdescription.replaceAll( "'", "^")
        // var descriptionStr = taskdescription.replaceAll( "'", "''")
         console.log("Task description "+descriptionStr)
        
-       var tasknameStr = taskName.replaceAll( "'", "''")
+       var tasknameStr = taskName.replaceAll( "'", "^")
        console.log("Taskname "+tasknameStr)
-       var taskNoteStr = taskNotes.replaceAll( "'", "''")
+       var taskNoteStr = taskNotes.replaceAll( "'", "^")
         console.log("Task notes "+taskNoteStr)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
