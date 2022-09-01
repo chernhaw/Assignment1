@@ -24,7 +24,7 @@ label {
 .column {
   float: left;
   border: 1px solid blue;
-  width: 16.0%;
+  width: 16%;
 }
 
 .task {
@@ -81,4 +81,8 @@ label {
   min-width: 100px;
   height: auto;
   margin: 5px;
+}
+
+.descriptionText {
+  resize: none;
 }

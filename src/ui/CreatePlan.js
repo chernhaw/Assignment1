@@ -64,7 +64,7 @@ function CreatePlan(){
     const handleAppAcronym=async(event)=>{
         setApp_acronym(event.target.value)
 
-        const res2 = await Axios.post('http://localhost:8080/planaccess', {  app_acronym: "" + app_acronym + ""});
+        const res2 = await Axios.post('http://localhost:8080/planaccess', {  app_acronym: "" + event.target.value + ""});
          
         var data = res2.data
         var access_member_str=""
@@ -201,7 +201,7 @@ function CreatePlan(){
     <input type="date" value={plan_end_date} required onChange={(e) => { handlePlanEndDate(e) }} />
     <br/>
     <div>{!readOnly&&<div><input type="submit" value="Create Plan"/></div>}</div>
-    <div>{readOnly&&<div>Plan created go to main Kanban to view or edit </div>}</div>
+    <div>{readOnly&&<div>Plan created </div>}</div>
     </form>
 `   </div>}
     </div>

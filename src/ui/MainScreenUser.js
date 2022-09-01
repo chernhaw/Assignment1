@@ -8,6 +8,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import Task from './Task';
+import Typography from '@mui/material/Typography';
+
 
 function MainScreenUser(){
 
@@ -50,16 +52,16 @@ function MainScreenUser(){
         getAllApp()
 
 
-        async function getAllPlans(){
-            const res = await Axios.post('http://localhost:8080/listplans');
+        // async function getAllPlans(){
+        //     const res = await Axios.post('http://localhost:8080/listplans');
         
-            var data = res.data;
-            console.log("Current plan list" +data)
-            setPlanListsResult(data)
-        }
+        //     var data = res.data;
+        //     console.log("Current plan list" +data)
+        //     setPlanListsResult(data)
+        // }
         
     
-        getAllPlans()
+        // getAllPlans()
         if (logged==null){
          navigate('../login')   
         }
@@ -68,8 +70,24 @@ function MainScreenUser(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
+        getAppPlans(event.target.value)
         setShowAppPlan(true)
        
+
+    }
+
+    async function getAppPlans(app_acronym){
+        const res = await Axios.post('http://localhost:8080/listappplan',{app_acronym:""+app_acronym+""});
+    
+        var data = res.data
+       
+  
+       //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
+      //  console.log("Current plan list" +data[0].object.)
+        
+        var none = { 'plan_app_acronym': 'none' }
+        data.push(none)
+        setPlanListsResult(data)
     }
 
     const handlePlanTaskQuery=async(e)=>{
@@ -488,7 +506,11 @@ function MainScreenUser(){
                 <MenuItem
                 key={plan.plan_app_acronym}
                 value={plan.plan_app_acronym }>
-              {plan.plan_app_acronym}
+
+<Typography variant="inherit" noWrap>
+{plan.plan_app_acronym}
+          </Typography>
+             
             </MenuItem>
           
           ))}

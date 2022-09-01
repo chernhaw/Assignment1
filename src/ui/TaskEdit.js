@@ -103,6 +103,8 @@ function TaskEdit(){
               task_access= ""+data[0].task_state
             }
 
+
+            getAppPlans(data[0].task_app_acronym)
             
           const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+task_access+""});
          
@@ -145,7 +147,7 @@ function TaskEdit(){
 
       
         getTaskDetail()
-        getAllPlans()
+    //    getAllPlans()
    
         
     },[])
@@ -171,12 +173,6 @@ function TaskEdit(){
      setUpdateMsg("")
     }
 
-    const goMain = () => {
-      var refresh="true"
-      window.localStorage.setItem("refresh", refresh )
-
-      navigate('../main')
-  }
     
     
     const handleUpdateTask=async(event)=>{
@@ -248,6 +244,19 @@ function TaskEdit(){
         }
     }
 
+    async function getAppPlans(app_acronym){
+      const res = await Axios.post('http://localhost:8080/listappplan',{app_acronym:""+app_acronym+""});
+  
+      var data = res.data
+     
+
+     //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
+    //  console.log("Current plan list" +data[0].object.)
+      
+      var none = { 'plan_app_acronym': 'none' }
+      data.push(none)
+      setPlanListsResult(data)
+  }
 
     return ( 
     
@@ -305,7 +314,7 @@ function TaskEdit(){
                <div className='boxType'>
                <label>Current Task Description: </label>
                <br/>
-               <textarea rows="4" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
+               <textarea className='descriptionText' rows="4" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
                <br/>
                </div>
                <div className='boxType'>
@@ -408,7 +417,7 @@ function TaskState(props){
     label="task State"
     onChange={handleTaskStateChange}
   >
-    
+     <MenuItem value={"Open"}>Open</MenuItem>
     <MenuItem value={"Todo"}>Todo</MenuItem>
   </Select>
 

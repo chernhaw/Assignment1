@@ -507,7 +507,7 @@ function EditApp(){
     <label><b>App Description : {app_description} </b></label><br/>
     <label>Update description</label><br/>
 
-     <textarea rows="4" cols="50" value={app_description}  onChange={(e) => { handleAppDescription(e) }} />
+     <textarea className='descriptionText' rows="4" cols="50" value={app_description}  onChange={(e) => { handleAppDescription(e) }} />
     <br />
     <br />
     </div>

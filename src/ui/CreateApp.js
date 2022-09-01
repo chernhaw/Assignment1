@@ -40,7 +40,7 @@ function CreateApp(){
 
     const [applistresult, setAppListsResult] = useState('');
 
-    const [hasAccess, setHasAccess]=useState('true')
+    const [hasAccess, setHasAccess]=useState('false')
 
     const [readOnly, setReadOnly]=useState()
     
@@ -70,9 +70,9 @@ function CreateApp(){
 
         // check if user has APPLEAD Access
         async function checkAssess(){
-          //  const res = await Axios.post('http://localhost:8080/appaccess');
+            const res = await Axios.post('http://localhost:8080/appaccess');
 
-          const res = await Axios.post('http://localhost:8080/lead');  // create app
+          //const res = await Axios.post('http://localhost:8080/lead');  // create app
             const size = res.data.length;
 
             var userlist =""  
@@ -84,23 +84,21 @@ function CreateApp(){
         for (var i=0; i<accessData.length; i++){
           console.log(accessData[i].username)
           access_member_str= access_member_str + accessData[i].username + " "
+          console.log(""+logged+""===""+accessData[i].username+"")
+
+          if (logged===accessData[i].username){
+              setHasAccess(true)
+          }
           
         }
 
-        if (access_member_str.indexOf(logged)!=-1){
-              console.log("Granting access "+logged)
-              setHasAccess(true)
-             
-        } else {
-          setHasAccess(false)
-        }
 
         }
 
         checkAssess()
         console.log(logged+ " has access "+hasAccess)
 
-        setHasAccess(true)
+     //   setHasAccess(true)
         async function getAllApp(){
             const res = await Axios.post('http://localhost:8080/listapp');
         
@@ -229,7 +227,7 @@ function CreateApp(){
         if (groupDoingList.search(event.target.value+" ")!=-1){
             alert(event.target.value+" is already assigned")
           } else {
-            var currentDoingList = ""+groupTodoList
+            var currentDoingList = ""+groupDoingList
             currentDoingList =currentDoingList+" "+event.target.value
             console.log("curgrouplist "+currentDoingList)
             setGroupDoingList(currentDoingList)
@@ -456,7 +454,7 @@ function CreateApp(){
     <br /><br/>
     <label>App Description :</label><br/>
 
-    <textarea rows="5" cols="50" value={app_description} onChange={(e) => { handleAppDescription(e) }} />
+    <textarea className='descriptionText' rows="5" cols="50" value={app_description} onChange={(e) => { handleAppDescription(e) }} />
     
     <br /><br/>
     <label>App R number :</label>

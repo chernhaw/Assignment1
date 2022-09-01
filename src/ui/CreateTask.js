@@ -49,26 +49,7 @@ function CreateTask(){
             setAppListsResult(data)
         }
         
-      
-        // get all plans
-
-        async function getAllPlans(){
-            const res = await Axios.post('http://localhost:8080/listplans');
-        
-            var data = res.data
-            console.log("Current plan list ->" +data[0].plan_app_acronym)
-
-           //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
-          //  console.log("Current plan list" +data[0].object.)
-            
-            var none = { 'plan_app_acronym': 'none' }
-            data.push(none)
-            setPlanListsResult(data)
-        }
-        
-        
         getAllApp()
-        getAllPlans()
         setTaskNotes("")
         
         setReadOnly(false)
@@ -105,8 +86,6 @@ function CreateTask(){
         setApp_acronym(event.target.value)
         // check permission to create task
 
-      
-
         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+event.target.value+"", access_type:"Create"});
          
         var accessData = res2.data
@@ -127,8 +106,24 @@ function CreateTask(){
           setHasAccess(false)
         }
        
+        getAppPlans(event.target.value)
         
     }
+
+
+    async function getAppPlans(app_acronym){
+      const res = await Axios.post('http://localhost:8080/listappplan',{app_acronym:""+app_acronym+""});
+  
+      var data = res.data
+     
+
+     //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
+    //  console.log("Current plan list" +data[0].object.)
+      
+      var none = { 'plan_app_acronym': 'none' }
+      data.push(none)
+      setPlanListsResult(data)
+  }
 
     const handleTaskPlan=(event)=>{
         setTaskPlan(event.target.value)
@@ -161,6 +156,10 @@ function CreateTask(){
             }
 
             setReadOnly(false)
+
+            // rest call to retrieve plan by app
+
+
               
         } catch (e){
            console.error("Create task function - there was error "+e.message);
@@ -198,7 +197,7 @@ function CreateTask(){
         setReadOnly(true)
         console.log("Task notes "+taskNotes)
      
-        setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Open, Date and Time:"+Date())
+        setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Create, Date and Time:"+Date())
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
         console.log("Create task for app "+app_acronym)
         console.log("Create plan for task "+taskplan)
@@ -290,7 +289,7 @@ function CreateTask(){
                     
                <label>Task Name :</label>
                <br/>
-               <div>{!readOnly&&<div><textarea rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>
+               <div>{!readOnly&&<div><textarea className='deacriptionText' rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>
                <div>{readOnly&&<div>{taskName}</div>}</div>
 
               
@@ -298,8 +297,8 @@ function CreateTask(){
                <br />
                <label>Task Description</label>
                <br/>
-               <div>{!readOnly&&<div><textarea rows="5" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} /></div>}</div>
-               <div>{readOnly&&<div><textarea rows="5" cols="50" value={taskdescription}   /></div>}</div>
+               <div>{!readOnly&&<div><textarea  rows="5" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} /></div>}</div>
+               <div>{readOnly&&<div><textarea className='.descriptionText' rows="5" cols="50" value={taskdescription}   /></div>}</div>
                <br/>
                <label>Task Notes</label>
 
