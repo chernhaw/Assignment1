@@ -346,7 +346,7 @@ function TaskEdit(){
                <div className='boxType'>
                <label>Current Task Description: </label>
                <br/>
-               <textarea className='descriptionText' rows="4" cols="50" value={taskdescription} required onChange={(e) => { handleTaskDescriptionChange(e) }} />
+               <textarea className='descriptionText' rows="4" cols="50" value={taskdescription}  onChange={(e) => { handleTaskDescriptionChange(e) }} />
                <br/>
                </div>
                <div className='boxType'>

@@ -27,7 +27,7 @@ function MainScreen(){
     const [plan, setPlan] = useState('');
     const [planlistresult, setPlanListsResult] = useState([]);
     const [showAppPlan, setShowAppPlan] = useState('');
-
+   
 
     var openTaskList =[]
     var todoTaskList=[]
@@ -48,20 +48,20 @@ function MainScreen(){
         }
         getAllApp()
 
-        async function getAllPlans(){
-            const res = await Axios.post('http://localhost:8080/listplans');
+        // async function getAllPlans(){
+        //     const res = await Axios.post('http://localhost:8080/listplans');
         
-            var data = res.data;
-            console.log("Current plan list" +data)
-            setPlanListsResult(data)
-        }
+        //     var data = res.data;
+        //     console.log("Current plan list" +data)
+        //     setPlanListsResult(data)
+        // }
         
     
-        getAllPlans()
+        // getAllPlans()
 
         // get Open user
 
-        setShowAppPlan(false)
+       // setShowAppPlan(false)
 
         // get PM user 
 
@@ -146,6 +146,7 @@ function MainScreen(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
+        getAppPlans(event.target.value)
         setShowAppPlan(true)
 
 
@@ -153,6 +154,18 @@ function MainScreen(){
        
     }
 
+     async function getAppPlans(app_acronym){
+        Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""})
+        .then((res)=>{
+         let planData = []
+         res.data.forEach((p)=>{
+             planData.push(p.plan_mvp_name)
+         })
+     setPlanListsResult(planData)
+         console.log(planData)
+        })
+        .catch((err)=>{console.log(err)});
+    }
     
     const handlePlanTaskQuery=async(e)=>{
         e.preventDefault();
@@ -483,12 +496,28 @@ function MainScreen(){
              console.log("Close list length :"+closeTaskList.length) 
 
              
+             Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""})
+             .then((res)=>{
+              let planData = []
+              res.data.forEach((p)=>{
+                  planData.push(p.plan_mvp_name)
+              })
+          setPlanListsResult(planData)
+              console.log(planData)
+             })
+             .catch((err)=>{console.log(err)});
+      
+      
+             
+           
+            
+      
         } catch (e){
            console.error("Query group error - "+e.message);
 
        }
 
-       
+       console.log("app acronym "+app_acronym)
         const res = await Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""});
     
         var data = res.data;
@@ -558,19 +587,22 @@ function MainScreen(){
                </form>
 
                {showAppPlan&&<div>
+                {console.log(planlistresult)}
                <form onSubmit={(e)=>{handlePlanTaskQuery(e)}}>        
-                 <Select 
+               <Select 
                 value ={plan}
                 onChange = {handlePlan}
                 input={<OutlinedInput label="User to Check" />}>
-                {planlistresult.map((plan) => (
+                    {console.log("Plan result "+ planlistresult)}
+                {planlistresult.map((plan) => {
+                return(
                 <MenuItem
-                key={plan.plan_app_acronym}
-                value={plan.plan_app_acronym }>
-              {plan.plan_app_acronym}
+                key={plan}
+                value={plan}>
+                {plan}
             </MenuItem>
           
-          ))}
+          )})}
                </Select>
 
               

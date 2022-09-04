@@ -90,7 +90,6 @@ function CreatePlan(){
 
     }
 
-
     const handlePlanStartDate=(e)=>{
        
         setPlan_Start_Date(""+e.target.value+"")
@@ -104,8 +103,6 @@ function CreatePlan(){
 
     const handleCreatePlan=async(e)=>{
         e.preventDefault();
-        
-
         var proceed = true
 
         console.log(plan_mvp_name)
@@ -116,11 +113,7 @@ function CreatePlan(){
         }
 
 
-        if(plan_mvp_name.indexOf("'")>-1){
-           proceed = true
-    
-            alert("Plan name should not have ' character")
-          }
+       
 
         setReadOnly(true)
 
@@ -132,15 +125,18 @@ function CreatePlan(){
         try {
 
             const res = await Axios.post('http://localhost:8080/checkplan', 
-            {  app_acronym: "" + app_acronym + "",
-            plan_mvp_name: ""+plan_mvp_name+"",
+            {  app_acronym: "" + app_acronym.replace("^","'") + "",
+            plan_mvp_name: ""+plan_mvp_name.replace("^","'")+"",
          });
             console.log("Duplicate " +res.data[0].duplicate)
             
             if(res.data[0].duplicate==0){
 
+
+        var app_acronymStr = "" + app_acronym + "".replace("'","^")
+
         const res = await Axios.post('http://localhost:8080/createplan', 
-            {  app_acronym: "" + app_acronym + "",
+            {  app_acronym: "" + app_acronymStr + "",
             plan_mvp_name: ""+plan_mvp_name+"",
             plan_start_date: ""+plan_start_date+"",
             plan_end_date: ""+plan_end_date+""
@@ -178,21 +174,21 @@ function CreatePlan(){
                 <MenuItem
                 key={app.app_acronym}
                 value={app.app_acronym }>
-              {app.app_acronym}
+              {app.app_acronym.replace("^","'")}
             </MenuItem>
           
           ))}
                </Select>
     
     <br />
-    {!hasAccess && <div>{app_acronym} : You do not have right to create plan </div>} 
+    {!hasAccess && <div>{app_acronym.replace("^","'")} : You do not have right to create plan </div>} 
     {hasAccess && 
     <div>
     <form onSubmit={(e)=>{handleCreatePlan(e)}}>
         <br/>
-    <label>App Acronym : {app_acronym}</label> <br/><br/>
+    <label>App Acronym : {app_acronym.replace("^","'")}</label> <br/><br/>
     <label>Plan MVP name :</label>
-    <input type="text" value={plan_mvp_name} required onChange={(e) => { handlePlanMVPNameChange(e) }} />
+    <input type="text" value={plan_mvp_name.replace("^","'")} required onChange={(e) => { handlePlanMVPNameChange(e) }} />
     <br /><br/>
     <label>Plan start date :</label>
     <input type="date" value={plan_start_date} required onChange={(e) => { handlePlanStartDate(e) }} />

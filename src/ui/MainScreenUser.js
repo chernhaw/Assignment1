@@ -72,7 +72,7 @@ function MainScreenUser(){
         setApp_acronym(event.target.value)
       //  getAppPlans(event.target.value)
         setShowAppPlan(true)
-       
+        getAppPlans(event.target.value)
 
     }
 
@@ -80,13 +80,14 @@ function MainScreenUser(){
         const res = await Axios.post('http://localhost:8080/listappplan',{app_acronym:""+app_acronym+""});
     
         var data = res.data
-       
+       console.log(res)
   
        //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
-      //  console.log("Current plan list" +data[0].object.)
+         console.log("Current plan list" +data[0].plan_mvp_name)
         
-        var none = { 'plan_app_acronym': 'none' }
+        var none = { 'plan_mvp_name': 'none' }
         data.push(none)
+        console.log(res.data)
         setPlanListsResult(data)
     }
 
@@ -265,7 +266,7 @@ function MainScreenUser(){
     const handleAppTaskQuery=async(e)=>{
         e.preventDefault();
 
-
+        console.log(111111111)
         try {             
             const res =  await Axios.post('http://localhost:8080/listapptasks',{  app_acronym: "" + app_acronym + ""});
            
@@ -424,14 +425,21 @@ function MainScreenUser(){
            console.error("Query group error - "+e.message);
 
        }
+       
+       Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""})
+       .then((res)=>{
+        let planData = []
+        res.data.forEach((p)=>{
+            planData.push(p.plan_mvp_name)
+        })
+    setPlanListsResult(planData)
+        console.log(planData)
+       })
+       .catch((err)=>{console.log(err)});
 
-       const res = await Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""});
-    
-       var data = res.data;
-       console.log("Current plan list" +data)
-       setPlanListsResult(data)
-   
-
+       
+     
+      
 
     }
    
@@ -490,7 +498,7 @@ function MainScreenUser(){
                 <MenuItem
                 key={app.app_acronym}
                 value={app.app_acronym }>
-              {app.app_acronym}
+              {app.app_acronym.replace("^", "'")}
             </MenuItem>
           
           ))}
@@ -502,16 +510,16 @@ function MainScreenUser(){
                 value ={plan}
                 onChange = {handlePlan}
                 input={<OutlinedInput label="User to Check" />}>
-                {planlistresult.map((plan) => (
+                    {console.log(planlistresult)}
+                {planlistresult.map((plan) => {
+                return(
                 <MenuItem
-                key={plan.plan_app_acronym}
-                value={plan.plan_app_acronym }>
-
-{plan.plan_app_acronym}
-         
+                key={plan}
+                value={plan}>
+                {plan}
             </MenuItem>
           
-          ))}
+          )})}
                </Select>
                <input type="submit" value="Get Plan Task"/>
                </form>

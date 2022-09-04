@@ -64,13 +64,11 @@ function CreateTask(){
 
        
           var notes = ""+event.target.value+""
-          notes = notes.replaceAll( "'", "''")
+        
           console.log("Task notes "+notes)
-          if (notes === undefined){
-            setTaskNotes(" ")
-          } else {
-            setTaskNotes(event.target.value)
-          }
+         
+            setTaskNotes(notes)
+        
         
           
     }
@@ -209,7 +207,7 @@ function CreateTask(){
 
       if(proceedToCreate){
 
-        setReadOnly(true)
+       
         console.log("Task notes "+taskNotes)
      
         setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Create, Date and Time:"+Date())
@@ -217,22 +215,48 @@ function CreateTask(){
         console.log("Create task for app "+app_acronym)
         console.log("Create plan for task "+taskplan)
        
-        var descriptionStr = taskdescription.replaceAll( "'", "^")
+        var descriptionStr=""
+
+        try {
+        descriptionStr = taskdescription.replaceAll( "'", "^")
+        } catch(err){
+
+        }
+
        // var descriptionStr = taskdescription.replaceAll( "'", "''")
         console.log("Task description "+descriptionStr)
        
        var tasknameStr = taskName.replaceAll( "'", "^")
        console.log("Taskname "+tasknameStr)
-       var taskNoteStr = taskNotes.replaceAll( "'", "^")
+
+
+       var taskNoteStr = ""
+       try {
+        taskNoteStr = taskNotes.replaceAll( "'", "^")
+        } catch(err){
+          
+        }
+
         console.log("Task notes "+taskNoteStr)
        console.log("Create user "+logged)
         console.log("No of task in "+noOfTask)
 
         
     
-         const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Create"});
+        // const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+app_acronym+"", access_type:"Create"});
          
-         var data = res2.data
+        // var data = res2.data
+
+         const resCheckTaskExist = await Axios.post('http://localhost:8080/checktaskexist',{app_acronym:""+app_acronym+"", task_name:""+taskName});
+
+         const exist = resCheckTaskExist.data[0].task
+
+
+
+         if (exist<1){
+
+          setReadOnly(true)
+          setTaskNotes(taskNoteStr)
 
         var res= null
          try {
@@ -244,16 +268,18 @@ function CreateTask(){
         taskNotes:""+taskNoteStr+"",
         taskCreator:""+logged+""
      }
-   
+    
      
      );
-
-     
+    
+    
      console.log("Result form query "+res.data)
     } catch (e){
         console.error("Create task function - there was error "+e.message);
     }
-
+  } else {
+    alert("Task name already in used "+taskName +" please use another task name")
+  }
   }
 
 

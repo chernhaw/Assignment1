@@ -369,7 +369,7 @@ function CreateApp(){
             tocreateApp=false
            }
          
-           var app_descriptionStr = app_description.replace("'", "~")
+           var app_descriptionStr = app_description.replace("'", "^")
 
           // if(app_description.indexOf("'")>-1){
           //   var tocreateApp = false
@@ -411,15 +411,18 @@ function CreateApp(){
 
             setReadOnly(true)
 
+             var app_acronymStr= app_acronym.replaceAll( "'", "''")
+            
+             var app_descriptionStr = app_description.replaceAll( "'", "^")
             const res = await Axios.post('http://localhost:8080/createapp', 
-            {  app_acronym: app_acronym ,
-            app_description: app_description,
+            {  app_acronym: app_acronymStr ,
+            app_description: app_descriptionStr,
             app_rnumber: app_rnumber,
             app_start_date: app_start_date,
             app_end_date: app_end_date,
             app_permit_open: groupToOpenList,
             app_permit_todolist: groupTodoList,
-            app_permit_doing:groupDoneList,
+            app_permit_doing:groupDoingList,
             app_permit_create:groupCreateList,
             app_permit_done:groupDoneList
 

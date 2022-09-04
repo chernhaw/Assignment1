@@ -38,6 +38,7 @@ function EditApp(){
     const [groupCreateList, setGroupCreateList] = useState('')
     const [groupCreate, setGroupCreate] = useState('') 
     const [showupdatemsg, setShowUpdateMsg]=useState()
+    const [hasAccess, setHasAccess]=useState(false)
 
 
     var curgrouplist="";
@@ -46,11 +47,10 @@ function EditApp(){
     var admin = window.localStorage.getItem("admin");
     console.log("Logged" +logged);
     console.log("Admin" +admin);
-   
-   
 
     useEffect(() => {
       setShowUpdateMsg('')
+     
 
         if (logged==null){
          navigate('../login')   
@@ -96,7 +96,34 @@ function EditApp(){
         
         getAllGroup()
         
+        async function checkAssess(){
+          const res = await Axios.post('http://localhost:8080/appaccess');
+
+        //const res = await Axios.post('http://localhost:8080/lead');  // create app
+          const size = res.data.length;
+
+          var userlist =""  
+
+            var accessData = res.data
+      var access_member_str=""
+      console.log("Users able to change update this state : ")
+      
+      for (var i=0; i<accessData.length; i++){
+        console.log(accessData[i].username)
+        access_member_str= access_member_str + accessData[i].username + " "
+        console.log(""+logged+""===""+accessData[i].username+"")
+
+        if (logged===accessData[i].username){
+            setHasAccess(true)
+        }
         
+      }
+
+
+      }
+      checkAssess()
+
+
     },[])
 
 
@@ -308,7 +335,7 @@ function EditApp(){
         try {
 
             const res = await Axios.post('http://localhost:8080/checkapp', 
-            {  app_acronym: "" + app_acronym + ""});
+            {  app_acronym: "" + app_acronym.replace("^", "'") + ""});
             console.log("Response length:"+""+res.data+"".length)
             
             const data = res.data
@@ -325,8 +352,8 @@ function EditApp(){
                 console.log("app permit_done "+ data[0].app_permit_done);
 
 
-              
-                 setApp_description(data[0].app_description);
+               // setTaskNotes(data[0].task_notes.replaceAll("^","'"))
+                 setApp_description(data[0].app_description.replaceAll("^","'"));
                  setApp_rnumber(data[0].app_rnumber);
 
                  try {
@@ -370,10 +397,11 @@ function EditApp(){
 
 
                 try {
-                  data[0].app_permit_todo.split("")
+                  data[0].app_permit_todolist.split("")
                   setGroupTodoList(data[0].app_permit_todolist);
 
                 } catch (error){
+                 // console.log(error)
                   setGroupTodoList("");
                 }
                //  setGroupToOpenList(data[0].app_permit_open);
@@ -423,17 +451,14 @@ function EditApp(){
 
         
 
-        if(app_description.indexOf("'")>-1){
-          proceed = true 
-         
-          alert("App description should not have ' character")
-        }
+         var app_descriptionStr = app_description.replace("'", "^")
+
 
         if (proceed){
           
 
         try {
-            console.log("app description "+app_description);
+            console.log("app description "+app_descriptionStr);
                 
             console.log("app startdate "+app_start_date);
             console.log("app enddate "+app_end_date);
@@ -445,7 +470,7 @@ function EditApp(){
 
             const res = await Axios.post('http://localhost:8080/updateapp', 
             {  app_acronym: "" + app_acronym + "",
-            app_description: ""+app_description+"",
+            app_description: ""+app_descriptionStr+"",
             app_rnumber: ""+app_rnumber+"",
             app_start_date: ""+app_start_date+"",
             app_end_date: ""+app_end_date+"",
@@ -476,7 +501,9 @@ function EditApp(){
     <div className='Login'>
 
     <h2>Edit App</h2>
-
+    {!hasAccess && <div>You did not have right to create App </div>} 
+      <div>{hasAccess&&
+    <div>
      <div>
     <form onSubmit={(e)=>{handleAppCheck(e)}}>
     <label>Select App to Edit</label>
@@ -488,7 +515,7 @@ function EditApp(){
                 <MenuItem
                 key={app.app_acronym}
                 value={app.app_acronym }>
-              {app.app_acronym}
+              {app.app_acronym.replace("^", "'")}
             </MenuItem>
           
           ))}
@@ -753,8 +780,10 @@ function EditApp(){
 
     
     </div>
+    </div>}
     </div>
     
+    </div>
     </div>
    
 );
