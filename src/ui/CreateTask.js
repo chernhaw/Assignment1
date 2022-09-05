@@ -177,6 +177,13 @@ function CreateTask(){
         }
 
     }
+
+    const anotherTask =(event)=>{
+      setTaskNotes("")
+      setTaskName("")
+      setTaskDescription("")
+      setReadOnly(false)
+    }
     const handleCreateTask=async(event)=>{
        
         var proceedToCreate = true
@@ -184,33 +191,19 @@ function CreateTask(){
 
         
       
-        if(taskName.indexOf("'")>-1){
-          var proceedToCreate = false
-          alert("Task name should not have ' character")
-        }
+        // if(taskName.indexOf("'")>-1){
+        //   var proceedToCreate = false
+        //   alert("Task name should not have ' character")
+        // }
 
 
-      //   if(taskdescription.indexOf("'")>-1){
-      //     var proceedToCreate = false
-      //     alert("Task description should not have ' character")
-      //   }
-
-      //   if(taskNotes.indexOf("'")>-1){
-      //     var proceedToCreate = false
-      //     alert("Task notes should not have ' character")
-      //   }
-
-      //   if (taskName.length>100){
-      //     var proceedToCreate = false
-      //   alert("Task name must be less than 100 chars")
-      // }
-
+     
       if(proceedToCreate){
 
        
         console.log("Task notes "+taskNotes)
      
-        setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Create, Date and Time:"+Date())
+       
         console.log("Current no of task in "+app_acronym +" is "+ noOfTask)
         console.log("Create task for app "+app_acronym)
         console.log("Create plan for task "+taskplan)
@@ -232,6 +225,7 @@ function CreateTask(){
 
        var taskNoteStr = ""
        try {
+        
         taskNoteStr = taskNotes.replaceAll( "'", "^")
         } catch(err){
           
@@ -256,7 +250,7 @@ function CreateTask(){
          if (exist<1){
 
           setReadOnly(true)
-          setTaskNotes(taskNoteStr)
+         // setTaskNotes(taskNoteStr)
 
         var res= null
          try {
@@ -269,14 +263,17 @@ function CreateTask(){
         taskCreator:""+logged+""
      }
     
-     
+   
      );
-    
-    
+  //   setTaskNotes(taskNotes)
+  setTaskNotes(taskNotes+"\n----------\nUser:"+logged+", Current State:Create, Date and Time:"+Date())
      console.log("Result form query "+res.data)
     } catch (e){
         console.error("Create task function - there was error "+e.message);
     }
+
+
+
   } else {
     alert("Task name already in used "+taskName +" please use another task name")
   }
@@ -327,7 +324,7 @@ function CreateTask(){
                <label>Task Name :</label>
                <br/>
                <div>{!readOnly&&<div><textarea className='deacriptionText' rows="1" cols="50" value={taskName} required onChange={(e) => { handleTaskNameChange(e) }} /></div>}</div>
-               <div>{readOnly&&<div>{taskName}</div>}</div>
+               
 
               
                
@@ -345,6 +342,7 @@ function CreateTask(){
                 <br/>
                 <div>{!readOnly&&<input type="submit" value="Create Task"/>}</div>
                 <div>{readOnly&&<div><div>Task created - please go to Main Kanban Board to View Task</div><GoMain/></div>}</div>
+                <div>{readOnly&&<div><Button onClick={anotherTask}>Create another Task</Button> </div>}</div>
                </div>
                }
     </form>

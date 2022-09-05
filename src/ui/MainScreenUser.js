@@ -70,8 +70,12 @@ function MainScreenUser(){
     const handleAppAcronym=(event)=>{
        
         setApp_acronym(event.target.value)
+
+
       //  getAppPlans(event.target.value)
         setShowAppPlan(true)
+        setPlanListsResult([])
+
         getAppPlans(event.target.value)
 
     }
@@ -85,8 +89,8 @@ function MainScreenUser(){
        //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
          console.log("Current plan list" +data[0].plan_mvp_name)
         
-        var none = { 'plan_mvp_name': 'none' }
-        data.push(none)
+       
+      
         console.log(res.data)
         setPlanListsResult(data)
     }

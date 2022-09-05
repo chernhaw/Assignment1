@@ -7,6 +7,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import LogOut from './Logout';
 import GoMain from './GoMain';
+import Button from '@mui/material/Button';
 
 function CreatePlan(){
 
@@ -100,6 +101,14 @@ function CreatePlan(){
         setPlan_End_Date(""+e.target.value+"")
         console.log("App "+app_acronym+" end date "+ plan_end_date)
     }
+
+    const anotherPlan = () =>{
+        setPlan_MVP_Name("")
+        setPlan_Start_Date("")
+        setPlan_End_Date("")
+        setReadOnly(false)
+    }
+
 
     const handleCreatePlan=async(e)=>{
         e.preventDefault();
@@ -197,12 +206,12 @@ function CreatePlan(){
     <input type="date" value={plan_end_date} required onChange={(e) => { handlePlanEndDate(e) }} />
     <br/>
     <div>{!readOnly&&<div><input type="submit" value="Create Plan"/></div>}</div>
-    <div>{readOnly&&<div>Plan created </div>}</div>
+    
+    <div>{readOnly&&<div>Plan created - please go to Main Kanban Board access the Kanban for App <GoMain/></div>}</div>
     </form>
 `   </div>}
     </div>
     <br/>
-    <button onClick={goMain}>Main Kanban Board</button>
     </div>
     </div>
 );

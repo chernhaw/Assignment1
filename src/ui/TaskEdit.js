@@ -106,13 +106,12 @@ function TaskEdit(){
             if (data[0].task_state=="Open"){
               task_access="Open"
               setAssignPlan(true)
+              getAppPlans(data[0].task_app_acronym)
 
             } else {
               task_access= ""+data[0].task_state
             }
 
-
-            getAppPlans(data[0].task_app_acronym)
             
           const res2 = await Axios.post('http://localhost:8080/taskaccess',{app_acronym:""+data[0].task_app_acronym+"", access_type:""+task_access+""});
          
@@ -137,25 +136,8 @@ function TaskEdit(){
           }
       }
        
-        // get all plans
-
-        async function getAllPlans(){
-            const res = await Axios.post('http://localhost:8080/listplans');
-        
-            var data = res.data
-            console.log("Current plan list ->" +data[0].plan_app_acronym)
-
-           //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
-          //  console.log("Current plan list" +data[0].object.)
-            
-            var none = { 'plan_app_acronym': 'none' }
-            data.push(none)
-            setPlanListsResult(data)
-        }
-
       
         getTaskDetail()
-    //    getAllPlans()
    
         
         
@@ -220,7 +202,7 @@ function TaskEdit(){
          var taskNotesStr="\n"+appendtaskNotes+"\n----------\nUser:"+logged+", Current State:"+task_State+", Date and Time:"+Date()+"\n"+taskNotes
         
          taskNotesStr=taskNotesStr.replaceAll("'","^")
-        
+      // setTaskNotes(taskNotesStr)
         var proceedToCreate = true
 
         if (appendtaskNotes===undefined){
@@ -285,8 +267,9 @@ function TaskEdit(){
      //  // data.push({ 'plan_app_acronym': 'none' })({ 'plan_app_acronym': 'none' })
     //  console.log("Current plan list" +data[0].object.)
       
-      var none = { 'plan_app_acronym': 'none' }
+      var none = { 'plan_mvp_name': 'none' }
       data.push(none)
+      console.log(data)
       setPlanListsResult(data)
   }
 
@@ -321,14 +304,16 @@ function TaskEdit(){
                 value ={taskplan}
                 onChange = {handleTaskPlan}
                 input={<OutlinedInput label="User to Check" />}>
-                {planlistresult.map((plan) => (
+                  {console.log(planlistresult)}
+                {planlistresult.map((plan) => {
+                  return(
                 <MenuItem
-                key={plan.plan_app_acronym}
-                value={plan.plan_app_acronym }>
-              {plan.plan_app_acronym}
+                key={plan.plan_mvp_name}
+                value={plan.plan_mvp_name }>
+              {plan.plan_mvp_name}
             </MenuItem>
           
-          ))}
+          )})}
                </Select>
                </div>}  </div>}
                   </div>

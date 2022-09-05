@@ -48,22 +48,7 @@ function MainScreen(){
         }
         getAllApp()
 
-        // async function getAllPlans(){
-        //     const res = await Axios.post('http://localhost:8080/listplans');
-        
-        //     var data = res.data;
-        //     console.log("Current plan list" +data)
-        //     setPlanListsResult(data)
-        // }
-        
-    
-        // getAllPlans()
-
-        // get Open user
-
-       // setShowAppPlan(false)
-
-        // get PM user 
+      
 
 
     },[])
@@ -147,6 +132,7 @@ function MainScreen(){
        
         setApp_acronym(event.target.value)
         getAppPlans(event.target.value)
+        setPlanListsResult([])
         setShowAppPlan(true)
 
 
@@ -158,6 +144,7 @@ function MainScreen(){
         Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""})
         .then((res)=>{
          let planData = []
+        
          res.data.forEach((p)=>{
              planData.push(p.plan_mvp_name)
          })
@@ -497,16 +484,15 @@ function MainScreen(){
 
              
              Axios.post('http://localhost:8080/listappplan',{  app_acronym: "" + app_acronym + ""})
-             .then((res)=>{
-              let planData = []
-              res.data.forEach((p)=>{
-                  planData.push(p.plan_mvp_name)
-              })
-          setPlanListsResult(planData)
-              console.log(planData)
-             })
-             .catch((err)=>{console.log(err)});
-      
+       .then((res)=>{
+        let planData = []
+        res.data.forEach((p)=>{
+            planData.push(p.plan_mvp_name)
+        })
+    setPlanListsResult(planData)
+        console.log(planData)
+       })
+       .catch((err)=>{console.log(err)});
       
              
            
@@ -593,13 +579,14 @@ function MainScreen(){
                 value ={plan}
                 onChange = {handlePlan}
                 input={<OutlinedInput label="User to Check" />}>
-                    {console.log("Plan result "+ planlistresult)}
+                    {console.log(planlistresult)}
                 {planlistresult.map((plan) => {
+                    console.log(plan)
                 return(
                 <MenuItem
-                key={plan}
-                value={plan}>
-                {plan}
+                key={plan.plan_mvp_name}
+                value={plan.plan_mvp_name}>
+                {plan.plan_mvp_name}
             </MenuItem>
           
           )})}

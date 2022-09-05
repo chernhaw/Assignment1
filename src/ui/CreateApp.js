@@ -155,7 +155,7 @@ function CreateApp(){
           for ( var i=0; i<size; i++){
             
             curapplist = curapplist+ " " +res.data[i].app_acronym
-             console.log("current user list "+ curapplist)
+             console.log("current app list "+ curapplist)
           }
 
          // setAppListsResult(curapplist)
@@ -355,11 +355,20 @@ function CreateApp(){
 //groupCreateList.search(event.target.value+" ")!=-1
 
 
-            console.log("Current apps "+ curapplist)
-            if(curapplist.search(app_acronym)!=-1){
-                alert("App "+app_acronym+" already exist - please use another name")
-                tocreateApp=false
-            }
+           
+
+            //  var curapplist = curapplist.toString().toUpperCase()
+            //  console.log("create app Current apps "+ curapplist)
+             
+            //  var app_acronymupper = app_acronym.toString().toUpperCase()
+            //  console.log("new app "+ app_acronymupper)
+
+
+            //  console.log( curapplist.search(app_acronymupper))
+            // if(curapplist.search(app_acronymupper)!=-1){
+            //     alert("App "+app_acronym+" already exist - please use another name")
+            //     tocreateApp=false
+            // }
            
 
            // var app_rnumber_nospace = ""+app_rnumber+"".replaceAll(' ','')
@@ -387,15 +396,15 @@ function CreateApp(){
           // }
            try {
 
-            const res = await Axios.post('http://localhost:8080/checkapp', 
+            const res = await Axios.post('http://localhost:8080/checkexistingapp', 
             {  app_acronym: "" + app_acronym + ""});
             console.log("Response length:"+""+res.data+"".length)
             
             const data = res.data
           // alert("app result "+data.app_acronym)
-                console.log("app result "+data[0].app_acronym);
-                
-                if (data[0].app_acronym==app_acronym){
+                console.log("app with exist "+data[0].appcount);
+              
+                if (data[0].appcount>0){
                     tocreateApp=false
                     alert ("App already exist - "+app_acronym)
                 }

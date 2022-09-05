@@ -39,6 +39,7 @@ function EditApp(){
     const [groupCreate, setGroupCreate] = useState('') 
     const [showupdatemsg, setShowUpdateMsg]=useState()
     const [hasAccess, setHasAccess]=useState(false)
+    const [loadApp, setLoadApp] = useState(false)
 
 
     var curgrouplist="";
@@ -428,7 +429,7 @@ function EditApp(){
                  var arrOpen = groupToOpenList.split(" ")
 
                 setGroupToOpenOption(JSON.stringify(arrOpen));
-        
+              setLoadApp(true)
 
     } catch (e){
             console.error("Checking app function - there was error getting information "+e.message);
@@ -523,8 +524,9 @@ function EditApp(){
                <input type="submit" value="Edit App" />
         </form>
         </div> 
+        
     <div>
-    
+    {loadApp&&<div>
     <form onSubmit={(e)=>{handleEditApp(e)}}>
 
       
@@ -541,8 +543,7 @@ function EditApp(){
     <div className='boxType'>
     <label><b>App R number :</b>{app_rnumber}</label><br/>
     <br /><br/>
-    <label>App R number :</label>
-    <input type="number" value={app_rnumber} required onChange={(e) => { handleAppRnumber(e) }} ></input>
+   
 
 
     </div>
@@ -777,7 +778,7 @@ function EditApp(){
     
    
     </form>
-
+    </div>}        
     
     </div>
     </div>}
